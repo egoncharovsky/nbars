@@ -1,0 +1,46 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
+    id 'application'
+}
+
+group = 'ru.egoncharovsky'
+version = '1.0-SNAPSHOT'
+
+ext {
+    log4jVersion = '2.9.1'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'http://maven.geomajas.org/' }
+}
+
+dependencies {
+    implementation 'com.twmacinta:fast-md5:2.7.1'
+
+    implementation 'io.github.microutils:kotlin-logging-jvm:2.0.4'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
+    implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+
+application {
+    mainClassName = 'MainKt'
+}
