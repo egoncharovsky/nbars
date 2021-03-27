@@ -15,6 +15,12 @@ data class RawPart(
         }[0]
     }
 
+    fun get(range: IntRange): String {
+        val value = raw.substring(range)
+        raw.removeRange(range)
+        return value
+    }
+
     fun getAll(regex: Regex): List<String> {
         return consumeFind(regex) {
             require(it.isNotEmpty()) { "Expected at least 1 in '$raw' by '$regex' but was ${it.size}: $it" }
@@ -31,13 +37,50 @@ data class RawPart(
         return consumeFind(regex)
     }
 
-    fun all(): String? {
-        logger.trace("Getting all of $raw")
-        return if (raw.isNotEmpty()) {
-            val all = raw
-            raw = ""
-            all
-        } else null
+    fun getPart(regex: Regex): RawPart {
+        return RawPart(get(regex)).also {
+            children.add(it)
+        }
+    }
+
+    fun findPart(regex: Regex): RawPart? {
+        return find(regex)?.let { RawPart(it) }?.also {
+            children.add(it)
+        }
+    }
+
+    fun getGroupValues(regex: Regex): List<String> {
+        return consumeFindGroups(regex) {
+            require(it.size == 1) { "Expected exactly 1 in '$raw' by '$regex' but was ${it.size}: $it" }
+        }[0]
+    }
+
+    fun findMatchesRange(regex: Regex): List<IntRange> {
+        return regex.findAll(raw).map { it.groups[0]!!.range }.toList()
+    }
+
+    fun cut(vararg ranges: IntRange): List<RawPart> {
+        logger.trace("Cutting by ${ranges.size} ranges")
+
+        val parts = ranges.map {
+            logger.trace("Cutting $it from '$raw'")
+
+            RawPart(raw.substring(it))
+        }.also {
+            children.addAll(it)
+        }
+
+        var shift = 0
+        ranges.forEach {
+            val size = (it.last + 1) - it.first
+            val shifted = it.first - shift..it.last - shift
+
+            shift += size
+            raw = raw.removeRange(shifted)
+        }
+        logger.trace("Cut to '$raw'")
+
+        return parts
     }
 
     fun split(regex: Regex): List<RawPart> {
@@ -99,6 +142,8 @@ data class RawPart(
 //        }
 //    }
 
+    fun length() = raw.length
+
     fun finish() {
         require(raw.isEmpty()) { "Finish: expected empty raw but not: '$raw'" }
     }
@@ -110,6 +155,17 @@ data class RawPart(
 
     private fun consumeFind(regex: Regex, assertion: (List<String>) -> Unit = {}): List<String> {
         return regex.findAll(raw).map { it.groupValues[1] }.toList().also {
+            logger.trace("Found ${it.size} matches for '$regex'")
+            assertion(it)
+
+            logger.trace("Consuming of '$raw'")
+            raw = raw.replace(regex, "").trim()
+            logger.trace("Raw cut to '$raw'")
+        }
+    }
+
+    private fun consumeFindGroups(regex: Regex, assertion: (List<List<String>>) -> Unit = {}): List<List<String>> {
+        return regex.findAll(raw).map { it.groupValues }.toList().also {
             logger.trace("Found ${it.size} matches for '$regex'")
             assertion(it)
 

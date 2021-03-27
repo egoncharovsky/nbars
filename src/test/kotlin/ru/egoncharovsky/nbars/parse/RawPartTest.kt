@@ -25,6 +25,16 @@ internal class RawPartTest {
         )
     }
 
+    @Test
+    fun cut() {
+        val rawPart = RawPart("0123456789")
+
+        val cut = rawPart.cut(1 until 5, 7..8)
+
+        assertEquals(listOf(RawPart("1234"), RawPart("78")), cut)
+        assertEquals(RawPart("0569"), rawPart)
+    }
+
 //    @Test
 //    fun `Raw should be divided by regex into trimmed parts`() {
 //        val rawPart = RawPart(

@@ -2,6 +2,9 @@ package ru.egoncharovsky.nbars
 
 import com.twmacinta.util.MD5
 import mu.KotlinLogging
+import ru.egoncharovsky.nbars.Regexes.braces
+import ru.egoncharovsky.nbars.Regexes.dictionaryEndMarker
+import ru.egoncharovsky.nbars.Regexes.headwordMarker
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.RandomAccessFile
@@ -17,10 +20,6 @@ class DictionaryReader(
         const val entry = ","
         const val keyValue = ":"
     }
-
-    private val headwordMarker = "^[^\\t#]".toRegex()
-    private val endMarker = "\\{\\{ The End }}".toRegex()
-    private val braces = "[{}]".toRegex()
 
     private val logger = KotlinLogging.logger { }
 
@@ -63,7 +62,7 @@ class DictionaryReader(
                 val line = raf.readLine(charset("UTF-8"))
 
                 if (line != null) {
-                    if (endMarker.containsMatchIn(line)) break
+                    if (dictionaryEndMarker.containsMatchIn(line)) break
                     if (headwordMarker.containsMatchIn(line)) {
                         val headword = line.trim().replace(braces, "")
                         headwordPositions[headword] = lineStart
