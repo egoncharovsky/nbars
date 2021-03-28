@@ -9,8 +9,8 @@ data class RawPart(
 
     private var children = mutableListOf<RawPart>()
 
-    fun get(regex: Regex): String {
-        return consumeFind(regex) {
+    fun get(regex: Regex, group: Int = 1): String {
+        return consumeFind(regex, group) {
             require(it.size == 1) { "Expected exactly 1 in '$raw' by '$regex' but was ${it.size}: $it" }
         }[0]
     }
@@ -21,20 +21,20 @@ data class RawPart(
         return value
     }
 
-    fun getAll(regex: Regex): List<String> {
-        return consumeFind(regex) {
+    fun getAll(regex: Regex, group: Int = 1): List<String> {
+        return consumeFind(regex, group) {
             require(it.isNotEmpty()) { "Expected at least 1 in '$raw' by '$regex' but was ${it.size}: $it" }
         }
     }
 
-    fun find(regex: Regex): String? {
-        return consumeFind(regex) {
+    fun find(regex: Regex, group: Int = 1): String? {
+        return consumeFind(regex, group) {
             require(it.size <= 1) { "No more than 1 expected in '$raw' by '$regex' but was ${it.size}: $it" }
         }.getOrNull(0)
     }
 
-    fun findAll(regex: Regex): List<String> {
-        return consumeFind(regex)
+    fun findAll(regex: Regex, group: Int = 1): List<String> {
+        return consumeFind(regex, group)
     }
 
     fun getPart(regex: Regex): RawPart {
@@ -43,8 +43,8 @@ data class RawPart(
         }
     }
 
-    fun findPart(regex: Regex): RawPart? {
-        return find(regex)?.let { RawPart(it) }?.also {
+    fun findPart(regex: Regex, group: Int = 1): RawPart? {
+        return find(regex, group)?.let { RawPart(it) }?.also {
             children.add(it)
         }
     }
@@ -116,32 +116,6 @@ data class RawPart(
         }
     }
 
-//    fun divide(regex: Regex, into: Int): List<RawPart> {
-//        logger.trace("Consuming divide into $into parts by '$regex' of '$raw'")
-//        require(raw.isNotEmpty()) { "Try to divide empty raw" }
-//
-//        val split = raw.split(regex)
-//        val occurrences = regex.findAll(raw).map { it.groupValues[0] }.toList()
-//
-//        if (occurrences.isEmpty()) {
-//            logger.trace("No occurrences found")
-//            return listOf(this)
-//        }
-//
-//        val divided = (0 until into).map { i ->
-//            when (i % 2) {
-//                0 -> split.getOrElse(i / 2) { "" }
-//                1 -> occurrences.getOrElse(i / 2) { "" }
-//                else -> throw IllegalStateException("Unreachable state")
-//            }
-//        }
-//
-//        return divided.map { it.trim() }.map { RawPart(it) }.also {
-//            children.addAll(it)
-//            raw = ""
-//        }
-//    }
-
     fun length() = raw.length
 
     fun finish() {
@@ -153,8 +127,8 @@ data class RawPart(
         children.forEach { it.finishAll() }
     }
 
-    private fun consumeFind(regex: Regex, assertion: (List<String>) -> Unit = {}): List<String> {
-        return regex.findAll(raw).map { it.groupValues[1] }.toList().also {
+    private fun consumeFind(regex: Regex, group: Int, assertion: (List<String>) -> Unit = {}): List<String> {
+        return regex.findAll(raw).map { it.groupValues[group] }.toList().also {
             logger.trace("Found ${it.size} matches for '$regex'")
             assertion(it)
 

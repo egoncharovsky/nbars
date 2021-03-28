@@ -12,6 +12,7 @@ object Regexes {
     val braces = "[{}]".toRegex()
     val doubleBraces = "\\{\\{|}}".toRegex()
     val squareBrackets = "[\\[\\]]".toRegex()
+    val mirroredSquareBrackets = "(\\\\\\[|\\\\])".toRegex()
     val plain = "(.+)".toRegex()
 
     val homonymMarker = "\\[sup]\\d+?\\[/sup]".toRegex()
@@ -19,7 +20,7 @@ object Regexes {
     val translationMarker = "\\d+?\\.".toRegex()
     val translationVariantMarker = "\\d+?\\)".toRegex()
 
-    val transcription = "\\\\[\\[t](.+?)\\[/t]\\\\]".toRegex()
+    val transcription = "\\[t](.+)\\[/t]".toRegex()
     val partOfSpeech = "\\[p](n|a)\\[/p]".toRegex()
     val translation = "\\[trn](.+?)\\[/trn]".toRegex()
     val label = "\\[p](.+?)\\[/p]".toRegex()

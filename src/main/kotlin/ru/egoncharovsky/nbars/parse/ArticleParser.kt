@@ -1,9 +1,7 @@
 package ru.egoncharovsky.nbars.parse
 
 import mu.KotlinLogging
-import ru.egoncharovsky.nbars.Regexes
 import ru.egoncharovsky.nbars.entity.*
-import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.Regexes.boldTag
 import ru.egoncharovsky.nbars.Regexes.doubleBraces
 import ru.egoncharovsky.nbars.Regexes.colorTag
@@ -13,11 +11,13 @@ import ru.egoncharovsky.nbars.Regexes.italicTag
 import ru.egoncharovsky.nbars.Regexes.label
 import ru.egoncharovsky.nbars.Regexes.lexicalGrammarHomonymMarker
 import ru.egoncharovsky.nbars.Regexes.marginTag
+import ru.egoncharovsky.nbars.Regexes.mirroredSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
 import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
+import ru.egoncharovsky.nbars.entity.Translation.Variant
 
 class ArticleParser {
 
@@ -31,6 +31,7 @@ class ArticleParser {
             .replace(italicTag, "")
             .replace(colorTag, "")
             .replace(doubleBraces, "")
+            .replace(mirroredSquareBrackets, "")
 
         val raw = RawPart(body)
         val homonyms = parseBody(raw)
@@ -40,7 +41,7 @@ class ArticleParser {
         return Article(key, homonyms)
     }
 
-    internal fun parseBody(raw: RawPart): List<Homonym> {
+    internal fun parseBody(raw: RawPart): List<List<Homonym>> {
         logger.trace("Parse body from: $raw")
 
         val split = raw.split(homonymMarker)
@@ -60,7 +61,7 @@ class ArticleParser {
         return homonyms
     }
 
-    internal fun parseHomonym(raw: RawPart): Homonym {
+    internal fun parseHomonym(raw: RawPart): List<Homonym> {
         logger.trace("Parse homonym from: $raw")
 
         val split = raw.split(lexicalGrammarHomonymMarker)
@@ -77,10 +78,10 @@ class ArticleParser {
         }
         prefix.finish()
 
-        return Homonym(lexGramHomonyms)
+        return lexGramHomonyms
     }
 
-    internal fun parseLexicalGrammaticalHomonym(raw: RawPart): LexGramHomonym {
+    internal fun parseLexicalGrammaticalHomonym(raw: RawPart): Homonym {
         logger.trace("Parse lex. gram. homonym from: $raw")
 
         val split = raw.split(translationMarker)
@@ -100,7 +101,7 @@ class ArticleParser {
         }
         prefix.finish()
 
-        return LexGramHomonym(transcription, partOfSpeech, translations)
+        return Homonym(transcription, partOfSpeech, translations)
     }
 
     internal fun parseTranslation(raw: RawPart): Translation {
@@ -113,32 +114,27 @@ class ArticleParser {
 
         val rawVariants = split.drop(1)
 
-        val variants: List<TranslationVariant>
-        val remark: Text?
-        val comment: Text?
-
-        if (rawVariants.isEmpty()) {
-            variants = listOf(parseVariant(prefix))
-            remark = null
-            comment = null
+        return if (rawVariants.isEmpty()) {
+            Translation(listOf(parseVariant(prefix)))
         } else {
-            variants = rawVariants.map { parseVariant(it) }
-            comment = prefix.findPart(Regexes.comment)?.let { textParser.parse(it) }
-            remark = prefix.findPart(label)?.let { textParser.parse(it) }
+            Translation(
+                rawVariants.map { parseVariant(it) },
+                comment = prefix.findPart(comment)?.let { textParser.parse(it) },
+                remark = prefix.findPart(label, 0)?.let { textParser.parse(it) }
+            )
+        }.also {
+            prefix.finish()
         }
-        prefix.finish()
-
-        return Translation(variants, remark, comment)
     }
 
-    internal fun parseVariant(raw: RawPart): TranslationVariant {
+    internal fun parseVariant(raw: RawPart): Variant {
         logger.trace("Parse translation variant from: $raw")
 
         val meaning = textParser.parse(raw.getPart(translation))
         val comment = raw.findPart(comment)?.let { textParser.parse(it) }
-        val remark = raw.findPart(label)?.let { textParser.parse(it) }
+        val remark = raw.findPart(label, 0)?.let { textParser.parse(it) }
         raw.finish()
 
-        return TranslationVariant(meaning, remark, comment)
+        return Variant(meaning, remark, comment)
     }
 }

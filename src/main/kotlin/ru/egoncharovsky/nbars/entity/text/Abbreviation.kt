@@ -8,6 +8,4 @@ data class Abbreviation(
     }
 
     override fun asPlain(): String = short
-    override fun toString(): String = "Abbreviation(${asPlain()})"
-
 }

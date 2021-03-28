@@ -8,5 +8,4 @@ data class PlainText(
     }
 
     override fun asPlain(): String = text
-    override fun toString(): String  = asPlain()
 }

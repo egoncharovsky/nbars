@@ -7,7 +7,6 @@ data class Sentence(
     constructor(vararg parts: Text) : this(parts.asList())
 
     override fun asPlain(): String = parts.joinToString("") { it.asPlain() }
-    override fun toString(): String  = asPlain()
 
     companion object {
         fun pt(s: String) = PlainText(s)

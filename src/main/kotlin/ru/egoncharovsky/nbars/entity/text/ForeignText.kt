@@ -10,5 +10,4 @@ data class ForeignText(
     }
 
     override fun asPlain(): String = text
-    override fun toString(): String = "ForeignText(${asPlain()})"
 }
