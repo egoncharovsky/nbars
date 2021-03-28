@@ -2,15 +2,12 @@ package ru.egoncharovsky.nbars.parse
 
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import ru.egoncharovsky.nbars.ArticleBuilder
 import ru.egoncharovsky.nbars.entity.Article
-import ru.egoncharovsky.nbars.entity.Homonym
-import ru.egoncharovsky.nbars.entity.Translation
-import ru.egoncharovsky.nbars.entity.Translation.Variant
-import ru.egoncharovsky.nbars.entity.text.Abbreviation
-import ru.egoncharovsky.nbars.entity.text.Sentence
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ab
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ft
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.pt
+import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.st
 import ru.egoncharovsky.nbars.readResourceLines
 import kotlin.test.assertEquals
 
@@ -19,72 +16,41 @@ internal class ArticleParserTest {
     companion object {
         @JvmStatic
         fun parameters() = listOf(
-            "adjutant" to Article(
-                "adjutant", listOf(
-                    listOf(
-                        Homonym(
-                            "ˈæʤʊt(ə)nt", "n", listOf(
-                                Translation(
-                                    remark = Abbreviation("воен."),
-                                    variants = listOf(
-                                        Variant(pt("адъютант")),
-                                        Variant(
-                                            Sentence(
-                                                pt("начальник строевого отдела "),
-                                                ab("или"),
-                                                pt(" отделения личного состава")
-                                            )
-                                        )
-                                    )
-                                ),
-                                Translation(
-                                    listOf(
-                                        Variant(
-                                            remark = ab("арх."),
-                                            meaning = pt("помощник, ассистент")
-                                        )
+            "adjutant" to ArticleBuilder("adjutant")
+                .homonyms {
+                    it.homonym("ˈæʤʊt(ə)nt", "n") {
+                        it.translation(ab("воен.")) {
+                            it
+                                .variant(pt("адъютант"))
+                                .variant(
+                                    st(
+                                        pt("начальник строевого отдела "), ab("или"),
+                                        pt(" отделения личного состава")
                                     )
                                 )
-                            )
-                        ),
-                        Homonym(
-                            "ˈæʤʊt(ə)nt", "a", listOf(
-                                Translation(
-                                    variants = listOf(
-                                        Variant(
-                                            remark = ab("редк."),
-                                            meaning = pt("оказывающий помощь, помогающий, содействующий")
-                                        )
-                                    )
+                        }.translation {
+                            it.variant(pt("помощник, ассистент"), remark = ab("арх."))
+                        }
+                    }.homonym("ˈæʤʊt(ə)nt", "a") {
+                        it.translation {
+                            it.variant(pt("оказывающий помощь, помогающий, содействующий"), remark = ab("редк."))
+                        }
+                    }
+                }.homonyms {
+                    it.homonym("ˈæʤʊt(ə)nt", "n") {
+                        it.translation {
+                            it.variant(
+                                pt("марабу, аист индийский"), remark = ab("зоол."), comment = st(
+                                    pt("("),
+                                    ft("Leptoptilus", "1142"), pt("; "),
+                                    ab("тж"), pt(" "),
+                                    ft("adjutant bird, adjutant stork", "1033"),
+                                    pt(")")
                                 )
                             )
-                        )
-                    ),
-                    listOf(
-                        Homonym(
-                            "ˈæʤʊt(ə)nt", "n", translations = listOf(
-                                Translation(
-                                    variants = listOf(
-                                        Variant(
-                                            remark = ab("зоол."),
-                                            meaning = pt("марабу, аист индийский"),
-                                            comment = Sentence(
-                                                pt("("),
-                                                ft("Leptoptilus", "1142"),
-                                                pt("; "),
-                                                ab("тж"),
-                                                pt(" "),
-                                                ft("adjutant bird, adjutant stork", "1033"),
-                                                pt(")")
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+                        }
+                    }
+                }.build()
         ).map { arrayOf(it.first, it.second) }
     }
 
