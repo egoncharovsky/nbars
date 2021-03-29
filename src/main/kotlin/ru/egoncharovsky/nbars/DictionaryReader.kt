@@ -17,7 +17,7 @@ class DictionaryReader(
 ) {
 
     object IndexSeparator {
-        const val entry = ","
+        const val entry = "|"
         const val keyValue = ":"
     }
 
@@ -33,15 +33,16 @@ class DictionaryReader(
                 val lines = indexFile.readLines()
                 val indexHash = lines[0]
                 if (indexHash == dictionaryHash) {
+                    logger.debug("Restore positions from $indexFile")
                     restoreArticlePositions(lines)
                 } else {
-                    logger.debug("Dictionary changed, rescan: dictionary MD5 $dictionaryHash index MD5 $indexHash")
+                    logger.debug("Dictionary changed, rescan: dictionary MD5 $dictionaryHash but was MD5 $indexHash")
                     scanArticlePositions().also {
                         saveArticlePositionsIndex(dictionaryHash, it)
                     }
                 }
             } else {
-                logger.debug("Index doesn't exist")
+                logger.debug("Index $indexFile doesn't exist")
                 scanArticlePositions().also {
                     saveArticlePositionsIndex(dictionaryHash, it)
                 }
@@ -87,7 +88,7 @@ class DictionaryReader(
         return article
     }
 
-    fun readCards(positions: List<Long>): List<List<String>> {
+    fun readArticles(positions: List<Long>): List<List<String>> {
         logger.debug("Read ${positions.size} articles")
 
         val articles: List<List<String>>
@@ -119,9 +120,9 @@ class DictionaryReader(
     }
 
     private fun restoreArticlePositions(indexLines: List<String>): Map<String, Long> {
-        logger.debug("Restoring index")
+        val entries = indexLines[1].split(IndexSeparator.entry)
 
-        return indexLines[1].split(IndexSeparator.entry).map {
+        return entries.map {
              val split = it.split(IndexSeparator.keyValue)
 
             val key = split[0]

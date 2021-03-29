@@ -5,7 +5,7 @@ import ru.egoncharovsky.nbars.entity.*
 
 object Regexes {
 
-    val headwordMarker = "^[^\\t#]".toRegex()
+    val headwordMarker = "^[^\\t#\uFEFF]".toRegex()
     val dictionaryEndMarker = "\\{\\{ The End }}".toRegex()
 
     val marginTag = "\\[/?m\\d?]".toRegex()

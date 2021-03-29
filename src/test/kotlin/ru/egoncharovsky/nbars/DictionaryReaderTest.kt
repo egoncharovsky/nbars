@@ -12,7 +12,7 @@ internal class DictionaryReaderTest {
     @TempDir
     lateinit var indexDir: Path
 
-    private val dictionaryFile = File(javaClass.classLoader.getResource("dictionary/test.dsl")!!.toURI())
+    private val dictionaryFile = getResource("dictionary/test.dsl")
     private val indexFile by lazy { File(indexDir.toFile(), "test.dsl.index") }
 
     @Test
@@ -55,7 +55,7 @@ internal class DictionaryReaderTest {
 
     @Test
     fun `Read article should return full card body`() {
-        val runCardBody = readResourceLines("card/run.dsl")
+        val runCardBody = getResource("card/run.dsl").readLines()
         val reader = DictionaryReader(dictionaryFile, indexFile)
 
         val positions = reader.readArticlePositions()

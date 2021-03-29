@@ -9,7 +9,7 @@ import ru.egoncharovsky.nbars.entity.Pronoun
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ab
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.pt
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.st
-import ru.egoncharovsky.nbars.readResourceLines
+import ru.egoncharovsky.nbars.getResource
 import kotlin.test.assertEquals
 
 internal class ArticleParserTest {
@@ -26,7 +26,7 @@ internal class ArticleParserTest {
     @ParameterizedTest()
     @MethodSource("parameters")
     fun parse(key: String, expected: Article) {
-        val lines = readResourceLines("card/$key.dsl")
+        val lines = getResource("card/$key.dsl").readLines()
         val parser = ArticleParser()
 
         val article = parser.parse(key, lines)

@@ -1,4 +1,4 @@
-#NAME	"Test (En-Ru)"
+#﻿NAME  "Test (En-Ru)"
 #INDEX_LANGUAGE	"English"
 #CONTENTS_LANGUAGE	"Russian"
 
@@ -633,14 +633,5 @@ run
 {{ The End }}
 
 {{ Техническая часть }}
-
-About {(}Dictionary{)}
-About{ (Dictionary)}
-_About {(}Dictionary{)}
-_About{ (Dictionary)}
-_О словаре
-О словаре
-**
-	Version: 10.4
 
 {{ Техническая часть }}

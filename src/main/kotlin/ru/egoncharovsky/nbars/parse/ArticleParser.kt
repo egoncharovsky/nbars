@@ -30,7 +30,9 @@ class ArticleParser {
     private val logger = KotlinLogging.logger { }
     private val textParser = TextParser()
 
-    fun parse(key: String, bodyLines: List<String>): Article {
+    fun parse(headword: String, bodyLines: List<String>): Article {
+        logger.debug("Parsing $headword with ${bodyLines.size} lines")
+
         val body = bodyLines.joinToString("") { it.trim() }
             .replace(marginTag, "")
             .replace(boldTag, "")
@@ -44,7 +46,7 @@ class ArticleParser {
 
         raw.finishAll()
 
-        return Article(key, homonyms)
+        return Article(headword, homonyms)
     }
 
     private fun parseBody(raw: RawPart): List<List<Homonym>> {
