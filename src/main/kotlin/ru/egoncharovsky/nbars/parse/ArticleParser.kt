@@ -23,6 +23,7 @@ import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
 import ru.egoncharovsky.nbars.entity.Translation.Variant
 import ru.egoncharovsky.nbars.entity.text.ForeignText
+import java.lang.IllegalArgumentException
 
 class ArticleParser {
 
@@ -97,7 +98,7 @@ class ArticleParser {
         val transcription = prefix.get(transcription).also {
             prefix.removeAll(escapedSquareBrackets)
         }
-        val partOfSpeech = prefix.get(partOfSpeech)
+        val partOfSpeech = parsePartOfSpeech(prefix.getAll(partOfSpeech))
 
         val rawTranslations = split.drop(1)
 
@@ -109,6 +110,14 @@ class ArticleParser {
         prefix.finishAll()
 
         return Homonym(transcription, partOfSpeech, translations)
+    }
+
+    internal fun parsePartOfSpeech(labels: List<String>): PartOfSpeech {
+        return when(labels.size) {
+            1 -> PartOfSpeech.byLabel(labels[0])
+            2 -> PartOfSpeech.byLabel(labels[1], labels[0])
+            else -> throw IllegalArgumentException("Can't parse part of speech from $labels: unexpected size ${labels.size}")
+        }
     }
 
     private fun parseTranslation(raw: RawPart): Translation {

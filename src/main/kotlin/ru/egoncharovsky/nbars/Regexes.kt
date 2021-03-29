@@ -1,6 +1,10 @@
 package ru.egoncharovsky.nbars
 
+import ru.egoncharovsky.nbars.entity.*
+
+
 object Regexes {
+
     val headwordMarker = "^[^\\t#]".toRegex()
     val dictionaryEndMarker = "\\{\\{ The End }}".toRegex()
 
@@ -25,10 +29,11 @@ object Regexes {
     val translationVariantMarker = "\\d+?\\)".toRegex()
 
     val transcription = "\\[t](.+)\\[/t]".toRegex()
-    val partOfSpeech = "\\[p](n|a|v)\\[/p]".toRegex()
     val translation = "\\[trn](.+?)\\[/trn]".toRegex()
     val label = "\\[p](.+?)\\[/p]".toRegex()
     val comment = "\\[com](.+?)\\[/com]".toRegex()
     val lang = "\\[lang id=(\\d+)](.+?)\\[/lang]".toRegex()
     val example = "\\[ex](.+?)\\[/ex]".toRegex()
+
+    val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
 }

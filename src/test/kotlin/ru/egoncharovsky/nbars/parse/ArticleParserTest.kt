@@ -1,16 +1,15 @@
 package ru.egoncharovsky.nbars.parse
 
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import ru.egoncharovsky.nbars.ArticleBuilder
 import ru.egoncharovsky.nbars.VariantBuilder
 import ru.egoncharovsky.nbars.entity.Article
+import ru.egoncharovsky.nbars.entity.Pronoun
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ab
-import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ft
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.pt
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.st
 import ru.egoncharovsky.nbars.readResourceLines
-import kotlin.test.Test
 import kotlin.test.assertEquals
 
 internal class ArticleParserTest {
@@ -19,7 +18,8 @@ internal class ArticleParserTest {
         @JvmStatic
         fun parameters() = listOf(
             Articles.adjutant,
-            Articles.tarnish
+            Articles.tarnish,
+            Articles.someone
         ).map { arrayOf(it.headword, it) }
     }
 
@@ -51,5 +51,15 @@ internal class ArticleParserTest {
 
         val variant = ArticleParser().parseVariant(raw)
         assertEquals(expected, variant)
+    }
+
+    @Test
+    fun parsePartOfSpeech() {
+        val parser = ArticleParser()
+
+        assertEquals(
+            Pronoun(Pronoun.SubType.INDEFINITE),
+            parser.parsePartOfSpeech(listOf("indef", "pron"))
+        )
     }
 }

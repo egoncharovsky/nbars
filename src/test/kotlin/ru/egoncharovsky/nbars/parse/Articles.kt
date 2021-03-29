@@ -1,6 +1,10 @@
 package ru.egoncharovsky.nbars.parse
 
 import ru.egoncharovsky.nbars.ArticleBuilder
+import ru.egoncharovsky.nbars.entity.Adjective
+import ru.egoncharovsky.nbars.entity.Noun
+import ru.egoncharovsky.nbars.entity.Pronoun
+import ru.egoncharovsky.nbars.entity.Verb
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ab
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ft
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.pt
@@ -9,7 +13,7 @@ import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.st
 object Articles {
     val adjutant = ArticleBuilder("adjutant")
         .homonyms {
-            it.homonym("ˈæʤʊt(ə)nt", "n") {
+            it.homonym("ˈæʤʊt(ə)nt", Noun) {
                 it.translation(ab("воен.")) {
                     it
                         .variant("адъютант")
@@ -19,13 +23,13 @@ object Articles {
                 }.translation {
                     it.variant(pt("помощник, ассистент"), remark = ab("арх."))
                 }
-            }.homonym("ˈæʤʊt(ə)nt", "a") {
+            }.homonym("ˈæʤʊt(ə)nt", Adjective) {
                 it.translation {
                     it.variant(pt("оказывающий помощь, помогающий, содействующий"), remark = ab("редк."))
                 }
             }
         }.homonyms {
-            it.homonym("ˈæʤʊt(ə)nt", "n") {
+            it.homonym("ˈæʤʊt(ə)nt", Noun) {
                 it.translation {
                     it.variant(
                         pt("марабу, аист индийский"), remark = ab("зоол."), comment = st(
@@ -39,7 +43,7 @@ object Articles {
 
     val tarnish = ArticleBuilder("tarnish")
         .homonyms {
-            it.homonym("ˈtɑːnɪʃ", "n") {
+            it.homonym("ˈtɑːnɪʃ", Noun) {
                 it
                     .translation {
                         it
@@ -53,7 +57,7 @@ object Articles {
                             it.example("there's no tarnish on them", "1033", "они ничем себя не запятнали")
                         }
                     }
-            }.homonym("ˈtɑːnɪʃ", "v") {
+            }.homonym("ˈtɑːnɪʃ", Verb) {
                 it.translation {
                     it
                         .variant("вызывать потускнение, лишать блеска; окислять") {
@@ -73,6 +77,26 @@ object Articles {
                             "to tarnish one's honour \\[one's reputation, one's name\\]", "1033",
                             "запятнать свою честь \\[репутацию, своё имя\\]"
                         )
+                    }
+                }
+            }
+        }
+        .build()
+
+    val someone = ArticleBuilder("someone")
+        .homonyms {
+            it.homonym("ˈsʌmwʌn, ˈsʌmwən", Pronoun(Pronoun.SubType.INDEFINITE)) {
+                it.translation {
+                    it.variant("кто-то, кто-нибудь, кто-либо") {
+                        it
+                            .example("someone else", "1033", "кто-то другой")
+                            .example("someone else's", "1033", "чужой, не свой")
+                            .example("someone or other", "1033", "тот или иной; кто-нибудь, кто-либо")
+                            .example(
+                                "someone has to lock up the house",
+                                "1033",
+                                "кто-нибудь /кто-то/ должен запереть дом"
+                            )
                     }
                 }
             }

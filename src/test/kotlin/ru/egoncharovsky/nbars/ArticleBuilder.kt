@@ -1,9 +1,6 @@
 package ru.egoncharovsky.nbars
 
-import ru.egoncharovsky.nbars.entity.Article
-import ru.egoncharovsky.nbars.entity.Example
-import ru.egoncharovsky.nbars.entity.Homonym
-import ru.egoncharovsky.nbars.entity.Translation
+import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.entity.Translation.Variant
 import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.PlainText
@@ -28,7 +25,7 @@ class HomonymsBuilder {
 
     fun homonym(
         transcription: String,
-        partOfSpeech: String,
+        partOfSpeech: PartOfSpeech,
         applyParams: (HomonymBuilder) -> Unit
     ): HomonymsBuilder {
         homonyms.add(HomonymBuilder(transcription, partOfSpeech).also(applyParams).build())
@@ -42,7 +39,7 @@ class HomonymsBuilder {
 
 class HomonymBuilder(
     private val transcription: String,
-    private val partOfSpeech: String
+    private val partOfSpeech: PartOfSpeech
 ) {
     private val translations = mutableListOf<Translation>()
 
