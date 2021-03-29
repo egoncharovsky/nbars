@@ -11,9 +11,7 @@ data class Translation(
     data class Variant(
         val meaning: Text,
         val remark: Text? = null,
-        val comment: Text? = null
-    ) {
-        override fun toString(): String =
-            "${remark?.asPlain().orEmpty()} ${meaning.asPlain()} ${comment?.asPlain().orEmpty()}".trim()
-    }
+        val comment: Text? = null,
+        val examples: List<Example> = listOf()
+    )
 }

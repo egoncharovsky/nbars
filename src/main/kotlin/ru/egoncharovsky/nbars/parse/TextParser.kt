@@ -1,10 +1,12 @@
 package ru.egoncharovsky.nbars.parse
 
-import ru.egoncharovsky.nbars.entity.text.*
 import ru.egoncharovsky.nbars.Regexes.label
 import ru.egoncharovsky.nbars.Regexes.lang
+import ru.egoncharovsky.nbars.Regexes.leftEscapedSquareBracket
 import ru.egoncharovsky.nbars.Regexes.plain
-import java.lang.IllegalStateException
+import ru.egoncharovsky.nbars.Regexes.rightEscapedSquareBracket
+import ru.egoncharovsky.nbars.entity.text.*
+import ru.egoncharovsky.nbars.entity.text.Text.Companion.replaceEscapedBrackets
 
 class TextParser {
 
@@ -33,10 +35,13 @@ class TextParser {
             when (val type = rangeRegexes[range]!!) {
                 ForeignText::class -> {
                     val values = rawPart.getGroupValues(lang)
-                    ForeignText(values[2], values[1])
+                    ForeignText(
+                        replaceEscapedBrackets(values[2]),
+                        values[1]
+                    )
                 }
                 Abbreviation::class -> Abbreviation(rawPart.get(label))
-                PlainText::class -> PlainText(rawPart.get(plain))
+                PlainText::class -> PlainText(replaceEscapedBrackets(rawPart.get(plain)))
                 else -> throw IllegalStateException("Unknown type: $type")
             }
         }
@@ -51,7 +56,7 @@ class TextParser {
 
     private fun requireNoIntersections(ranges: Collection<IntRange>, lazyMessage: () -> Any) =
         ranges.fold(setOf<Int>()) { acc, range ->
-            require(acc.intersect(range).isEmpty())
+            require(acc.intersect(range).isEmpty(), lazyMessage)
             acc.plus(range)
         }
 

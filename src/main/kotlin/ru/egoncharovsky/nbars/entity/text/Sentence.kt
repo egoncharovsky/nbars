@@ -1,5 +1,7 @@
 package ru.egoncharovsky.nbars.entity.text
 
+import ru.egoncharovsky.nbars.entity.text.Text.Companion.replaceEscapedBrackets
+
 data class Sentence(
     val parts: List<Text>
 ) : Text {
@@ -10,8 +12,8 @@ data class Sentence(
 
     companion object {
         fun st(vararg parts: Text) = Sentence(*parts)
-        fun pt(s: String) = PlainText(s)
-        fun ft(s: String, lang: String) = ForeignText(s, lang)
+        fun pt(s: String) = PlainText(replaceEscapedBrackets(s))
+        fun ft(s: String, lang: String) = ForeignText(replaceEscapedBrackets(s), lang)
         fun ab(s: String) = Abbreviation(s)
     }
 }

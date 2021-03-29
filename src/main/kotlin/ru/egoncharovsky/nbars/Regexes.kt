@@ -8,12 +8,16 @@ object Regexes {
     val boldTag = "\\[/?b]".toRegex()
     val italicTag = "\\[/?i]".toRegex()
     val colorTag = "\\[/?c( .*?)?]".toRegex()
+    val optionalTag = "\\[/?\\*]".toRegex()
 
     val braces = "[{}]".toRegex()
     val doubleBraces = "\\{\\{|}}".toRegex()
-    val squareBrackets = "[\\[\\]]".toRegex()
-    val mirroredSquareBrackets = "(\\\\\\[|\\\\])".toRegex()
     val plain = "(.+)".toRegex()
+    val dash = "—".toRegex()
+    val squareBrackets = "[\\[\\]]".toRegex()
+    val escapedSquareBrackets = "(\\\\\\[|\\\\])".toRegex()
+    val leftEscapedSquareBracket = "\\\\\\[".toRegex()
+    val rightEscapedSquareBracket = "\\\\]".toRegex()
 
     val homonymMarker = "\\[sup]\\d+?\\[/sup]".toRegex()
     val lexicalGrammarHomonymMarker = "[Ⅰ-Ⅹ]".toRegex()
@@ -21,9 +25,10 @@ object Regexes {
     val translationVariantMarker = "\\d+?\\)".toRegex()
 
     val transcription = "\\[t](.+)\\[/t]".toRegex()
-    val partOfSpeech = "\\[p](n|a)\\[/p]".toRegex()
+    val partOfSpeech = "\\[p](n|a|v)\\[/p]".toRegex()
     val translation = "\\[trn](.+?)\\[/trn]".toRegex()
     val label = "\\[p](.+?)\\[/p]".toRegex()
     val comment = "\\[com](.+?)\\[/com]".toRegex()
     val lang = "\\[lang id=(\\d+)](.+?)\\[/lang]".toRegex()
+    val example = "\\[ex](.+?)\\[/ex]".toRegex()
 }

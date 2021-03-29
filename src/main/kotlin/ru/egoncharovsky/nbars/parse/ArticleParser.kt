@@ -6,18 +6,23 @@ import ru.egoncharovsky.nbars.Regexes.boldTag
 import ru.egoncharovsky.nbars.Regexes.doubleBraces
 import ru.egoncharovsky.nbars.Regexes.colorTag
 import ru.egoncharovsky.nbars.Regexes.comment
+import ru.egoncharovsky.nbars.Regexes.dash
+import ru.egoncharovsky.nbars.Regexes.example
 import ru.egoncharovsky.nbars.Regexes.homonymMarker
 import ru.egoncharovsky.nbars.Regexes.italicTag
 import ru.egoncharovsky.nbars.Regexes.label
+import ru.egoncharovsky.nbars.Regexes.lang
 import ru.egoncharovsky.nbars.Regexes.lexicalGrammarHomonymMarker
 import ru.egoncharovsky.nbars.Regexes.marginTag
-import ru.egoncharovsky.nbars.Regexes.mirroredSquareBrackets
+import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
+import ru.egoncharovsky.nbars.Regexes.optionalTag
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
 import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
 import ru.egoncharovsky.nbars.entity.Translation.Variant
+import ru.egoncharovsky.nbars.entity.text.ForeignText
 
 class ArticleParser {
 
@@ -31,7 +36,7 @@ class ArticleParser {
             .replace(italicTag, "")
             .replace(colorTag, "")
             .replace(doubleBraces, "")
-            .replace(mirroredSquareBrackets, "")
+            .replace(optionalTag, "")
 
         val raw = RawPart(body)
         val homonyms = parseBody(raw)
@@ -41,7 +46,7 @@ class ArticleParser {
         return Article(key, homonyms)
     }
 
-    internal fun parseBody(raw: RawPart): List<List<Homonym>> {
+    private fun parseBody(raw: RawPart): List<List<Homonym>> {
         logger.trace("Parse body from: $raw")
 
         val split = raw.split(homonymMarker)
@@ -56,12 +61,12 @@ class ArticleParser {
         } else {
             rawHomonyms.map { parseHomonym(it) }
         }
-        prefix.finish()
+        prefix.finishAll()
 
         return homonyms
     }
 
-    internal fun parseHomonym(raw: RawPart): List<Homonym> {
+    private fun parseHomonym(raw: RawPart): List<Homonym> {
         logger.trace("Parse homonym from: $raw")
 
         val split = raw.split(lexicalGrammarHomonymMarker)
@@ -76,12 +81,12 @@ class ArticleParser {
         } else {
             rawLexGramHomonyms.map { parseLexicalGrammaticalHomonym(it) }
         }
-        prefix.finish()
+        prefix.finishAll()
 
         return lexGramHomonyms
     }
 
-    internal fun parseLexicalGrammaticalHomonym(raw: RawPart): Homonym {
+    private fun parseLexicalGrammaticalHomonym(raw: RawPart): Homonym {
         logger.trace("Parse lex. gram. homonym from: $raw")
 
         val split = raw.split(translationMarker)
@@ -89,7 +94,9 @@ class ArticleParser {
 
         logger.trace("Lex. gram. homonym prefix: $prefix")
 
-        val transcription = prefix.get(transcription)
+        val transcription = prefix.get(transcription).also {
+            prefix.removeAll(escapedSquareBrackets)
+        }
         val partOfSpeech = prefix.get(partOfSpeech)
 
         val rawTranslations = split.drop(1)
@@ -99,12 +106,12 @@ class ArticleParser {
         } else {
             rawTranslations.map { parseTranslation(it) }
         }
-        prefix.finish()
+        prefix.finishAll()
 
         return Homonym(transcription, partOfSpeech, translations)
     }
 
-    internal fun parseTranslation(raw: RawPart): Translation {
+    private fun parseTranslation(raw: RawPart): Translation {
         logger.trace("Parse translation from: $raw")
 
         val split = raw.split(translationVariantMarker)
@@ -123,18 +130,29 @@ class ArticleParser {
                 remark = prefix.findPart(label, 0)?.let { textParser.parse(it) }
             )
         }.also {
-            prefix.finish()
+            prefix.finishAll()
         }
     }
 
     internal fun parseVariant(raw: RawPart): Variant {
         logger.trace("Parse translation variant from: $raw")
 
+        val examples = raw.findAllParts(example).map { parseExample(it) }
+
         val meaning = textParser.parse(raw.getPart(translation))
         val comment = raw.findPart(comment)?.let { textParser.parse(it) }
         val remark = raw.findPart(label, 0)?.let { textParser.parse(it) }
-        raw.finish()
 
-        return Variant(meaning, remark, comment)
+        raw.finishAll()
+
+        return Variant(meaning, remark, comment, examples)
+    }
+
+    private fun parseExample(raw: RawPart): Example {
+
+        val text = textParser.parse(raw.getPart(lang, 0)) as ForeignText
+        val translation = textParser.parse(raw.remove(dash))
+
+        return Example(text, translation)
     }
 }

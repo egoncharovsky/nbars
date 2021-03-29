@@ -37,8 +37,18 @@ data class RawPart(
         return consumeFind(regex, group)
     }
 
-    fun getPart(regex: Regex): RawPart {
-        return RawPart(get(regex)).also {
+    fun remove(regex: Regex): RawPart {
+        find(regex, 0)
+        return this
+    }
+
+    fun removeAll(regex: Regex): RawPart {
+        findAll(regex, 0)
+        return this
+    }
+
+    fun getPart(regex: Regex, group: Int = 1): RawPart {
+        return RawPart(get(regex, group)).also {
             children.add(it)
         }
     }
@@ -46,6 +56,12 @@ data class RawPart(
     fun findPart(regex: Regex, group: Int = 1): RawPart? {
         return find(regex, group)?.let { RawPart(it) }?.also {
             children.add(it)
+        }
+    }
+
+    fun findAllParts(regex: Regex, group: Int = 1): List<RawPart> {
+        return findAll(regex, group).map { RawPart(it) }.also {
+            children.addAll(it)
         }
     }
 
@@ -118,7 +134,7 @@ data class RawPart(
 
     fun length() = raw.length
 
-    fun finish() {
+    private fun finish() {
         require(raw.isEmpty()) { "Finish: expected empty raw but not: '$raw'" }
     }
 
