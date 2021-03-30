@@ -8,6 +8,7 @@ import ru.egoncharovsky.nbars.entity.Article
 import ru.egoncharovsky.nbars.entity.Pronoun
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ab
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.pt
+import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.rf
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.st
 import ru.egoncharovsky.nbars.getResource
 import kotlin.test.assertEquals
@@ -48,6 +49,15 @@ internal class ArticleParserTest {
                 st(ab("образн."), pt(" он не мог смириться с тем, что кто-то покушается на его мечту"))
             )
             .build()
+
+        val variant = ArticleParser().parseVariant(raw)
+        assertEquals(expected, variant)
+    }
+
+    @Test
+    fun parseVariantWithReference() {
+        val raw = RawPart("[p]прост.[/p] = <<Harry>>")
+        val expected = VariantBuilder(rf("Harry"), remark = ab("прост.")).build()
 
         val variant = ArticleParser().parseVariant(raw)
         assertEquals(expected, variant)

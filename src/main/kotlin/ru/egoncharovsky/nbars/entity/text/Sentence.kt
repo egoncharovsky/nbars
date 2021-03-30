@@ -15,5 +15,6 @@ data class Sentence(
         fun pt(s: String) = PlainText(replaceEscapedBrackets(s))
         fun ft(s: String, lang: String) = ForeignText(replaceEscapedBrackets(s), lang)
         fun ab(s: String) = Abbreviation(s)
+        fun rf(s: String) = Reference(s)
     }
 }

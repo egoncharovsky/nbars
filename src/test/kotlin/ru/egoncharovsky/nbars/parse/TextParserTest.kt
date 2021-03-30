@@ -3,6 +3,7 @@ package ru.egoncharovsky.nbars.parse
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import ru.egoncharovsky.nbars.entity.text.Reference
 import ru.egoncharovsky.nbars.entity.text.Sentence
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ab
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ft
@@ -19,6 +20,19 @@ internal class TextParserTest {
         val text = parser.parse(raw)
         assertEquals(
             Sentence(pt("("), ft("Leptoptilus", "1142"), pt("; "), ab("тж"), pt(" "), ft("adjutant bird, adjutant stork", "1033"), pt(")")),
+            text
+        )
+    }
+
+    @Test
+    fun parseReference() {
+        val raw = RawPart("<<Apple>>")
+
+        val parser = TextParser()
+
+        val text = parser.parse(raw)
+        assertEquals(
+            Reference("Apple"),
             text
         )
     }

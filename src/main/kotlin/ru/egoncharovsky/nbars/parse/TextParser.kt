@@ -4,6 +4,7 @@ import ru.egoncharovsky.nbars.Regexes.label
 import ru.egoncharovsky.nbars.Regexes.lang
 import ru.egoncharovsky.nbars.Regexes.leftEscapedSquareBracket
 import ru.egoncharovsky.nbars.Regexes.plain
+import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.rightEscapedSquareBracket
 import ru.egoncharovsky.nbars.entity.text.*
 import ru.egoncharovsky.nbars.entity.text.Text.Companion.replaceEscapedBrackets
@@ -13,8 +14,9 @@ class TextParser {
     fun parse(raw: RawPart): Text {
         val langRanges = raw.findMatchesRange(lang).map { it to ForeignText::class }.toMap()
         val labelRanges = raw.findMatchesRange(label).map { it to Abbreviation::class }.toMap()
+        val referenceRanges = raw.findMatchesRange(reference).map { it to Reference::class }.toMap()
 
-        val rangeRegexes = langRanges.plus(labelRanges)
+        val rangeRegexes = langRanges.plus(labelRanges).plus(referenceRanges)
             .toSortedMap { r1, r2 -> r1.first.compareTo(r2.first) }
         requireNoIntersections(rangeRegexes.keys) { "Intersected tags found in $raw" }
 
@@ -42,6 +44,7 @@ class TextParser {
                 }
                 Abbreviation::class -> Abbreviation(rawPart.get(label))
                 PlainText::class -> PlainText(replaceEscapedBrackets(rawPart.get(plain)))
+                Reference::class -> Reference(rawPart.get(reference))
                 else -> throw IllegalStateException("Unknown type: $type")
             }
         }

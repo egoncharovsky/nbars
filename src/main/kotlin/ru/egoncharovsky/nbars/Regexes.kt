@@ -22,6 +22,7 @@ object Regexes {
     val escapedSquareBrackets = "(\\\\\\[|\\\\])".toRegex()
     val leftEscapedSquareBracket = "\\\\\\[".toRegex()
     val rightEscapedSquareBracket = "\\\\]".toRegex()
+    val equal = "=".toRegex()
 
     val homonymMarker = "\\[sup]\\d+?\\[/sup]".toRegex()
     val lexicalGrammarHomonymMarker = "[Ⅰ-Ⅹ]".toRegex()
@@ -30,6 +31,7 @@ object Regexes {
 
     val transcription = "\\[t](.+)\\[/t]".toRegex()
     val translation = "\\[trn](.+?)\\[/trn]".toRegex()
+    val reference = "<<(.+)>>".toRegex()
     val label = "\\[p](.+?)\\[/p]".toRegex()
     val comment = "\\[com](.+?)\\[/com]".toRegex()
     val lang = "\\[lang id=(\\d+)](.+?)\\[/lang]".toRegex()

@@ -1,12 +1,13 @@
 package ru.egoncharovsky.nbars.parse
 
 import mu.KotlinLogging
-import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.Regexes.boldTag
-import ru.egoncharovsky.nbars.Regexes.doubleBraces
 import ru.egoncharovsky.nbars.Regexes.colorTag
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.dash
+import ru.egoncharovsky.nbars.Regexes.doubleBraces
+import ru.egoncharovsky.nbars.Regexes.equal
+import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.example
 import ru.egoncharovsky.nbars.Regexes.homonymMarker
 import ru.egoncharovsky.nbars.Regexes.italicTag
@@ -14,16 +15,16 @@ import ru.egoncharovsky.nbars.Regexes.label
 import ru.egoncharovsky.nbars.Regexes.lang
 import ru.egoncharovsky.nbars.Regexes.lexicalGrammarHomonymMarker
 import ru.egoncharovsky.nbars.Regexes.marginTag
-import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.optionalTag
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
+import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
+import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.entity.Translation.Variant
 import ru.egoncharovsky.nbars.entity.text.ForeignText
-import java.lang.IllegalArgumentException
 
 class ArticleParser {
 
@@ -115,7 +116,7 @@ class ArticleParser {
     }
 
     internal fun parsePartOfSpeech(labels: List<String>): PartOfSpeech {
-        return when(labels.size) {
+        return when (labels.size) {
             1 -> PartOfSpeech.byLabel(labels[0])
             2 -> PartOfSpeech.byLabel(labels[1], labels[0])
             else -> throw IllegalArgumentException("Can't parse part of speech from $labels: unexpected size ${labels.size}")
@@ -150,7 +151,9 @@ class ArticleParser {
 
         val examples = raw.findAllParts(example).map { parseExample(it) }
 
-        val meaning = textParser.parse(raw.getPart(translation))
+        val meaning = (raw.findPart(translation) ?: raw.getPart(reference, 0).also {
+            raw.remove(equal)
+        }).let { textParser.parse(it) }
         val comment = raw.findPart(comment)?.let { textParser.parse(it) }
         val remark = raw.findPart(label, 0)?.let { textParser.parse(it) }
 

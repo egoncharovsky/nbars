@@ -15,13 +15,15 @@ internal class FullDictionaryTest {
         val reader = DictionaryReader(dictionaryFile, indexFile)
         val parser = ArticleParser()
         val positions = reader.readArticlePositions()
+        var i=1
 
         positions.forEach { (headword, position) ->
             val lines = reader.readArticle(position)
             try {
                 parser.parse(headword, lines)
+                i++
             } catch (e: Exception) {
-                throw Exception("Exception during parse $headword", e)
+                throw Exception("Exception during parse '$headword' ($i from ${positions.size})", e)
             }
         }
     }
