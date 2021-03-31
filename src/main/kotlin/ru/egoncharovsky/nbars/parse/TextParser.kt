@@ -2,12 +2,13 @@ package ru.egoncharovsky.nbars.parse
 
 import ru.egoncharovsky.nbars.Regexes.label
 import ru.egoncharovsky.nbars.Regexes.lang
-import ru.egoncharovsky.nbars.Regexes.leftEscapedSquareBracket
 import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
-import ru.egoncharovsky.nbars.Regexes.rightEscapedSquareBracket
 import ru.egoncharovsky.nbars.entity.text.*
 import ru.egoncharovsky.nbars.entity.text.Text.Companion.replaceEscapedBrackets
+import ru.egoncharovsky.nbars.exception.IntersectedRangesFound
+import java.util.*
+import kotlin.reflect.KClass
 
 class TextParser {
 
@@ -18,7 +19,7 @@ class TextParser {
 
         val rangeRegexes = langRanges.plus(labelRanges).plus(referenceRanges)
             .toSortedMap { r1, r2 -> r1.first.compareTo(r2.first) }
-        requireNoIntersections(rangeRegexes.keys) { "Intersected tags found in $raw" }
+        requireNoIntersections(rangeRegexes, raw)
 
         val plainRanges =
             if (rangeRegexes.isNotEmpty()) {
@@ -31,7 +32,7 @@ class TextParser {
             }.map { it to PlainText::class }.toMap()
 
         rangeRegexes.putAll(plainRanges)
-        requireNoIntersections(rangeRegexes.keys) { "Intersected tags found in $raw" }
+        requireNoIntersections(rangeRegexes, raw)
 
         val parts = raw.cut(*rangeRegexes.keys.toTypedArray()).zip(rangeRegexes.keys).map { (rawPart, range) ->
             when (val type = rangeRegexes[range]!!) {
@@ -57,9 +58,9 @@ class TextParser {
         }
     }
 
-    private fun requireNoIntersections(ranges: Collection<IntRange>, lazyMessage: () -> Any) =
-        ranges.fold(setOf<Int>()) { acc, range ->
-            require(acc.intersect(range).isEmpty(), lazyMessage)
+    private fun requireNoIntersections(ranges: SortedMap<IntRange, KClass<out Text>>, raw: RawPart) =
+        ranges.keys.fold(setOf<Int>()) { acc, range ->
+            if(acc.intersect(range).isNotEmpty()) throw IntersectedRangesFound(raw.toString(), ranges.toString())
             acc.plus(range)
         }
 

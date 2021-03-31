@@ -1,6 +1,9 @@
 package ru.egoncharovsky.nbars.parse
 
 import mu.KotlinLogging
+import ru.egoncharovsky.nbars.exception.EmptyRaw
+import ru.egoncharovsky.nbars.exception.FailExpectation
+import ru.egoncharovsky.nbars.exception.FinishFail
 
 data class RawPart(
     private var raw: String
@@ -11,7 +14,7 @@ data class RawPart(
 
     fun get(regex: Regex, group: Int = 1): String {
         return consumeFind(regex, group) {
-            require(it.size == 1) { "Expected exactly 1 in '$raw' by '$regex' but was ${it.size}: $it" }
+            require(it.size == 1) { FailExpectation("Expected exactly 1", raw, regex, it.size, it) }
         }[0]
     }
 
@@ -23,13 +26,13 @@ data class RawPart(
 
     fun getAll(regex: Regex, group: Int = 1): List<String> {
         return consumeFind(regex, group) {
-            require(it.isNotEmpty()) { "Expected at least 1 in '$raw' by '$regex' but was ${it.size}: $it" }
+            require(it.isNotEmpty()) { FailExpectation("Expected at least 1", raw, regex, it.size, it) }
         }
     }
 
     fun find(regex: Regex, group: Int = 1): String? {
         return consumeFind(regex, group) {
-            require(it.size <= 1) { "No more than 1 expected in '$raw' by '$regex' but was ${it.size}: $it" }
+            require(it.size <= 1) { FailExpectation("No more than 1", raw, regex, it.size, it) }
         }.getOrNull(0)
     }
 
@@ -67,7 +70,7 @@ data class RawPart(
 
     fun getGroupValues(regex: Regex): List<String> {
         return consumeFindGroups(regex) {
-            require(it.size == 1) { "Expected exactly 1 in '$raw' by '$regex' but was ${it.size}: $it" }
+            require(it.size == 1) { FailExpectation("Expected exactly 1", raw, regex, it.size, it) }
         }[0]
     }
 
@@ -101,7 +104,7 @@ data class RawPart(
 
     fun split(regex: Regex): List<RawPart> {
         logger.trace("Consuming split by '$regex' of '$raw'")
-        require(raw.isNotEmpty()) { "Try to split empty raw" }
+        require(raw.isNotEmpty()) { EmptyRaw("split") }
 
         return raw.split(regex).map { it.trim() }.map { RawPart(it) }.also {
             children.addAll(it)
@@ -111,7 +114,7 @@ data class RawPart(
 
     fun before(regex: Regex): Pair<RawPart, RawPart?> {
         logger.trace("Consuming before by '$regex' of '$raw'")
-        require(raw.isNotEmpty()) { "Try to take before from empty raw" }
+        require(raw.isNotEmpty()) { EmptyRaw("take before") }
 
         return regex.find(raw)?.let {
             val first = it.groups[0]!!.range.first
@@ -135,7 +138,7 @@ data class RawPart(
     fun length() = raw.length
 
     private fun finish() {
-        require(raw.isEmpty()) { "Finish: expected empty raw but not: '$raw'" }
+        require(raw.isEmpty()) { FinishFail("empty raw", raw) }
     }
 
     fun finishAll() {
@@ -163,6 +166,10 @@ data class RawPart(
             raw = raw.replace(regex, "").trim()
             logger.trace("Raw cut to '$raw'")
         }
+    }
+
+    private fun require(requirement: Boolean, exception: () -> Exception) {
+        if (!requirement) throw exception.invoke()
     }
 
     override fun equals(other: Any?): Boolean {

@@ -22,6 +22,8 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
+        val printErrorOnLines = setOf<Int>()
+
         val results: List<Pair<String, Result<Article>>>
         val time = measureTimeMillis {
             results = runBlocking {
@@ -40,25 +42,46 @@ internal class FullDictionaryTest {
 
         val exceptionLines = mutableMapOf<StackTraceElement, Int>()
         val exceptionMessages = mutableMapOf<StackTraceElement, String>()
+        val exceptions = mutableMapOf<StackTraceElement, MutableSet<Throwable>>()
 
+        val a = results.toMap()
 
-        results.forEach { (headword, result) ->
-            result.exceptionOrNull()?.let {
+        results.toMap()
+            .mapValues { (_, result) -> result.exceptionOrNull() }
+            .filterValues { it != null }
+            .forEach { (headword, exception) ->
                 val element =
-                    it.stackTrace.find { it.className == "ru.egoncharovsky.nbars.parse.ArticleParser" }!!
+                    exception!!.stackTrace.find { it.className == "ru.egoncharovsky.nbars.parse.ArticleParser" }!!
+                val line = element.lineNumber
+                val message = exception.message!!
+
+                if (printErrorOnLines.contains(line)) {
+                    logger.error("$message at $line for '$headword' (#${headwords.indexOf(headword)})")
+                }
+
                 exceptionLines.putIfAbsent(element, 0)
-                exceptionMessages.putIfAbsent(element, "for '$headword' (#${headwords.indexOf(headword)}): ${it.message!!}")
                 exceptionLines[element] = exceptionLines[element]!! + 1
+
+                exceptionMessages.putIfAbsent(element, "for '$headword' (#${headwords.indexOf(headword)}): $message")
+
+                exceptions.putIfAbsent(element, mutableSetOf())
+                exceptions[element]!!.add(exception)
             }
-        }
         logger.info("Finished in ${seconds(time)}")
 
         val errors = exceptionLines.values.sum()
-        val sorted = exceptionLines.toList()
+        val sortedLines = exceptionLines.toList()
             .sortedByDescending { (_, value) -> value }
-            .joinToString("\n") { (element, count) -> "$count\t\tat $element, ${exceptionMessages[element]}" }
+        val frequency = sortedLines.joinToString("\n") { (element, count) ->
+            "$count\t\tat $element, ${exceptions[element]}"
+        }
+        val types = sortedLines.map { Triple(it.first, exceptions[it.first]!!, it.second) }
+            .joinToString("\n\n") { (element, exs, count) ->
+                "$count at $element: " + exs.joinToString("\n\t", "\n\t")
+            }
 
-        logger.error("Exceptions occurred at\n$sorted")
+        logger.error("Exceptions occurred at\n$frequency")
+        logger.error("Exception types:\n$types")
         logger.error("Total errors: $errors (${errors * 100 / positions.size} %)")
     }
 

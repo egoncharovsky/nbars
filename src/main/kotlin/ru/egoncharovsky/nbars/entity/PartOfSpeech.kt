@@ -1,5 +1,7 @@
 package ru.egoncharovsky.nbars.entity
 
+import ru.egoncharovsky.nbars.exception.UnknownLabel
+
 sealed class PartOfSpeech(val label: String) {
 
     companion object {
@@ -38,7 +40,7 @@ sealed class PartOfSpeech(val label: String) {
                     Conjunction(subType)
                 }
 
-                else -> throw IllegalArgumentException("Unknown label for type: '$typeLabel'")
+                else -> throw UnknownLabel(PartOfSpeech::class.simpleName!!, typeLabel)
             }
         }
     }
@@ -64,7 +66,7 @@ data class Pronoun(val subType: SubType? = null) : PartOfSpeech(label) {
 
         companion object {
             fun byLabel(label: String) = values().find { it.label == label }
-                ?: throw IllegalArgumentException("Unknown label for syb type: '$label'")
+                ?: throw UnknownLabel(SubType::class.simpleName!!, label)
         }
     }
 
@@ -81,7 +83,7 @@ data class Conjunction(val subType: SubType? = null) : PartOfSpeech(label) {
 
         companion object {
             fun byLabel(label: String) = SubType.values().find { it.label == label }
-                ?: throw IllegalArgumentException("Unknown label for syb type: '$label'")
+                ?: throw UnknownLabel(Pronoun.SubType::class.simpleName!!, label)
         }
     }
 
