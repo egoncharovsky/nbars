@@ -1,38 +1,15 @@
 package ru.egoncharovsky.nbars.parse
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
 import ru.egoncharovsky.nbars.VariantBuilder
-import ru.egoncharovsky.nbars.entity.Article
 import ru.egoncharovsky.nbars.entity.Pronoun
-import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ab
-import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.pt
-import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.rf
-import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.st
-import ru.egoncharovsky.nbars.getResource
+import ru.egoncharovsky.nbars.parse.SentenceHelper.ab
+import ru.egoncharovsky.nbars.parse.SentenceHelper.pt
+import ru.egoncharovsky.nbars.parse.SentenceHelper.rf
+import ru.egoncharovsky.nbars.parse.SentenceHelper.st
 import kotlin.test.assertEquals
 
-internal class ArticleParserTest {
-
-    companion object {
-        @JvmStatic
-        fun parameters() = listOf(
-            Articles.adjutant,
-            Articles.tarnish,
-            Articles.someone
-        ).map { arrayOf(it.headword, it) }
-    }
-
-    @ParameterizedTest()
-    @MethodSource("parameters")
-    fun parse(key: String, expected: Article) {
-        val lines = getResource("card/$key.dsl").readLines()
-        val parser = ArticleParser()
-
-        val article = parser.parse(key, lines)
-        assertEquals(expected, article)
-    }
+class ArticleParserTest {
 
     @Test
     fun parseVariantWithExamples() {
@@ -46,7 +23,10 @@ internal class ArticleParserTest {
             .example("tarnished by damp", "1033", "потускневший от влаги")
             .example(
                 "he couldn't bear to have his dream tarnished", "1033",
-                st(ab("образн."), pt(" он не мог смириться с тем, что кто-то покушается на его мечту"))
+                st(
+                    ab("образн."),
+                    pt(" он не мог смириться с тем, что кто-то покушается на его мечту")
+                )
             )
             .build()
 

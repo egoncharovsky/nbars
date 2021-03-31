@@ -5,10 +5,11 @@ import ru.egoncharovsky.nbars.entity.Adjective
 import ru.egoncharovsky.nbars.entity.Noun
 import ru.egoncharovsky.nbars.entity.Pronoun
 import ru.egoncharovsky.nbars.entity.Verb
-import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ab
-import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.ft
-import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.pt
-import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.st
+import ru.egoncharovsky.nbars.parse.SentenceHelper.ab
+import ru.egoncharovsky.nbars.parse.SentenceHelper.ft
+import ru.egoncharovsky.nbars.parse.SentenceHelper.pt
+import ru.egoncharovsky.nbars.parse.SentenceHelper.st
+import ru.egoncharovsky.nbars.parse.SentenceHelper.tr
 
 object Articles {
     val adjutant = ArticleBuilder("adjutant")
@@ -102,4 +103,15 @@ object Articles {
             }
         }
         .build()
+
+    val swagman = ArticleBuilder("swagman").homonyms {
+        it.homonym(
+            "ˈswægmæn", Noun,
+            comment = st("(", ab("pl"), " ", ft("-men", "1033"), " ", tr("ˈswægmen"))
+        ) {
+            it.translation(remark = ab("австрал.")) {
+                it.variant(pt("свагмен, человек, всё добро которого помещается в скатанном одеяле за плечами; бродяга"))
+            }
+        }
+    }.build()
 }

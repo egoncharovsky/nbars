@@ -25,6 +25,7 @@ import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
 import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.entity.Translation.Variant
 import ru.egoncharovsky.nbars.entity.text.ForeignText
+import ru.egoncharovsky.nbars.entity.text.Transcription
 
 class ArticleParser {
 
@@ -112,7 +113,8 @@ class ArticleParser {
         }
         prefix.finishAll()
 
-        return Homonym(transcription, partOfSpeech, translations)
+        TODO()
+//        return Homonym(transcription, partOfSpeech, translations)
     }
 
     internal fun parsePartOfSpeech(labels: List<String>): PartOfSpeech {

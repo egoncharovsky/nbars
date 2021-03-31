@@ -5,20 +5,22 @@ import ru.egoncharovsky.nbars.exception.UnknownLabel
 sealed class PartOfSpeech(val label: String) {
 
     companion object {
-        val labels = listOf(
-            Noun.label,
-            Adjective.label,
-            Adverb.label,
-            Numeric.label,
-            Verb.label,
-            Preposition.label,
-            Participle.label,
-            Interjection.label,
-            Pronoun.label,
-            Conjunction.label
-        )
-            .plus(Pronoun.SubType.values().map { it.label })
-            .plus(Conjunction.SubType.values().map { it.label })
+        val labels by lazy {
+            listOf(
+                Noun.label,
+                Adjective.label,
+                Adverb.label,
+                Numeric.label,
+                Verb.label,
+                Preposition.label,
+                Participle.label,
+                Interjection.label,
+                Pronoun.label,
+                Conjunction.label
+            )
+                .plus(Pronoun.SubType.values().map { it.label })
+                .plus(Conjunction.SubType.values().map { it.label })
+        }
 
         fun byLabel(typeLabel: String, subTypeLabel: String? = null): PartOfSpeech {
             return when (typeLabel) {

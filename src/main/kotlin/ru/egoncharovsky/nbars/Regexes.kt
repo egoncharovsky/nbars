@@ -29,9 +29,9 @@ object Regexes {
     val translationMarker = "\\d+?\\.".toRegex()
     val translationVariantMarker = "\\d+?\\)".toRegex()
 
-    val transcription = "\\[t](.+)\\[/t]".toRegex()
+    val transcription = "\\[t](.+?)\\[/t]".toRegex()
     val translation = "\\[trn](.+?)\\[/trn]".toRegex()
-    val reference = "<<(.+)>>".toRegex()
+    val reference = "<<(.+?)>>".toRegex()
     val label = "\\[p](.+?)\\[/p]".toRegex()
     val comment = "\\[com](.+?)\\[/com]".toRegex()
     val lang = "\\[lang id=(\\d+)](.+?)\\[/lang]".toRegex()

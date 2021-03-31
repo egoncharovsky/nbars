@@ -22,7 +22,7 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines = setOf<Int>()
+        val printErrorOnLines = setOf<Int>(104)
 
         val results: List<Pair<String, Result<Article>>>
         val time = measureTimeMillis {
