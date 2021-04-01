@@ -3,13 +3,10 @@ package ru.egoncharovsky.nbars.parse
 import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.plain
-import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.referenceType
 import ru.egoncharovsky.nbars.Regexes.transcription
-import ru.egoncharovsky.nbars.entity.ExpressionType
 import ru.egoncharovsky.nbars.entity.ReferenceType
 import ru.egoncharovsky.nbars.entity.article.ReferenceArticle
-import ru.egoncharovsky.nbars.entity.text.Reference
 import ru.egoncharovsky.nbars.entity.text.Transcription
 
 class ReferenceArticleParser {

@@ -15,15 +15,16 @@ class DictionaryArticlesParseTest {
         @Suppress("unused")
         @JvmStatic
         fun parameters() = listOf(
-            Articles.adjutant,
-            Articles.tarnish,
-            Articles.someone,
-            Articles.swagman,
-            Articles.arry,
-            ExpressionArticles.tie_in,
-            ReferenceArticles.ible,
-            ReferenceArticles.peet,
-            ReferenceArticles.pence
+//            Articles.adjutant,
+//            Articles.tarnish,
+//            Articles.someone,
+//            Articles.swagman,
+//            Articles.arry,
+//            ExpressionArticles.tie_in,
+//            ReferenceArticles.ible,
+//            ReferenceArticles.peet,
+//            ReferenceArticles.pence,
+            Articles.narrator
         ).map { arrayOf(it.headword, it) }
     }
 

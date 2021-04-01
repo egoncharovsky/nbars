@@ -7,6 +7,7 @@ import ru.egoncharovsky.nbars.Regexes.dash
 import ru.egoncharovsky.nbars.Regexes.example
 import ru.egoncharovsky.nbars.Regexes.label
 import ru.egoncharovsky.nbars.Regexes.lang
+import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
@@ -53,7 +54,7 @@ class TranslationParser {
                 val meaning = textParser.parse(raw.getPart(translation).removeAll(commentTag))
 
                 val comment = raw.findPart(comment)?.let { textParser.parse(it) }
-                val remark = raw.findPart(label, 0)?.let { textParser.parse(it) }
+                val remark = raw.findPart(plain, 0)?.let { textParser.parse(it) }
 
                 Translation.Variant(meaning, remark, comment, examples)
             }

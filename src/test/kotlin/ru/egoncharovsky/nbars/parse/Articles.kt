@@ -129,4 +129,20 @@ object Articles {
             }
         }
     }.build()
+
+    val narrator = ArticleBuilder("narrator")
+        .homonyms {
+            it.homonym("nəˈreɪtə", Noun) {
+                it
+                    .translation { it.variant("рассказчик; повествователь") }
+                    .translation {
+                        it.variant(
+                            "ведущий; диктор; актёр, читающий текст от автора",
+                            remark = "ab(театр.), ab(кино), ab(радио), ab(тлв.)"
+                        )
+                    }
+
+            }
+        }
+        .build()
 }
