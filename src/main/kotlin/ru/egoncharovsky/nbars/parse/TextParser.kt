@@ -9,7 +9,6 @@ import ru.egoncharovsky.nbars.entity.text.*
 import ru.egoncharovsky.nbars.entity.text.Text.Companion.replaceEscapedBrackets
 import ru.egoncharovsky.nbars.exception.IntersectedRangesFound
 import java.util.*
-import kotlin.jvm.internal.Reflection
 
 class TextParser {
 
@@ -69,7 +68,7 @@ class TextParser {
         }.toMap()
     }
 
-    private fun parse(raw: RawPart, ranges: Map<IntRange, (RawPart) -> Text>): Text {
+    internal fun parse(raw: RawPart, ranges: Map<IntRange, (RawPart) -> Text>): Text {
         val sortedRanges = ranges
             .toSortedMap { r1, r2 -> r1.first.compareTo(r2.first) }
         requireNoIntersections(sortedRanges.keys, raw)
