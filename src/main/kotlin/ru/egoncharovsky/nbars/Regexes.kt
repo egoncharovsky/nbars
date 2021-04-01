@@ -13,6 +13,7 @@ object Regexes {
     val italicTag = "\\[/?i]".toRegex()
     val colorTag = "\\[/?c( .*?)?]".toRegex()
     val optionalTag = "\\[/?\\*]".toRegex()
+    val commentTag = "\\[/?com]".toRegex()
 
     val braces = "[{}]".toRegex()
     val doubleBraces = "\\{\\{|}}".toRegex()
@@ -39,4 +40,5 @@ object Regexes {
     val stress = "\\['](.)\\[/']".toRegex()
 
     val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
+    val expressionType = "\\[p](${ExpressionType.labels.joinToString("|")})\\[/p]".toRegex()
 }

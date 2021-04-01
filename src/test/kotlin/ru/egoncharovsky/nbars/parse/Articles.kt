@@ -1,10 +1,10 @@
 package ru.egoncharovsky.nbars.parse
 
-import ru.egoncharovsky.nbars.utils.ArticleBuilder
 import ru.egoncharovsky.nbars.entity.Adjective
 import ru.egoncharovsky.nbars.entity.Noun
 import ru.egoncharovsky.nbars.entity.Pronoun
 import ru.egoncharovsky.nbars.entity.Verb
+import ru.egoncharovsky.nbars.utils.ArticleBuilder
 import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
 import ru.egoncharovsky.nbars.utils.SentenceHelper.ft
 import ru.egoncharovsky.nbars.utils.SentenceHelper.pt
@@ -121,7 +121,12 @@ object Articles {
     val arry = ArticleBuilder("'Arry").homonyms {
         it.homonym("ˈærɪ", Noun) {
             it.translation { it.variant(st("= rf(Harry)"), remark = ab("прост.")) }
-            it.translation { it.variant(st("ко\u00B4кни, весёлый и не очень грамотный лондонец"), remark = ab("пренебр.")) }
+            it.translation {
+                it.variant(
+                    st("ко\u00B4кни, весёлый и не очень грамотный лондонец"),
+                    remark = ab("пренебр.")
+                )
+            }
         }
     }.build()
 }

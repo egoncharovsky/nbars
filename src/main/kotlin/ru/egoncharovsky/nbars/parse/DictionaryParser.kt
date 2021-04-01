@@ -29,12 +29,11 @@ import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.exception.ParseException
 
-class DictionaryArticleParser {
+class DictionaryParser {
 
     private val logger = KotlinLogging.logger { }
     private val articleParser = ArticleParser()
-
-
+    private val expressionArticleParser = ExpressionArticleParser()
 
     fun parse(headword: String, bodyLines: List<String>): DictionaryArticle {
         logger.debug("Parsing $headword with ${bodyLines.size} lines")
@@ -49,6 +48,9 @@ class DictionaryArticleParser {
 
         val raw = RawPart(body)
 
-        return articleParser.parse(headword, raw)
+        return when {
+            headword.trim().contains(" ") -> expressionArticleParser.parse(headword, raw)
+            else -> articleParser.parse(headword, raw)
+        }
     }
 }

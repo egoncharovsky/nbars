@@ -1,20 +1,24 @@
 package ru.egoncharovsky.nbars.parse
 
 import mu.KotlinLogging
-import ru.egoncharovsky.nbars.Regexes
-import ru.egoncharovsky.nbars.entity.Example
+import ru.egoncharovsky.nbars.Regexes.comment
+import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
+import ru.egoncharovsky.nbars.Regexes.homonymMarker
+import ru.egoncharovsky.nbars.Regexes.lexicalGrammarHomonymMarker
+import ru.egoncharovsky.nbars.Regexes.partOfSpeech
+import ru.egoncharovsky.nbars.Regexes.transcription
+import ru.egoncharovsky.nbars.Regexes.translation
+import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.entity.Homonym
 import ru.egoncharovsky.nbars.entity.PartOfSpeech
-import ru.egoncharovsky.nbars.entity.Translation
 import ru.egoncharovsky.nbars.entity.article.Article
-import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.Transcription
-import ru.egoncharovsky.nbars.exception.ParseException
 
 class ArticleParser {
 
     private val logger = KotlinLogging.logger { }
     private val textParser = TextParser()
+    private val translationParser = TranslationParser()
 
     fun parse(headword: String, raw: RawPart): Article {
         logger.trace("Parsing article $headword from $raw")
@@ -29,7 +33,7 @@ class ArticleParser {
     private fun parseBody(raw: RawPart): List<List<Homonym>> {
         logger.trace("Parse body from: $raw")
 
-        val split = raw.split(Regexes.homonymMarker)
+        val split = raw.split(homonymMarker)
         val prefix = split[0]
 
         logger.trace("Body prefix: $prefix")
@@ -49,7 +53,7 @@ class ArticleParser {
     private fun parseHomonym(raw: RawPart): List<Homonym> {
         logger.trace("Parse homonym from: $raw")
 
-        val split = raw.split(Regexes.lexicalGrammarHomonymMarker)
+        val split = raw.split(lexicalGrammarHomonymMarker)
         val prefix = split[0]
 
         logger.trace("Homonym prefix: $prefix")
@@ -69,24 +73,24 @@ class ArticleParser {
     private fun parseLexicalGrammaticalHomonym(raw: RawPart): Homonym {
         logger.trace("Parse lex. gram. homonym from: $raw")
 
-        val split = raw.split(Regexes.translationMarker)
+        val split = raw.split(translationMarker)
         val prefix = split[0]
 
         logger.trace("Lex. gram. homonym prefix: $prefix")
 
-        prefix.removeAll(Regexes.escapedSquareBrackets)
-        val comment = prefix.findPartBefore(Regexes.comment, Regexes.translation)?.let {
+        prefix.removeAll(escapedSquareBrackets)
+        val comment = prefix.findPartBefore(comment, translation)?.let {
             textParser.parse(it)
         }
-        val transcription = textParser.parse(prefix.getPart(Regexes.transcription, 0)) as Transcription
-        val partOfSpeech = parsePartOfSpeech(prefix.getAll(Regexes.partOfSpeech))
+        val transcription = textParser.parse(prefix.getPart(transcription, 0)) as Transcription
+        val partOfSpeech = parsePartOfSpeech(prefix.getAll(partOfSpeech))
 
         val rawTranslations = split.drop(1)
 
         val translations = if (rawTranslations.isEmpty()) {
-            listOf(parseTranslation(prefix))
+            listOf(translationParser.parse(prefix))
         } else {
-            rawTranslations.map { parseTranslation(it) }
+            rawTranslations.map { translationParser.parse(it) }
         }
         prefix.finishAll()
 
@@ -99,68 +103,5 @@ class ArticleParser {
             2 -> PartOfSpeech.byLabel(labels[1], labels[0])
             else -> throw IllegalArgumentException("Can't parse part of speech from $labels: unexpected size ${labels.size}")
         }
-    }
-
-    private fun parseTranslation(raw: RawPart): Translation {
-        logger.trace("Parse translation from: $raw")
-
-        val split = raw.split(Regexes.translationVariantMarker)
-        val prefix: RawPart = split[0]
-
-        logger.trace("Translation prefix: $prefix")
-
-        val rawVariants = split.drop(1)
-
-        return if (rawVariants.isEmpty()) {
-            Translation(listOf(parseVariant(prefix)))
-        } else {
-            Translation(
-                rawVariants.map { parseVariant(it) },
-                comment = prefix.findPart(Regexes.comment)?.let { textParser.parse(it) },
-                remark = prefix.findPart(Regexes.label, 0)?.let { textParser.parse(it) }
-            )
-        }.also {
-            prefix.finishAll()
-        }
-    }
-
-    internal fun parseVariant(raw: RawPart): Translation.Variant {
-        logger.trace("Parse translation variant from: $raw")
-
-        val examples = raw.findAllParts(Regexes.example).map { parseExample(it) }
-
-        return when {
-            raw.contains(Regexes.translation) -> {
-                val meaning = textParser.parse(raw.getPart(Regexes.translation))
-
-                val comment = raw.findPart(Regexes.comment)?.let { textParser.parse(it) }
-                val remark = raw.findPart(Regexes.label, 0)?.let { textParser.parse(it) }
-
-                Translation.Variant(meaning, remark, comment, examples)
-            }
-            raw.contains(Regexes.reference) -> {
-                val comment = raw.findPart(Regexes.comment)?.let { textParser.parse(it) }
-                val remark = raw.findPart(Regexes.label, 0)?.let { textParser.parse(it) }
-
-                val reference = textParser.parse(raw)
-
-                Translation.Variant(reference, remark, comment, examples)
-            }
-            else -> throw ParseException(
-                "meaning",
-                "no translation by '${Regexes.translation}' or reference by '${Regexes.reference}' found",
-                raw
-            )
-        }.also {
-            raw.finishAll()
-        }
-    }
-
-    private fun parseExample(raw: RawPart): Example {
-
-        val text = textParser.parse(raw.getPart(Regexes.lang, 0)) as ForeignText
-        val translation = textParser.parse(raw.remove(Regexes.dash))
-
-        return Example(text, translation)
     }
 }

@@ -84,7 +84,7 @@ data class Conjunction(val subType: SubType? = null) : PartOfSpeech(label) {
         COORDINATIVE("coord");
 
         companion object {
-            fun byLabel(label: String) = SubType.values().find { it.label == label }
+            fun byLabel(label: String) = values().find { it.label == label }
                 ?: throw UnknownLabel(Pronoun.SubType::class.simpleName!!, label)
         }
     }
