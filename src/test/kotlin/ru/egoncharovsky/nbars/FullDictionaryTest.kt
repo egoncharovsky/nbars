@@ -1,6 +1,9 @@
 package ru.egoncharovsky.nbars
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.junit.jupiter.api.Test
 import ru.egoncharovsky.nbars.entity.Article
@@ -26,17 +29,15 @@ internal class FullDictionaryTest {
 
         val results: List<Pair<String, Result<Article>>>
         val time = measureTimeMillis {
-            results = runBlocking {
-                withContext(Dispatchers.IO) {
-                    positions.map { (headword, position) ->
-                        async {
-                            val lines = reader.readArticle(position)
-                            headword to kotlin.runCatching {
-                                parser.parse(headword, lines)
-                            }
+            results = runBlocking(Dispatchers.IO) {
+                positions.map { (headword, position) ->
+                    async {
+                        val lines = reader.readArticle(position)
+                        headword to kotlin.runCatching {
+                            parser.parse(headword, lines)
                         }
-                    }.awaitAll()
-                }
+                    }
+                }.awaitAll()
             }
         }
 
@@ -56,7 +57,7 @@ internal class FullDictionaryTest {
                 val message = exception.message!!
 
                 if (printErrorOnLines.contains(line)) {
-                    logger.error("$message at $line for '$headword' (#${headwords.indexOf(headword)})")
+                    logger.error("$message at $element for '$headword' (#${headwords.indexOf(headword)})")
                 }
 
                 exceptionLines.putIfAbsent(element, 0)
