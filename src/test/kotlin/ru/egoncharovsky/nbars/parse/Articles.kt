@@ -158,7 +158,7 @@ object Articles {
                     it.variant("приготовленный на какой-л. манер", remark = "ab(кул.)") {
                         it
                             .example("à la parisienne (Boston)", "1033", "по-парижски (по-бостонски)")
-                            .example("lobster à la king", "1033", "омар «кинг»", "(в белом соусе)")
+                            .example("lobster à la king", "1033", "омар «кинг» (в белом соусе)")
                             .example("à la broche", "1033", "жаренный на вертеле")
                     }
                 }

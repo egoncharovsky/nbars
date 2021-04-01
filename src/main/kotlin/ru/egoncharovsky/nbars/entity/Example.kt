@@ -5,6 +5,5 @@ import ru.egoncharovsky.nbars.entity.text.Text
 
 data class Example(
     val foreign: ForeignText,
-    val translation: Text,
-    val comment: Text? = null
+    val translation: Text
 )

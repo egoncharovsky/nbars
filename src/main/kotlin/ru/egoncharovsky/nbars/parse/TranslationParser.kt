@@ -79,9 +79,9 @@ class TranslationParser {
     private fun parseExample(raw: RawPart): Example {
 
         val foreign = textParser.parse(raw.getPart(lang, 0)) as ForeignText
-        val comment = raw.findPart(comment)?.let { textParser.parse(it) }
-        val translation = textParser.parse(raw.remove(dash))
+        raw.remove(dash).removeAll(commentTag)
+        val translation = textParser.parse(raw)
 
-        return Example(foreign, translation, comment)
+        return Example(foreign, translation)
     }
 }
