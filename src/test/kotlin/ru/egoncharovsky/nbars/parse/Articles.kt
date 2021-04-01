@@ -1,9 +1,6 @@
 package ru.egoncharovsky.nbars.parse
 
-import ru.egoncharovsky.nbars.entity.Adjective
-import ru.egoncharovsky.nbars.entity.Noun
-import ru.egoncharovsky.nbars.entity.Pronoun
-import ru.egoncharovsky.nbars.entity.Verb
+import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.utils.ArticleBuilder
 import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
 import ru.egoncharovsky.nbars.utils.SentenceHelper.ft
@@ -145,4 +142,26 @@ object Articles {
             }
         }
         .build()
+
+    val a_la = ArticleBuilder("a la").homonyms {
+        it.homonym("ˈɑːlɑː", Adverb, remark = st("ab(фр.) à la")) {
+            it
+                .translation {
+                    it.variant("а-ля; в стиле, в духе, во вкусе") {
+                        it
+                            .example("hairdo à la Marilyn Monroe", "1033", "причёска а-ля /под/ Мерилин Монро")
+                            .example("à la Hollywood", "1033", "по-голливудски")
+                            .example("demagoguery à la Hitler", "1033", "демагогия гитлеровского толка")
+                    }
+                }
+                .translation {
+                    it.variant("приготовленный на какой-л. манер", remark = "ab(кул.)") {
+                        it
+                            .example("à la parisienne (Boston)", "1033", "по-парижски (по-бостонски)")
+                            .example("lobster à la king", "1033", "омар «кинг»", "(в белом соусе)")
+                            .example("à la broche", "1033", "жаренный на вертеле")
+                    }
+                }
+        }
+    }.build()
 }

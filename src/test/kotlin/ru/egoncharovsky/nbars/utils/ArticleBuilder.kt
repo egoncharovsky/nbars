@@ -4,6 +4,7 @@ import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.entity.article.Article
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Transcription
+import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 
 class ArticleBuilder(private val keyword: String) {
@@ -25,10 +26,11 @@ class HomonymsBuilder {
     fun homonym(
         transcription: String,
         partOfSpeech: PartOfSpeech,
+        remark: Text? = null,
         comment: Text? = null,
         applyParams: (HomonymBuilder) -> Unit
     ): HomonymsBuilder {
-        homonyms.add(HomonymBuilder(tr(transcription), partOfSpeech, comment).also(applyParams).build())
+        homonyms.add(HomonymBuilder(tr(transcription), partOfSpeech, remark, comment).also(applyParams).build())
         return this
     }
 
@@ -40,6 +42,7 @@ class HomonymsBuilder {
 class HomonymBuilder(
     private val transcription: Transcription,
     private val partOfSpeech: PartOfSpeech,
+    private val remark: Text? = null,
     private val comment: Text? = null
 ) {
     private val translations = mutableListOf<Translation>()
@@ -53,5 +56,5 @@ class HomonymBuilder(
         return this
     }
 
-    fun build(): Homonym = Homonym(transcription, partOfSpeech, comment, translations)
+    fun build(): Homonym = Homonym(transcription, partOfSpeech, remark, comment, translations)
 }

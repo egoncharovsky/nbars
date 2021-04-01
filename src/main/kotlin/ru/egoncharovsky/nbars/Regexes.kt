@@ -20,9 +20,12 @@ object Regexes {
     val plain = "(.+)".toRegex()
     val dash = "—".toRegex()
     val squareBrackets = "[\\[\\]]".toRegex()
+
     val escapedSquareBrackets = "(\\\\\\[|\\\\])".toRegex()
     val leftEscapedSquareBracket = "\\\\\\[".toRegex()
     val rightEscapedSquareBracket = "\\\\]".toRegex()
+
+    val russianLetter = "[а-яА-Я]".toRegex()
 
     val homonymMarker = "\\[sup]\\d+?\\[/sup]".toRegex()
     val lexicalGrammarHomonymMarker = "[Ⅰ-Ⅹ]".toRegex()

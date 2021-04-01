@@ -6,6 +6,7 @@ import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.homonymMarker
 import ru.egoncharovsky.nbars.Regexes.lexicalGrammarHomonymMarker
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
+import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
@@ -92,9 +93,11 @@ class ArticleParser {
         } else {
             rawTranslations.map { translationParser.parse(it) }
         }
+        val remark = prefix.findPart(plain)?.let { textParser.parse(it) }
+
         prefix.finishAll()
 
-        return Homonym(transcription, partOfSpeech, comment, translations)
+        return Homonym(transcription, partOfSpeech, remark, comment, translations)
     }
 
     internal fun parsePartOfSpeech(labels: List<String>): PartOfSpeech {

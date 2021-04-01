@@ -15,27 +15,30 @@ class DictionaryArticlesParseTest {
         @Suppress("unused")
         @JvmStatic
         fun parameters() = listOf(
-//            Articles.adjutant,
-//            Articles.tarnish,
-//            Articles.someone,
-//            Articles.swagman,
-//            Articles.arry,
-//            ExpressionArticles.tie_in,
-//            ReferenceArticles.ible,
-//            ReferenceArticles.peet,
-//            ReferenceArticles.pence,
-            Articles.narrator
+            Articles.adjutant,
+            Articles.tarnish,
+            Articles.someone,
+            Articles.swagman,
+            Articles.arry,
+            ExpressionArticles.tie_in,
+            ReferenceArticles.ible,
+            ReferenceArticles.peet,
+            ReferenceArticles.pence,
+            Articles.narrator,
+            Articles.a_la
         ).map { arrayOf(it.headword, it) }
     }
 
     @ParameterizedTest()
     @MethodSource("parameters")
     fun parse(key: String, expected: DictionaryArticle) {
-        val path = when (expected) {
-            is Article -> "card/$key.dsl"
-            is ExpressionArticle -> "card/expressions/${key.replace(" ", "_")}.dsl"
-            is ReferenceArticle -> "card/references/$key.dsl"
-            else -> throw IllegalArgumentException("Unknown type $expected")
+        val path = key.replace(" ", "_").let {
+            when (expected) {
+                is Article -> "card/$it.dsl"
+                is ExpressionArticle -> "card/expressions/$it.dsl"
+                is ReferenceArticle -> "card/references/$it.dsl"
+                else -> throw IllegalArgumentException("Unknown type $expected")
+            }
         }
 
         val lines = getResource(path).readLines()

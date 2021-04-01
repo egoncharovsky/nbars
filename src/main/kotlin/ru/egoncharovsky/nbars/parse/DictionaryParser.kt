@@ -32,7 +32,7 @@ class DictionaryParser {
         val raw = RawPart(body)
 
         return when {
-            headword.trim().contains(" ") -> expressionArticleParser.parse(headword, raw)
+            !body.contains(partOfSpeech) && headword.trim().contains(" ") -> expressionArticleParser.parse(headword, raw)
             !body.contains(partOfSpeech) && body.contains(reference) -> referenceArticleParser.parse(headword, raw)
             else -> articleParser.parse(headword, raw)
         }

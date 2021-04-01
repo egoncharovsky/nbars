@@ -51,6 +51,11 @@ data class RawPart(
         return this
     }
 
+    fun removeBefore(regex: Regex, before: Regex): RawPart {
+        findBefore(regex, before, 0)
+        return this
+    }
+
     fun removeAll(regex: Regex): RawPart {
         findAll(regex, 0)
         return this
@@ -151,7 +156,12 @@ data class RawPart(
         }
     }
 
-    private fun consumeFindBefore(regex: Regex, before: Regex, group: Int = 1, assertion: (List<String>) -> Unit = {}): List<String> {
+    private fun consumeFindBefore(
+        regex: Regex,
+        before: Regex,
+        group: Int = 1,
+        assertion: (List<String>) -> Unit = {}
+    ): List<String> {
         val (rawBefore, rawAfter) = before(raw, before)
         return findAll(rawBefore, regex, group).also {
             assertion(it)
@@ -171,7 +181,7 @@ data class RawPart(
         }
     }
 
-    private fun consume(raw: String,regex: Regex): String {
+    private fun consume(raw: String, regex: Regex): String {
         logger.trace("Consuming of '$raw'")
         return raw.replace(regex, "").trim().also {
             logger.trace("Raw cut to '$it'")
@@ -179,9 +189,9 @@ data class RawPart(
     }
 
     private fun findAll(raw: String, regex: Regex, group: Int): List<String> {
-       return regex.findAll(raw).map { it.groupValues[group] }.toList().also {
-           logger.trace("Found ${it.size} matches for '$regex' in '$raw'")
-       }
+        return regex.findAll(raw).map { it.groupValues[group] }.toList().also {
+            logger.trace("Found ${it.size} matches for '$regex' in '$raw'")
+        }
     }
 
     private fun before(raw: String, regex: Regex): Pair<String, String?> {
