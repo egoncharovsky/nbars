@@ -16,7 +16,6 @@ class DictionaryParser {
     private val logger = KotlinLogging.logger { }
     private val articleParser = ArticleParser()
     private val expressionArticleParser = ExpressionArticleParser()
-    private val referenceArticleParser = ReferenceArticleParser()
 
     fun parse(headword: String, bodyLines: List<String>): DictionaryArticle {
         logger.debug("Parsing $headword with ${bodyLines.size} lines")
@@ -33,7 +32,6 @@ class DictionaryParser {
 
         return when {
             !body.contains(partOfSpeech) && headword.trim().contains(" ") -> expressionArticleParser.parse(headword, raw)
-            !body.contains(partOfSpeech) && body.contains(reference) -> referenceArticleParser.parse(headword, raw)
             else -> articleParser.parse(headword, raw)
         }
     }

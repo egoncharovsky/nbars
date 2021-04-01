@@ -3,24 +3,20 @@ package ru.egoncharovsky.nbars.parse
 import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.commentTag
-import ru.egoncharovsky.nbars.Regexes.dash
 import ru.egoncharovsky.nbars.Regexes.example
 import ru.egoncharovsky.nbars.Regexes.label
-import ru.egoncharovsky.nbars.Regexes.lang
 import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
-import ru.egoncharovsky.nbars.Regexes.russianLetter
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
-import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.Translation
-import ru.egoncharovsky.nbars.entity.text.ForeignText
-import ru.egoncharovsky.nbars.exception.ParseException
+import ru.egoncharovsky.nbars.exception.StepParseException
 
 class TranslationParser {
 
     private val logger = KotlinLogging.logger { }
     private val textParser = TextParser()
+    private val exampleParser = ExampleParser()
 
     fun parse(raw: RawPart): Translation {
         logger.trace("Parse translation from: $raw")
@@ -48,7 +44,7 @@ class TranslationParser {
     internal fun parseVariant(raw: RawPart): Translation.Variant {
         logger.trace("Parse translation variant from: $raw")
 
-        val examples = raw.findAllParts(example).map { parseExample(it) }
+        val examples = raw.findAllParts(example).map { exampleParser.parse(it) }
 
         return when {
             raw.contains(translation) -> {
@@ -67,7 +63,7 @@ class TranslationParser {
 
                 Translation.Variant(reference, remark, comment, examples)
             }
-            else -> throw ParseException(
+            else -> throw StepParseException(
                 "meaning",
                 "no translation by '$translation' or reference by '${reference}' found",
                 raw
@@ -77,12 +73,4 @@ class TranslationParser {
         }
     }
 
-    private fun parseExample(raw: RawPart): Example {
-
-        val foreign = textParser.parse(raw.getPart(lang, 0)) as ForeignText
-        raw.removeBefore(dash, russianLetter).removeAll(commentTag)
-        val translation = textParser.parse(raw)
-
-        return Example(foreign, translation)
-    }
 }

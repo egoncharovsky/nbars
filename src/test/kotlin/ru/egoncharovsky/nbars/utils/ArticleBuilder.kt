@@ -1,7 +1,14 @@
 package ru.egoncharovsky.nbars.utils
 
-import ru.egoncharovsky.nbars.entity.*
+import ru.egoncharovsky.nbars.Either
+import ru.egoncharovsky.nbars.entity.Example
+import ru.egoncharovsky.nbars.entity.GrammaticalForm
+import ru.egoncharovsky.nbars.entity.PartOfSpeech
+import ru.egoncharovsky.nbars.entity.Translation
 import ru.egoncharovsky.nbars.entity.article.Article
+import ru.egoncharovsky.nbars.entity.article.Homonym
+import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
+import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
@@ -9,7 +16,7 @@ import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 
 class ArticleBuilder(private val keyword: String) {
 
-    private val homonyms = mutableListOf<List<Homonym>>()
+    private val homonyms = mutableListOf<List<Either<Homonym, ReferenceToArticle>>>()
 
     fun homonyms(applyParams: (HomonymsBuilder) -> Unit): ArticleBuilder {
         homonyms.add(HomonymsBuilder().also(applyParams).build())
@@ -21,7 +28,7 @@ class ArticleBuilder(private val keyword: String) {
 
 class HomonymsBuilder {
 
-    private val homonyms = mutableListOf<Homonym>()
+    private val homonyms = mutableListOf<Either<Homonym, ReferenceToArticle>>()
 
     fun homonym(
         transcription: String,
@@ -30,13 +37,48 @@ class HomonymsBuilder {
         comment: Text? = null,
         applyParams: (HomonymBuilder) -> Unit
     ): HomonymsBuilder {
-        homonyms.add(HomonymBuilder(tr(transcription), partOfSpeech, remark, comment).also(applyParams).build())
+        homonyms.add(
+            Either.Left(
+                HomonymBuilder(tr(transcription), partOfSpeech, remark, comment).also(applyParams).build()
+            )
+        )
         return this
     }
 
-    fun build(): List<Homonym> = homonyms
+    fun reference(
+        transcription: String,
+        referenceOnHeadWord: String,
+        grammaticalForm: GrammaticalForm? = null,
+        applyParams: (ReferenceToArticleBuilder) -> Unit = {}
+    ): HomonymsBuilder {
+        homonyms.add(
+            Either.Right(
+                ReferenceToArticleBuilder(
+                    tr(transcription),
+                    st(referenceOnHeadWord),
+                    grammaticalForm
+                ).also(applyParams).build()
+            )
+        )
+        return this
+    }
 
+    fun build(): List<Either<Homonym, ReferenceToArticle>> = homonyms
+}
 
+class ReferenceToArticleBuilder(
+    private val transcription: Transcription,
+    private val referenceOnHeadWord: Text,
+    private val grammaticalForm: GrammaticalForm? = null
+) {
+    private val examples = mutableListOf<Example>()
+
+    fun example(text: String, lang: String, translation: String): ReferenceToArticleBuilder {
+        examples.add(Example(ForeignText(Text.normalize(text), lang), st(translation)))
+        return this
+    }
+
+    fun build() = ReferenceToArticle(transcription, grammaticalForm, referenceOnHeadWord, examples)
 }
 
 class HomonymBuilder(

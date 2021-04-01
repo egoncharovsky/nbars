@@ -1,6 +1,7 @@
 package ru.egoncharovsky.nbars.parse
 
 import ru.egoncharovsky.nbars.entity.*
+import ru.egoncharovsky.nbars.entity.GrammaticalForm.Plural
 import ru.egoncharovsky.nbars.utils.ArticleBuilder
 import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
 import ru.egoncharovsky.nbars.utils.SentenceHelper.ft
@@ -198,4 +199,35 @@ object Articles {
                     }
             }
         }.build()
+
+    val peet = ArticleBuilder("peet")
+        .homonyms {
+            it.reference("piːt", "= rf(pete)")
+        }
+
+        .build()
+
+    val ible = ArticleBuilder("-ible")
+        .homonyms {
+            it.reference("-əb(ə)l", "= rf(-able) 2, 3")
+        }
+        .build()
+
+    val pence = ArticleBuilder("pence")
+        .homonyms {
+            it.reference("pens", "ab(от) rf(penny)", Plural)
+        }
+        .build()
+
+    val excepting = ArticleBuilder("excepting")
+        .homonyms {
+            it
+                .reference("ɪkˈseptɪŋ", "= rf(except) II 1", Preposition) {
+                    it
+                        .example("everyone not excepting myself", "1033", "все, в том числе и я")
+                        .example("all were there not excepting him", "1033", "все были там, и он в том числе")
+                }
+                .reference("ɪkˈseptɪŋ", "= rf(except) III 1")
+        }.build()
+
 }

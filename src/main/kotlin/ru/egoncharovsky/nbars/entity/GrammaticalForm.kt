@@ -2,7 +2,30 @@ package ru.egoncharovsky.nbars.entity
 
 import ru.egoncharovsky.nbars.exception.UnknownLabel
 
-sealed class PartOfSpeech(val label: String) {
+sealed class GrammaticalForm(val label: String) {
+    object Plural : GrammaticalForm("pl")
+
+    companion object {
+        val labels by lazy {
+            listOf(
+                Plural.label
+            ).plus(PartOfSpeech.labels)
+        }
+
+        fun byLabel(typeLabel: String, subTypeLabel: String? = null): GrammaticalForm {
+            return when (typeLabel) {
+                Plural.label -> Plural
+                else -> try {
+                    PartOfSpeech.byLabel(typeLabel, subTypeLabel)
+                } catch (e: UnknownLabel) {
+                    throw UnknownLabel(GrammaticalForm::class.simpleName!!, typeLabel)
+                }
+            }
+        }
+    }
+}
+
+sealed class PartOfSpeech(label: String) : GrammaticalForm(label) {
 
     companion object {
         val labels by lazy {
@@ -93,6 +116,3 @@ data class Conjunction(val subType: SubType? = null) : PartOfSpeech(label) {
         const val label = "cj"
     }
 }
-
-
-

@@ -43,5 +43,5 @@ object Regexes {
 
     val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
     val expressionType = "\\[p](${ExpressionType.labels.joinToString("|")})\\[/p]".toRegex()
-    val referenceType = "\\[p](${ReferenceType.labels.joinToString("|")})\\[/p]".toRegex()
+    val grammaticalForm = "\\[p](${GrammaticalForm.labels.joinToString("|")})\\[/p]".toRegex()
 }
