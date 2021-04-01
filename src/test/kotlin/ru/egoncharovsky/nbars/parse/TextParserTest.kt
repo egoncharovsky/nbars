@@ -3,9 +3,9 @@ package ru.egoncharovsky.nbars.parse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import ru.egoncharovsky.nbars.entity.text.Reference
-import ru.egoncharovsky.nbars.parse.SentenceHelper.ab
-import ru.egoncharovsky.nbars.parse.SentenceHelper.ft
-import ru.egoncharovsky.nbars.parse.SentenceHelper.st
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ft
+import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 
 internal class TextParserTest {
 

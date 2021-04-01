@@ -23,7 +23,7 @@ class ArticlesParseTest {
     @MethodSource("parameters")
     fun parse(key: String, expected: Article) {
         val lines = getResource("card/$key.dsl").readLines()
-        val parser = ArticleParser()
+        val parser = DictionaryArticleParser()
 
         val article = parser.parse(key, lines)
         assertEquals(expected, article)

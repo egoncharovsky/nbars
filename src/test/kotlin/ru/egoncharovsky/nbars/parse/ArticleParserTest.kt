@@ -1,12 +1,12 @@
 package ru.egoncharovsky.nbars.parse
 
 import org.junit.jupiter.api.Test
-import ru.egoncharovsky.nbars.VariantBuilder
+import ru.egoncharovsky.nbars.utils.VariantBuilder
 import ru.egoncharovsky.nbars.entity.Pronoun
-import ru.egoncharovsky.nbars.parse.SentenceHelper.ab
-import ru.egoncharovsky.nbars.parse.SentenceHelper.pt
-import ru.egoncharovsky.nbars.parse.SentenceHelper.rf
-import ru.egoncharovsky.nbars.parse.SentenceHelper.st
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
+import ru.egoncharovsky.nbars.utils.SentenceHelper.pt
+import ru.egoncharovsky.nbars.utils.SentenceHelper.rf
+import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 import kotlin.test.assertEquals
 
 class ArticleParserTest {

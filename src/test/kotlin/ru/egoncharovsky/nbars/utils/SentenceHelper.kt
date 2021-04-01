@@ -1,6 +1,8 @@
-package ru.egoncharovsky.nbars.parse
+package ru.egoncharovsky.nbars.utils
 
 import ru.egoncharovsky.nbars.entity.text.*
+import ru.egoncharovsky.nbars.parse.RawPart
+import ru.egoncharovsky.nbars.parse.TextParser
 
 object SentenceHelper {
     private val ft = "ft\\((.+?),(.+?)\\)".toRegex()
@@ -45,10 +47,10 @@ object SentenceHelper {
         val rawPart = RawPart(raw)
 
         val ranges = listOf(
-            ::findLangRanges,
-            ::findLabelRanges,
-            ::findReferenceRanges,
-            ::findTranscriptionRanges
+            SentenceHelper::findLangRanges,
+            SentenceHelper::findLabelRanges,
+            SentenceHelper::findReferenceRanges,
+            SentenceHelper::findTranscriptionRanges
         ).map {
             it.invoke(rawPart)
         }.reduce(Map<IntRange, (RawPart) -> Text>::plus)

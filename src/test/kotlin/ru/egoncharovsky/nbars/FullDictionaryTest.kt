@@ -6,9 +6,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.junit.jupiter.api.Test
-import ru.egoncharovsky.nbars.entity.article.Article
 import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
-import ru.egoncharovsky.nbars.parse.ArticleParser
+import ru.egoncharovsky.nbars.parse.DictionaryArticleParser
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -22,7 +21,7 @@ internal class FullDictionaryTest {
     @Test
     fun fullDictionary() {
         val reader = DictionaryReader(dictionaryFile, indexFile)
-        val parser = ArticleParser()
+        val parser = DictionaryArticleParser()
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 

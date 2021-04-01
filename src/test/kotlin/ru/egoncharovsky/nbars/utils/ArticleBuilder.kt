@@ -1,4 +1,4 @@
-package ru.egoncharovsky.nbars
+package ru.egoncharovsky.nbars.utils
 
 import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.entity.Translation.Variant
@@ -8,7 +8,7 @@ import ru.egoncharovsky.nbars.entity.text.PlainText
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Text.Companion.normalize
 import ru.egoncharovsky.nbars.entity.text.Transcription
-import ru.egoncharovsky.nbars.parse.SentenceHelper.tr
+import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 
 class ArticleBuilder(private val keyword: String) {
 

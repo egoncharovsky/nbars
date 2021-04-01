@@ -1,15 +1,15 @@
 package ru.egoncharovsky.nbars.parse
 
-import ru.egoncharovsky.nbars.ArticleBuilder
+import ru.egoncharovsky.nbars.utils.ArticleBuilder
 import ru.egoncharovsky.nbars.entity.Adjective
 import ru.egoncharovsky.nbars.entity.Noun
 import ru.egoncharovsky.nbars.entity.Pronoun
 import ru.egoncharovsky.nbars.entity.Verb
-import ru.egoncharovsky.nbars.parse.SentenceHelper.ab
-import ru.egoncharovsky.nbars.parse.SentenceHelper.ft
-import ru.egoncharovsky.nbars.parse.SentenceHelper.pt
-import ru.egoncharovsky.nbars.parse.SentenceHelper.st
-import ru.egoncharovsky.nbars.parse.SentenceHelper.tr
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ft
+import ru.egoncharovsky.nbars.utils.SentenceHelper.pt
+import ru.egoncharovsky.nbars.utils.SentenceHelper.st
+import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 
 object Articles {
     val adjutant = ArticleBuilder("adjutant")

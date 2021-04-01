@@ -1,11 +1,11 @@
 package ru.egoncharovsky.nbars.parse
 
 import org.junit.jupiter.api.Test
-import ru.egoncharovsky.nbars.parse.SentenceHelper.ab
-import ru.egoncharovsky.nbars.parse.SentenceHelper.ft
-import ru.egoncharovsky.nbars.parse.SentenceHelper.pt
-import ru.egoncharovsky.nbars.parse.SentenceHelper.st
-import ru.egoncharovsky.nbars.parse.SentenceHelper.tr
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ft
+import ru.egoncharovsky.nbars.utils.SentenceHelper.pt
+import ru.egoncharovsky.nbars.utils.SentenceHelper.st
+import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 import kotlin.test.assertEquals
 
 class SentenceHelperTest {
