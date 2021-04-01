@@ -36,6 +36,7 @@ object Regexes {
     val comment = "\\[com](.+?)\\[/com]".toRegex()
     val lang = "\\[lang id=(\\d+)](.+?)\\[/lang]".toRegex()
     val example = "\\[ex](.+?)\\[/ex]".toRegex()
+    val stress = "\\['](.)\\[/']".toRegex()
 
     val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
 }

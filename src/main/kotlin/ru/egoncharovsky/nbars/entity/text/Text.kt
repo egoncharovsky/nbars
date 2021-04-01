@@ -12,10 +12,11 @@ interface Text {
             if (squareBrackets.containsMatchIn(value)) throw TextContainsTag(value)
         }
 
-        fun replaceEscapedBrackets(value: String): String {
+        fun normalize(value: String): String {
             return value
                 .replace(Regexes.leftEscapedSquareBracket, "(")
                 .replace(Regexes.rightEscapedSquareBracket, ")")
+                .replace(Regexes.stress) { it.groupValues[1] + "\u00B4" }
         }
     }
 }

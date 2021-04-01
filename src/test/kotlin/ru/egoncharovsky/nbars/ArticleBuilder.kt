@@ -5,7 +5,7 @@ import ru.egoncharovsky.nbars.entity.Translation.Variant
 import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.PlainText
 import ru.egoncharovsky.nbars.entity.text.Text
-import ru.egoncharovsky.nbars.entity.text.Text.Companion.replaceEscapedBrackets
+import ru.egoncharovsky.nbars.entity.text.Text.Companion.normalize
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.parse.SentenceHelper.tr
 
@@ -68,7 +68,7 @@ class TranslationBuilder(
     private val variants = mutableListOf<Variant>()
 
     fun variant(meaning: String, applyParams: (VariantBuilder) -> Unit = {}): TranslationBuilder {
-        variant(PlainText(replaceEscapedBrackets(meaning)), null, null, applyParams)
+        variant(PlainText(normalize(meaning)), null, null, applyParams)
         return this
     }
 
@@ -95,12 +95,12 @@ class VariantBuilder(
     private val examples = mutableListOf<Example>()
 
     fun example(text: String, lang: String, translation: String): VariantBuilder {
-        example(text, lang, PlainText(replaceEscapedBrackets(translation)))
+        example(text, lang, PlainText(normalize(translation)))
         return this
     }
 
     fun example(text: String, lang: String, translation: Text): VariantBuilder {
-        examples.add(Example(ForeignText(replaceEscapedBrackets(text), lang), translation))
+        examples.add(Example(ForeignText(normalize(text), lang), translation))
         return this
     }
 

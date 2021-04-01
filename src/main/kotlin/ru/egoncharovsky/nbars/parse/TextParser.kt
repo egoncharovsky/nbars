@@ -6,7 +6,7 @@ import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.entity.text.*
-import ru.egoncharovsky.nbars.entity.text.Text.Companion.replaceEscapedBrackets
+import ru.egoncharovsky.nbars.entity.text.Text.Companion.normalize
 import ru.egoncharovsky.nbars.exception.IntersectedRangesFound
 import java.util.*
 
@@ -30,7 +30,7 @@ class TextParser {
             it to { rawPart: RawPart ->
                 val values = rawPart.getGroupValues(lang)
                 ForeignText(
-                    replaceEscapedBrackets(values[2]),
+                    normalize(values[2]),
                     values[1]
                 )
             }
@@ -63,7 +63,7 @@ class TextParser {
 
         return plainRanges.map {
             it to { rawPart: RawPart ->
-                PlainText(replaceEscapedBrackets(rawPart.get(plain)))
+                PlainText(normalize(rawPart.get(plain)))
             }
         }.toMap()
     }

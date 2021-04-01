@@ -6,7 +6,6 @@ import ru.egoncharovsky.nbars.Regexes.colorTag
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.dash
 import ru.egoncharovsky.nbars.Regexes.doubleBraces
-import ru.egoncharovsky.nbars.Regexes.equal
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.example
 import ru.egoncharovsky.nbars.Regexes.homonymMarker
@@ -26,6 +25,7 @@ import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.entity.Translation.Variant
 import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.Transcription
+import ru.egoncharovsky.nbars.exception.ParseException
 
 class ArticleParser {
 
@@ -154,15 +154,31 @@ class ArticleParser {
 
         val examples = raw.findAllParts(example).map { parseExample(it) }
 
-        val meaning = (raw.findPart(translation) ?: raw.getPart(reference, 0).also {
-            raw.remove(equal)
-        }).let { textParser.parse(it) }
-        val comment = raw.findPart(comment)?.let { textParser.parse(it) }
-        val remark = raw.findPart(label, 0)?.let { textParser.parse(it) }
+        return when {
+            raw.contains(translation) -> {
+                val meaning = textParser.parse(raw.getPart(translation))
 
-        raw.finishAll()
+                val comment = raw.findPart(comment)?.let { textParser.parse(it) }
+                val remark = raw.findPart(label, 0)?.let { textParser.parse(it) }
 
-        return Variant(meaning, remark, comment, examples)
+                Variant(meaning, remark, comment, examples)
+            }
+            raw.contains(reference) -> {
+                val comment = raw.findPart(comment)?.let { textParser.parse(it) }
+                val remark = raw.findPart(label, 0)?.let { textParser.parse(it) }
+
+                val reference = textParser.parse(raw)
+
+                Variant(reference, remark, comment, examples)
+            }
+            else -> throw ParseException(
+                "meaning",
+                "no translation by '$translation' or reference by '$reference' found",
+                raw
+            )
+        }.also {
+            raw.finishAll()
+        }
     }
 
     private fun parseExample(raw: RawPart): Example {

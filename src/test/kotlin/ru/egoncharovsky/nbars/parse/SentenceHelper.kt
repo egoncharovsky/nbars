@@ -1,6 +1,5 @@
 package ru.egoncharovsky.nbars.parse
 
-import ru.egoncharovsky.nbars.Regexes
 import ru.egoncharovsky.nbars.entity.text.*
 
 object SentenceHelper {
@@ -57,8 +56,8 @@ object SentenceHelper {
         return textParser.parse(rawPart, ranges)
     }
 
-    fun pt(s: String) = PlainText(Text.replaceEscapedBrackets(s))
-    fun ft(s: String, lang: String) = ForeignText(Text.replaceEscapedBrackets(s), lang)
+    fun pt(s: String) = PlainText(Text.normalize(s))
+    fun ft(s: String, lang: String) = ForeignText(Text.normalize(s), lang)
     fun ab(s: String) = Abbreviation(s)
     fun rf(s: String) = Reference(s)
     fun tr(s: String) = Transcription(s)

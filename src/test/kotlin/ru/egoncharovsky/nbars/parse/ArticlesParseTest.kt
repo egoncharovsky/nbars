@@ -14,7 +14,8 @@ class ArticlesParseTest {
             Articles.adjutant,
             Articles.tarnish,
             Articles.someone,
-            Articles.swagman
+            Articles.swagman,
+            Articles.arry
         ).map { arrayOf(it.headword, it) }
     }
 

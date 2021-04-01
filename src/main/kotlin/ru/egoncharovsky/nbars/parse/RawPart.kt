@@ -78,6 +78,8 @@ data class RawPart(
         }[0]
     }
 
+    fun contains(regex: Regex): Boolean = raw.contains(regex)
+
     fun findMatchesRange(regex: Regex): List<IntRange> {
         return regex.findAll(raw).map { it.groups[0]!!.range }.toList()
     }

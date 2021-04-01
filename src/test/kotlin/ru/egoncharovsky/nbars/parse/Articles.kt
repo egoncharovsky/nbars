@@ -117,4 +117,11 @@ object Articles {
             }
         }
     }.build()
+
+    val arry = ArticleBuilder("'Arry").homonyms {
+        it.homonym("ˈærɪ", Noun) {
+            it.translation { it.variant(st("= rf(Harry)"), remark = ab("прост.")) }
+            it.translation { it.variant(st("ко\u00B4кни, весёлый и не очень грамотный лондонец"), remark = ab("пренебр.")) }
+        }
+    }.build()
 }
