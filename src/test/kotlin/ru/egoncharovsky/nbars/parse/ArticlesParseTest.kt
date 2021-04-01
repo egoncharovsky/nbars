@@ -2,7 +2,7 @@ package ru.egoncharovsky.nbars.parse
 
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import ru.egoncharovsky.nbars.entity.Article
+import ru.egoncharovsky.nbars.entity.article.Article
 import ru.egoncharovsky.nbars.getResource
 import kotlin.test.assertEquals
 

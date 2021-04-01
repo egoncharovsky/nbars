@@ -6,7 +6,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.junit.jupiter.api.Test
-import ru.egoncharovsky.nbars.entity.Article
+import ru.egoncharovsky.nbars.entity.article.Article
+import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
 import ru.egoncharovsky.nbars.parse.ArticleParser
 import java.io.File
 import kotlin.system.measureTimeMillis
@@ -25,9 +26,9 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines = setOf<Int>(104)
+        val printErrorOnLines = setOf<Int>(109)
 
-        val results: List<Pair<String, Result<Article>>>
+        val results: List<Pair<String, Result<DictionaryArticle>>>
         val time = measureTimeMillis {
             results = runBlocking(Dispatchers.IO) {
                 positions.map { (headword, position) ->

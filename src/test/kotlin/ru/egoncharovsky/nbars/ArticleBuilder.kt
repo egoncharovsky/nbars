@@ -2,6 +2,7 @@ package ru.egoncharovsky.nbars
 
 import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.entity.Translation.Variant
+import ru.egoncharovsky.nbars.entity.article.Article
 import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.PlainText
 import ru.egoncharovsky.nbars.entity.text.Text

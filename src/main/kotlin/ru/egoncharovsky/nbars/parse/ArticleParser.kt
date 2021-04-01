@@ -23,6 +23,8 @@ import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
 import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.entity.Translation.Variant
+import ru.egoncharovsky.nbars.entity.article.Article
+import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
 import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.exception.ParseException
@@ -32,7 +34,7 @@ class ArticleParser {
     private val logger = KotlinLogging.logger { }
     private val textParser = TextParser()
 
-    fun parse(headword: String, bodyLines: List<String>): Article {
+    fun parse(headword: String, bodyLines: List<String>): DictionaryArticle {
         logger.debug("Parsing $headword with ${bodyLines.size} lines")
 
         val body = bodyLines.joinToString("") { it.trim() }
