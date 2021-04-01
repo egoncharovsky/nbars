@@ -23,7 +23,6 @@ object Regexes {
     val escapedSquareBrackets = "(\\\\\\[|\\\\])".toRegex()
     val leftEscapedSquareBracket = "\\\\\\[".toRegex()
     val rightEscapedSquareBracket = "\\\\]".toRegex()
-    val equal = "=".toRegex()
 
     val homonymMarker = "\\[sup]\\d+?\\[/sup]".toRegex()
     val lexicalGrammarHomonymMarker = "[Ⅰ-Ⅹ]".toRegex()
@@ -41,4 +40,5 @@ object Regexes {
 
     val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
     val expressionType = "\\[p](${ExpressionType.labels.joinToString("|")})\\[/p]".toRegex()
+    val referenceType = "\\[p](${ReferenceType.labels.joinToString("|")})\\[/p]".toRegex()
 }

@@ -5,8 +5,8 @@ import org.junit.jupiter.params.provider.MethodSource
 import ru.egoncharovsky.nbars.entity.article.Article
 import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
 import ru.egoncharovsky.nbars.entity.article.ExpressionArticle
+import ru.egoncharovsky.nbars.entity.article.ReferenceArticle
 import ru.egoncharovsky.nbars.getResource
-import java.lang.IllegalArgumentException
 import kotlin.test.assertEquals
 
 class DictionaryArticlesParseTest {
@@ -20,16 +20,20 @@ class DictionaryArticlesParseTest {
             Articles.someone,
             Articles.swagman,
             Articles.arry,
-            ExpressionArticles.tie_in
+            ExpressionArticles.tie_in,
+            ReferenceArticles.ible,
+            ReferenceArticles.peet,
+            ReferenceArticles.pence
         ).map { arrayOf(it.headword, it) }
     }
 
     @ParameterizedTest()
     @MethodSource("parameters")
     fun parse(key: String, expected: DictionaryArticle) {
-        val path = when(expected) {
+        val path = when (expected) {
             is Article -> "card/$key.dsl"
             is ExpressionArticle -> "card/expressions/${key.replace(" ", "_")}.dsl"
+            is ReferenceArticle -> "card/references/$key.dsl"
             else -> throw IllegalArgumentException("Unknown type $expected")
         }
 
