@@ -10,7 +10,7 @@ data class RawPart(
 ) {
     private val logger = KotlinLogging.logger { }
 
-    private var children = mutableListOf<RawPart>()
+    private val children = mutableSetOf<RawPart>()
 
     fun get(regex: Regex, group: Int = 1): String {
         return consumeFind(regex, group) {
@@ -40,6 +40,12 @@ data class RawPart(
         return consumeFind(regex, group)
     }
 
+    fun findBefore(regex: Regex, before: Regex, group: Int = 1): String? {
+        return consumeFindBefore(regex, before, group) {
+            require(it.size <= 1) { FailExpectation("No more than 1", raw, regex, it.size, it) }
+        }.getOrNull(0)
+    }
+
     fun remove(regex: Regex): RawPart {
         find(regex, 0)
         return this
@@ -51,21 +57,19 @@ data class RawPart(
     }
 
     fun getPart(regex: Regex, group: Int = 1): RawPart {
-        return RawPart(get(regex, group)).also {
-            children.add(it)
-        }
+        return addPart(get(regex, group))
     }
 
     fun findPart(regex: Regex, group: Int = 1): RawPart? {
-        return find(regex, group)?.let { RawPart(it) }?.also {
-            children.add(it)
-        }
+        return find(regex, group)?.let { addPart(it) }
+    }
+
+    fun findPartBefore(regex: Regex, before: Regex, group: Int = 1): RawPart? {
+        return findBefore(regex, before, group)?.let { addPart(it) }
     }
 
     fun findAllParts(regex: Regex, group: Int = 1): List<RawPart> {
-        return findAll(regex, group).map { RawPart(it) }.also {
-            children.addAll(it)
-        }
+        return findAll(regex, group).map { addPart(it) }
     }
 
     fun getGroupValues(regex: Regex): List<String> {
@@ -84,9 +88,7 @@ data class RawPart(
         val parts = ranges.map {
             logger.trace("Cutting $it from '$raw'")
 
-            RawPart(raw.substring(it))
-        }.also {
-            children.addAll(it)
+            addPart(raw.substring(it))
         }
 
         var shift = 0
@@ -106,8 +108,7 @@ data class RawPart(
         logger.trace("Consuming split by '$regex' of '$raw'")
         require(raw.isNotEmpty()) { EmptyRaw("split") }
 
-        return raw.split(regex).map { it.trim() }.map { RawPart(it) }.also {
-            children.addAll(it)
+        return raw.split(regex).map { it.trim() }.map { addPart(it) }.also {
             raw = ""
         }
     }
@@ -116,22 +117,17 @@ data class RawPart(
         logger.trace("Consuming before by '$regex' of '$raw'")
         require(raw.isNotEmpty()) { EmptyRaw("take before") }
 
-        return regex.find(raw)?.let {
-            val first = it.groups[0]!!.range.first
+        val (before, after) = before(raw, regex)
 
-            val before = RawPart(raw.substring(0 until first))
-            val after = RawPart(raw.substring(first until raw.length))
-
-            children.add(before)
-            children.add(after)
-            raw = ""
-
+        return if (after != null) {
             logger.trace("Divided by '$regex' into before:'$before' and after'$after'")
 
-            Pair(before, after)
-        } ?: kotlin.run {
+            raw = ""
+            addPart(before) to addPart(after)
+        } else {
             logger.trace("No occurrences found of '$regex' returning itself: '$raw'")
-            Pair(this, null)
+
+            this to null
         }
     }
 
@@ -147,13 +143,18 @@ data class RawPart(
     }
 
     private fun consumeFind(regex: Regex, group: Int, assertion: (List<String>) -> Unit = {}): List<String> {
-        return regex.findAll(raw).map { it.groupValues[group] }.toList().also {
-            logger.trace("Found ${it.size} matches for '$regex'")
+        return findAll(raw, regex, group).also {
             assertion(it)
+            raw = consume(raw, regex)
+        }
+    }
 
-            logger.trace("Consuming of '$raw'")
-            raw = raw.replace(regex, "").trim()
-            logger.trace("Raw cut to '$raw'")
+    private fun consumeFindBefore(regex: Regex, before: Regex, group: Int = 1, assertion: (List<String>) -> Unit = {}): List<String> {
+        val (rawBefore, rawAfter) = before(raw, before)
+        return findAll(rawBefore, regex, group).also {
+            assertion(it)
+            val beforeCut = consume(rawBefore, regex)
+            raw = beforeCut + rawAfter.orEmpty()
         }
     }
 
@@ -166,6 +167,34 @@ data class RawPart(
             raw = raw.replace(regex, "").trim()
             logger.trace("Raw cut to '$raw'")
         }
+    }
+
+    private fun consume(raw: String,regex: Regex): String {
+        logger.trace("Consuming of '$raw'")
+        return raw.replace(regex, "").trim().also {
+            logger.trace("Raw cut to '$it'")
+        }
+    }
+
+    private fun findAll(raw: String, regex: Regex, group: Int): List<String> {
+       return regex.findAll(raw).map { it.groupValues[group] }.toList().also {
+           logger.trace("Found ${it.size} matches for '$regex' in '$raw'")
+       }
+    }
+
+    private fun before(raw: String, regex: Regex): Pair<String, String?> {
+        return regex.find(raw)?.let {
+            val first = it.groups[0]!!.range.first
+
+            raw.substring(0 until first) to raw.substring(first until raw.length)
+        } ?: run {
+            raw to null
+        }
+    }
+
+    private fun addPart(value: String): RawPart {
+        logger.trace("Register children $value of $raw")
+        return RawPart(value).also { children.add(it) }
     }
 
     private fun require(requirement: Boolean, exception: () -> Exception) {

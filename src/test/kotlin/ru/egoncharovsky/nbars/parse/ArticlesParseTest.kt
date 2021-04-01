@@ -11,9 +11,9 @@ class ArticlesParseTest {
     companion object {
         @JvmStatic
         fun parameters() = listOf(
-//            Articles.adjutant,
-//            Articles.tarnish,
-//            Articles.someone,
+            Articles.adjutant,
+            Articles.tarnish,
+            Articles.someone,
             Articles.swagman
         ).map { arrayOf(it.headword, it) }
     }

@@ -10,7 +10,7 @@ import ru.egoncharovsky.nbars.parse.SentenceHelper.st
 internal class TextParserTest {
 
     @Test
-    fun parseText() {
+    fun parseSentence() {
         val raw =
             RawPart("([lang id=1142]Leptoptilus[/lang]; [p]тж[/p] [lang id=1033]adjutant bird, adjutant stork[/lang])")
 

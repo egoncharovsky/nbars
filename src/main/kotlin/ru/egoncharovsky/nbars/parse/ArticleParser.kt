@@ -99,9 +99,11 @@ class ArticleParser {
 
         logger.trace("Lex. gram. homonym prefix: $prefix")
 
-        val transcription = prefix.get(transcription).also {
-            prefix.removeAll(escapedSquareBrackets)
+        prefix.removeAll(escapedSquareBrackets)
+        val comment = prefix.findPartBefore(comment, translation)?.let {
+            textParser.parse(it)
         }
+        val transcription = textParser.parse(prefix.getPart(transcription, 0)) as Transcription
         val partOfSpeech = parsePartOfSpeech(prefix.getAll(partOfSpeech))
 
         val rawTranslations = split.drop(1)
@@ -113,8 +115,7 @@ class ArticleParser {
         }
         prefix.finishAll()
 
-        TODO()
-//        return Homonym(transcription, partOfSpeech, translations)
+        return Homonym(transcription, partOfSpeech, comment, translations)
     }
 
     internal fun parsePartOfSpeech(labels: List<String>): PartOfSpeech {

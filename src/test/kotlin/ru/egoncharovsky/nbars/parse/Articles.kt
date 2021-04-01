@@ -107,10 +107,13 @@ object Articles {
     val swagman = ArticleBuilder("swagman").homonyms {
         it.homonym(
             "ˈswægmæn", Noun,
-            comment = st("(", ab("pl"), " ", ft("-men", "1033"), " ", tr("ˈswægmen"))
+            comment = st("(", ab("pl"), " ", ft("-men", "1033"), " ", tr("ˈswægmen"), pt(")"))
         ) {
-            it.translation(remark = ab("австрал.")) {
-                it.variant(pt("свагмен, человек, всё добро которого помещается в скатанном одеяле за плечами; бродяга"))
+            it.translation {
+                it.variant(
+                    pt("свагмен, человек, всё добро которого помещается в скатанном одеяле за плечами; бродяга"),
+                    remark = ab("австрал.")
+                )
             }
         }
     }.build()
