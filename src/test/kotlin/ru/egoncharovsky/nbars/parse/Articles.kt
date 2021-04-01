@@ -164,4 +164,38 @@ object Articles {
                 }
         }
     }.build()
+
+    val abatement = ArticleBuilder("abatement")
+        .homonyms {
+            it.homonym("əˈbeɪtmənt", Noun) {
+                it
+                    .translation {
+                        it.variant("ослабление, уменьшение; смягчение") {
+                            it
+                                .example("noise abatement campaign", "1033", "кампания за уменьшение (городского) шума")
+                                .example("abatement of a storm", "1033", "затихание бури")
+                                .example("abatement of the energies", "1033", "ослабление усилий")
+
+                        }
+                    }
+                    .translation {
+                        it
+                            .variant("прекращение; устранение; отмена")
+                            .variant("аннулирование, отмена, прекращение", remark = "ab(юр.)") {
+                                it.example(
+                                    "plea in abatement", "1033",
+                                    "иск об аннулировании /отмене/ (права ab(и т. п.) — возражение ответчика против иска или его ходатайство о прекращении дела)"
+                                )
+                            }
+
+                    }
+                    .translation {
+                        it.variant("скидка, снижение", remark = "ab(ком.)") {
+                            it
+                                .example("to make abatement", "1033", "сделать скидку, сбавить цену")
+                                .example("no abatement made!", "1033", "по твёрдым ценам!, без запроса!")
+                        }
+                    }
+            }
+        }.build()
 }

@@ -25,7 +25,8 @@ class DictionaryArticlesParseTest {
             ReferenceArticles.peet,
             ReferenceArticles.pence,
             Articles.narrator,
-            Articles.a_la
+            Articles.a_la,
+            Articles.abatement,
         ).map { arrayOf(it.headword, it) }
     }
 

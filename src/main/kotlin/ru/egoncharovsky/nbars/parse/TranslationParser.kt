@@ -9,6 +9,7 @@ import ru.egoncharovsky.nbars.Regexes.label
 import ru.egoncharovsky.nbars.Regexes.lang
 import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
+import ru.egoncharovsky.nbars.Regexes.russianLetter
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
 import ru.egoncharovsky.nbars.entity.Example
@@ -79,7 +80,7 @@ class TranslationParser {
     private fun parseExample(raw: RawPart): Example {
 
         val foreign = textParser.parse(raw.getPart(lang, 0)) as ForeignText
-        raw.remove(dash).removeAll(commentTag)
+        raw.removeBefore(dash, russianLetter).removeAll(commentTag)
         val translation = textParser.parse(raw)
 
         return Example(foreign, translation)
