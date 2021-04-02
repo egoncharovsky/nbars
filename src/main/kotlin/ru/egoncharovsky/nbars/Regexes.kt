@@ -14,6 +14,8 @@ object Regexes {
     val colorTag = "\\[/?c( .*?)?]".toRegex()
     val optionalTag = "\\[/?\\*]".toRegex()
     val commentTag = "\\[/?com]".toRegex()
+    val superscriptTag = "\\[/?sup]".toRegex()
+    val subscriptTag = "\\[/?sub]".toRegex()
 
     val braces = "[{}]".toRegex()
     val doubleBraces = "\\{\\{|}}".toRegex()
@@ -27,7 +29,7 @@ object Regexes {
 
     val russianLetter = "[а-яА-Я]".toRegex()
 
-    val homonymMarker = "\\[sup]\\d+?\\[/sup]".toRegex()
+    val homonymMarker = "\\[b]\\[sup]\\d+?\\[/sup]\\[/b]".toRegex()
     val lexicalGrammarHomonymMarker = "[Ⅰ-Ⅹ]".toRegex()
     val translationMarker = "\\d+?\\.".toRegex()
     val translationVariantMarker = "\\d+?\\)".toRegex()

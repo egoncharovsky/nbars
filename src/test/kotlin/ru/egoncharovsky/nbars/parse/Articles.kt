@@ -230,4 +230,9 @@ object Articles {
                 .reference("ɪkˈseptɪŋ", "= rf(except) III 1")
         }.build()
 
+    val ll = ArticleBuilder("'ll").homonyms {
+        it.reference("-ə(l)", "ab(разг.) ab(сокр.) ab(от) rf(will)2") {
+            it.example("you'll be late", "1033", "вы опоздаете")
+        }
+    }.build()
 }

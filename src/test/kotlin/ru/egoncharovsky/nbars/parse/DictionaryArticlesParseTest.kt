@@ -1,5 +1,6 @@
 package ru.egoncharovsky.nbars.parse
 
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import ru.egoncharovsky.nbars.entity.article.Article
@@ -28,6 +29,7 @@ class DictionaryArticlesParseTest {
             Articles.a_la,
             Articles.abatement,
             Articles.excepting,
+            Articles.ll,
         ).map { arrayOf(it.headword, it) }
     }
 
@@ -48,5 +50,10 @@ class DictionaryArticlesParseTest {
 
         val article = parser.parse(key, lines)
         assertEquals(expected, article)
+    }
+
+//    @Test
+    fun test() {
+        parse("'Fro", Articles.excepting)
     }
 }

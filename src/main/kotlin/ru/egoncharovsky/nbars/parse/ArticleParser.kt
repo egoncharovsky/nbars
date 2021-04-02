@@ -3,6 +3,7 @@ package ru.egoncharovsky.nbars.parse
 import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Either
 import ru.egoncharovsky.nbars.Regexes
+import ru.egoncharovsky.nbars.Regexes.boldTag
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.grammaticalForm
@@ -11,6 +12,7 @@ import ru.egoncharovsky.nbars.Regexes.lexicalGrammarHomonymMarker
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
 import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
+import ru.egoncharovsky.nbars.Regexes.superscriptTag
 import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
@@ -42,7 +44,9 @@ class ArticleParser {
     private fun parseBody(raw: RawPart): List<List<Either<Homonym, ReferenceToArticle>>> {
         logger.trace("Parse body from: $raw")
 
-        val split = raw.split(homonymMarker)
+        val split = raw.split(homonymMarker).onEach {
+            it.removeAll(boldTag).removeAll(superscriptTag)
+        }
         val prefix = split[0]
 
         logger.trace("Body prefix: $prefix")

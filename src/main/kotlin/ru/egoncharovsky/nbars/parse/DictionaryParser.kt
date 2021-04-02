@@ -8,7 +8,6 @@ import ru.egoncharovsky.nbars.Regexes.italicTag
 import ru.egoncharovsky.nbars.Regexes.marginTag
 import ru.egoncharovsky.nbars.Regexes.optionalTag
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
-import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
 
 class DictionaryParser {
@@ -21,17 +20,19 @@ class DictionaryParser {
         logger.debug("Parsing $headword with ${bodyLines.size} lines")
 
         val body = bodyLines.joinToString("") { it.trim() }
-            .replace(marginTag, "")
-            .replace(boldTag, "")
-            .replace(italicTag, "")
-            .replace(colorTag, "")
-            .replace(doubleBraces, "")
-            .replace(optionalTag, "")
 
         val raw = RawPart(body)
+            .removeAll(marginTag)
+            .removeAll(italicTag)
+            .removeAll(colorTag)
+            .removeAll(doubleBraces)
+            .removeAll(optionalTag)
 
         return when {
-            !body.contains(partOfSpeech) && headword.trim().contains(" ") -> expressionArticleParser.parse(headword, raw)
+            !body.contains(partOfSpeech) && headword.trim().contains(" ") -> {
+                raw.removeAll(boldTag)
+                expressionArticleParser.parse(headword, raw)
+            }
             else -> articleParser.parse(headword, raw)
         }
     }
