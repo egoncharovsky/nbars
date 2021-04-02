@@ -1,6 +1,7 @@
 package ru.egoncharovsky.nbars.parse
 
 import mu.KotlinLogging
+import ru.egoncharovsky.nbars.Regexes.boldTag
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.expressionType
@@ -19,6 +20,8 @@ class ExpressionArticleParser {
 
     fun parse(headword: String, raw: RawPart): ExpressionArticle {
         logger.trace("Parse expression article for '$headword' from: '$raw'")
+
+        raw.removeAll(boldTag)
 
         val split = raw.split(translationMarker)
         val prefix = split[0]

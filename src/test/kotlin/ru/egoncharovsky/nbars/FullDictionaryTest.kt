@@ -25,7 +25,7 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("ArticleParser.kt:86")
+        val printErrorOnLines: Set<String> = setOf("DictionaryParser.kt:37")
 
         val results: List<Pair<String, Result<DictionaryArticle>>>
         val time = measureTimeMillis {
@@ -54,13 +54,13 @@ internal class FullDictionaryTest {
                             || it.className == "ru.egoncharovsky.nbars.parse.ExpressionArticleParser"
                             || it.className == "ru.egoncharovsky.nbars.parse.TranslationParser"
                             || it.className == "ru.egoncharovsky.nbars.parse.ReferenceArticleParser"
-                    }!!
+                    } ?: exception.stackTrace.find { it.className == "ru.egoncharovsky.nbars.parse.DictionaryParser" }!!
                 val fileName = element.fileName
                 val line = element.lineNumber
                 val message = exception.message!!
 
                 if (printErrorOnLines.contains("$fileName:$line")) {
-                    logger.error("$message at $element for '$headword' (#${headwords.indexOf(headword)})")
+                    logger.error("'$headword': \t$message at $element (#${headwords.indexOf(headword)})")
                 }
 
                 exceptionLines.putIfAbsent(element, 0)

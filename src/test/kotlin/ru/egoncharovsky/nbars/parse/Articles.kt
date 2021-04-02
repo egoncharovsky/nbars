@@ -207,12 +207,6 @@ object Articles {
 
         .build()
 
-    val ible = ArticleBuilder("-ible")
-        .homonyms {
-            it.reference("-əb(ə)l", "= rf(-able) 2, 3")
-        }
-        .build()
-
     val pence = ArticleBuilder("pence")
         .homonyms {
             it.reference("pens", "ab(от) rf(penny)", Plural)

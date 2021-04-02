@@ -3,7 +3,6 @@ package ru.egoncharovsky.nbars.utils
 import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.Translation
 import ru.egoncharovsky.nbars.entity.text.ForeignText
-import ru.egoncharovsky.nbars.entity.text.PlainText
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 
@@ -17,7 +16,7 @@ class TranslationBuilder(
         meaning: String,
         remark: String? = null,
         comment: String? = null,
-        applyParams: (VariantBuilder) -> Unit = {}
+        applyParams: (TranslationVariantBuilder) -> Unit = {}
     ): TranslationBuilder {
         return variant(st(meaning), remark?.let { st(it) }, comment?.let { st(it) }, applyParams)
     }
@@ -26,9 +25,9 @@ class TranslationBuilder(
         meaning: Text,
         remark: Text? = null,
         comment: Text? = null,
-        applyParams: (VariantBuilder) -> Unit = {}
+        applyParams: (TranslationVariantBuilder) -> Unit = {}
     ): TranslationBuilder {
-        variants.add(VariantBuilder(meaning, remark, comment).also(applyParams).build())
+        variants.add(TranslationVariantBuilder(meaning, remark, comment).also(applyParams).build())
         return this
     }
 
@@ -37,19 +36,19 @@ class TranslationBuilder(
 
 }
 
-class VariantBuilder(
+class TranslationVariantBuilder(
     private val meaning: Text,
     private val remark: Text? = null,
     private val comment: Text? = null
 ) {
     private val examples = mutableListOf<Example>()
 
-    fun example(text: String, lang: String, translation: String): VariantBuilder {
+    fun example(text: String, lang: String, translation: String): TranslationVariantBuilder {
         example(text, lang, st(translation))
         return this
     }
 
-    fun example(text: String, lang: String, translation: Text): VariantBuilder {
+    fun example(text: String, lang: String, translation: Text): TranslationVariantBuilder {
         examples.add(Example(ForeignText(Text.normalize(text), lang), translation))
         return this
     }

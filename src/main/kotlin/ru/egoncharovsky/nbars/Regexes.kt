@@ -16,6 +16,7 @@ object Regexes {
     val commentTag = "\\[/?com]".toRegex()
     val superscriptTag = "\\[/?sup]".toRegex()
     val subscriptTag = "\\[/?sub]".toRegex()
+    val translationTag = "\\[/?trn]".toRegex()
 
     val braces = "[{}]".toRegex()
     val doubleBraces = "\\{\\{|}}".toRegex()
@@ -33,6 +34,7 @@ object Regexes {
     val lexicalGrammarHomonymMarker = "[Ⅰ-Ⅹ]".toRegex()
     val translationMarker = "\\d+?\\.".toRegex()
     val translationVariantMarker = "\\d+?\\)".toRegex()
+    val meaningVariantMarker = "\\d+?[).]".toRegex()
 
     val transcription = "\\[t](.+?)\\[/t]".toRegex()
     val translation = "\\[trn](.+?)\\[/trn]".toRegex()
@@ -46,4 +48,5 @@ object Regexes {
     val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
     val expressionType = "\\[p](${ExpressionType.labels.joinToString("|")})\\[/p]".toRegex()
     val grammaticalForm = "\\[p](${GrammaticalForm.labels.joinToString("|")})\\[/p]".toRegex()
+    val morphemeType = "\\[p](${MorphemeType.labels.joinToString("|")})\\[/p]".toRegex()
 }

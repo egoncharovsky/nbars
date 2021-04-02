@@ -1,9 +1,12 @@
 package ru.egoncharovsky.nbars.parse
 
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import ru.egoncharovsky.nbars.utils.SentenceHelper
-import ru.egoncharovsky.nbars.utils.VariantBuilder
+import ru.egoncharovsky.nbars.utils.MeaningVariantBuilder
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
+import ru.egoncharovsky.nbars.utils.SentenceHelper.pt
+import ru.egoncharovsky.nbars.utils.SentenceHelper.st
+import ru.egoncharovsky.nbars.utils.TranslationVariantBuilder
 
 class TranslationParserTest {
     @Test
@@ -14,13 +17,13 @@ class TranslationParserTest {
                     "[ex][lang id=1033]he couldn't bear to have his dream tarnished[/lang] " +
                     "— [p]образн.[/p] он не мог смириться с тем, что кто-то покушается на его мечту[/ex]"
         )
-        val expected = VariantBuilder(SentenceHelper.pt("вызывать потускнение, лишать блеска; окислять"))
+        val expected = TranslationVariantBuilder(pt("вызывать потускнение, лишать блеска; окислять"))
             .example("tarnished by damp", "1033", "потускневший от влаги")
             .example(
                 "he couldn't bear to have his dream tarnished", "1033",
-                SentenceHelper.st(
-                    SentenceHelper.ab("образн."),
-                    SentenceHelper.pt(" он не мог смириться с тем, что кто-то покушается на его мечту")
+                st(
+                    ab("образн."),
+                    pt(" он не мог смириться с тем, что кто-то покушается на его мечту")
                 )
             )
             .build()
@@ -32,7 +35,7 @@ class TranslationParserTest {
     @Test
     fun parseVariantWithReference() {
         val raw = RawPart("[p]прост.[/p] = <<Harry>>")
-        val expected = VariantBuilder(SentenceHelper.rf("Harry"), remark = SentenceHelper.ab("прост.")).build()
+        val expected = TranslationVariantBuilder(SentenceHelper.rf("Harry"), remark = ab("прост.")).build()
 
         val variant = TranslationParser().parseVariant(raw)
         kotlin.test.assertEquals(expected, variant)

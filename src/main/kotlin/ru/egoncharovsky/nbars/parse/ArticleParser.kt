@@ -29,7 +29,7 @@ class ArticleParser {
     private val logger = KotlinLogging.logger { }
     private val textParser = TextParser()
     private val translationParser = TranslationParser()
-    private val exampleParser = ExampleParser()
+    private val referenceToArticleParser = ReferenceToArticleParser()
 
     fun parse(headword: String, raw: RawPart): Article {
         logger.trace("Parsing article $headword from $raw")
@@ -86,7 +86,7 @@ class ArticleParser {
     private fun parseHomonymOrReference(raw: RawPart): Either<Homonym, ReferenceToArticle> {
         return when {
             raw.contains(partOfSpeech) && raw.contains(translation) -> Either.Left(parseLexicalGrammaticalHomonym(raw))
-            raw.contains(reference) -> Either.Right(parseReferenceToArticle(raw))
+            raw.contains(reference) -> Either.Right(referenceToArticleParser.parse(raw))
             else -> throw StepParseException(
                 "homonyms or reference",
                 "raw doesn't contains both: $partOfSpeech and $reference",
@@ -95,19 +95,7 @@ class ArticleParser {
         }
     }
 
-    private fun parseReferenceToArticle(raw: RawPart): ReferenceToArticle {
-        logger.trace("Parse reference to article from: '$raw'")
 
-        val examples = raw.findAllParts(Regexes.example).map { exampleParser.parse(it) }
-
-        raw.removeAll(escapedSquareBrackets)
-
-        val transcription = textParser.parse(raw.getPart(transcription, 0)) as Transcription
-        val grammaticalForm = raw.find(grammaticalForm)?.let { GrammaticalForm.byLabel(it) }
-        val toHeadword = textParser.parse(raw.getPart(plain, 0))
-
-        return ReferenceToArticle(transcription, grammaticalForm, toHeadword, examples)
-    }
 
     private fun parseLexicalGrammaticalHomonym(raw: RawPart): Homonym {
         logger.trace("Parse lex. gram. homonym from: $raw")
@@ -131,7 +119,7 @@ class ArticleParser {
         } else {
             rawTranslations.map { translationParser.parse(it) }
         }
-        val remark = prefix.findPart(plain)?.let { textParser.parse(it) }
+        val remark = prefix.findPart(plain)?.let { textParser.parse(it) } //todo check
 
         prefix.finishAll()
 

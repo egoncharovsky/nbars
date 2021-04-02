@@ -1,12 +1,11 @@
 package ru.egoncharovsky.nbars.parse
 
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import ru.egoncharovsky.nbars.entity.article.Article
 import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
 import ru.egoncharovsky.nbars.entity.article.ExpressionArticle
-import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
+import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
 import ru.egoncharovsky.nbars.getResource
 import kotlin.test.assertEquals
 
@@ -22,7 +21,6 @@ class DictionaryArticlesParseTest {
             Articles.swagman,
             Articles.arry,
             ExpressionArticles.tie_in,
-            Articles.ible,
             Articles.peet,
             Articles.pence,
             Articles.narrator,
@@ -30,6 +28,9 @@ class DictionaryArticlesParseTest {
             Articles.abatement,
             Articles.excepting,
             Articles.ll,
+            Morphemes.ade,
+            Morphemes.ad,
+            Morphemes.ible
         ).map { arrayOf(it.headword, it) }
     }
 
@@ -40,6 +41,7 @@ class DictionaryArticlesParseTest {
             when (expected) {
                 is Article -> "card/$it.dsl"
                 is ExpressionArticle -> "card/expressions/$it.dsl"
+                is MorphemeArticle -> "card/morphemes/$it.dsl"
                 else -> throw IllegalArgumentException("Unknown type $expected")
             }
         }
@@ -52,7 +54,7 @@ class DictionaryArticlesParseTest {
         assertEquals(expected, article)
     }
 
-//    @Test
+    //    @Test
     fun test() {
         parse("'Fro", Articles.excepting)
     }

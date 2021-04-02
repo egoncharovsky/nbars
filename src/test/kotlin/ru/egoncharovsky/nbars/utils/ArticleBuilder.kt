@@ -1,14 +1,12 @@
 package ru.egoncharovsky.nbars.utils
 
 import ru.egoncharovsky.nbars.Either
-import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.GrammaticalForm
 import ru.egoncharovsky.nbars.entity.PartOfSpeech
 import ru.egoncharovsky.nbars.entity.Translation
 import ru.egoncharovsky.nbars.entity.article.Article
 import ru.egoncharovsky.nbars.entity.article.Homonym
 import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
-import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
@@ -64,21 +62,6 @@ class HomonymsBuilder {
     }
 
     fun build(): List<Either<Homonym, ReferenceToArticle>> = homonyms
-}
-
-class ReferenceToArticleBuilder(
-    private val transcription: Transcription,
-    private val referenceOnHeadWord: Text,
-    private val grammaticalForm: GrammaticalForm? = null
-) {
-    private val examples = mutableListOf<Example>()
-
-    fun example(text: String, lang: String, translation: String): ReferenceToArticleBuilder {
-        examples.add(Example(ForeignText(Text.normalize(text), lang), st(translation)))
-        return this
-    }
-
-    fun build() = ReferenceToArticle(transcription, grammaticalForm, referenceOnHeadWord, examples)
 }
 
 class HomonymBuilder(
