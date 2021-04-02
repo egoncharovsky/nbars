@@ -30,7 +30,8 @@ class DictionaryArticlesParseTest {
             Articles.ll,
             Morphemes.ade,
             Morphemes.ad,
-            Morphemes.ible
+            Morphemes.ible,
+            Articles.abed,
         ).map { arrayOf(it.headword, it) }
     }
 

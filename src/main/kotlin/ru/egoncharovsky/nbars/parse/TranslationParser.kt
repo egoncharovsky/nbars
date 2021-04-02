@@ -34,7 +34,7 @@ class TranslationParser {
             Translation(
                 rawVariants.map { parseVariant(it) },
                 comment = prefix.findPart(comment)?.let { textParser.parse(it) },
-                remark = prefix.findPart(label, 0)?.let { textParser.parse(it) }
+                remark = prefix.findPart(plain)?.let { textParser.parse(it) }
             )
         }.also {
             prefix.finishAll()
@@ -51,7 +51,7 @@ class TranslationParser {
                 val meaning = textParser.parse(raw.getPart(translation).removeAll(commentTag))
 
                 val comment = raw.findPart(comment)?.let { textParser.parse(it) }
-                val remark = raw.findPart(plain, 0)?.let { textParser.parse(it) }
+                val remark = raw.findPart(plain)?.let { textParser.parse(it) }
 
                 Translation.Variant(meaning, remark, comment, examples)
             }

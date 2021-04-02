@@ -229,4 +229,24 @@ object Articles {
             it.example("you'll be late", "1033", "вы опоздаете")
         }
     }.build()
+
+    val abed = ArticleBuilder("abed").homonyms {
+        it
+            .homonym("əˈbed", Adjective) {
+                it.translation(remark = st("ab(predic) ab(арх.)")) {
+                    it
+                        .variant("лежащий, находящийся в постели ab(или) на кровати")
+                        .variant("прикованный к постели") {
+                            it.example("he was abed with gout", "1033", "приступ подагры приковал его к постели")
+                        }
+                }
+            }
+            .homonym("əˈbed", Adverb) {
+                it.translation(remark = ab("арх.")) {
+                    it
+                        .variant("в постели, на кровати")
+                        .variant("в постель, на кровать")
+                }
+            }
+    }.build()
 }
