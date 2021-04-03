@@ -111,13 +111,31 @@ data class RawPart(
         return parts
     }
 
-    fun split(regex: Regex): List<RawPart> {
+    fun split(regex: Regex, group: Int = 0): List<RawPart> {
         logger.trace("Consuming split by '$regex' of '$raw'")
         require(raw.isNotEmpty()) { EmptyRaw("split") }
 
-        return raw.split(regex).map { it.trim() }.map { addPart(it) }.also {
+        return split(raw, regex, group).map { it.trim() }.map { addPart(it) }.also {
             raw = ""
         }
+    }
+
+    private fun split(raw: String, regex: Regex, group: Int): List<String> {
+        val ranges = regex.findAll(raw).map { it.groups[group]!!.range }.toList()
+
+        val between = if (ranges.isNotEmpty()) {
+            ranges.zipWithNext { a, b -> range(a.last + 1, b.first) }
+                .plus(range(0, ranges.first().first))
+                .plus(range(ranges.last().last + 1, raw.length))
+        } else {
+            listOf(range(0, raw.length))
+        }.filterNotNull().sortedBy { it.first }
+
+        return between.map { raw.substring(it) }
+    }
+
+    private fun range(from: Int, to: Int): IntRange? {
+        return if (from <= to) from until to else null
     }
 
     fun before(regex: Regex): Pair<RawPart, RawPart?> {
@@ -152,7 +170,7 @@ data class RawPart(
     private fun consumeFind(regex: Regex, group: Int, assertion: (List<String>) -> Unit = {}): List<String> {
         return findAll(raw, regex, group).also {
             assertion(it)
-            raw = consume(raw, regex)
+            raw = consume(raw, regex).trim()
         }
     }
 
@@ -166,7 +184,7 @@ data class RawPart(
         return findAll(rawBefore, regex, group).also {
             assertion(it)
             val beforeCut = consume(rawBefore, regex)
-            raw = beforeCut + rawAfter.orEmpty()
+            raw = (beforeCut + rawAfter.orEmpty()).trim()
         }
     }
 
@@ -183,7 +201,7 @@ data class RawPart(
 
     private fun consume(raw: String, regex: Regex): String {
         logger.trace("Consuming of '$raw'")
-        return raw.replace(regex, "").trim().also {
+        return raw.replace(regex, "").also {
             logger.trace("Raw cut to '$it'")
         }
     }

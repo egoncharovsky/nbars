@@ -249,4 +249,50 @@ object Articles {
                 }
             }
     }.build()
+
+    val abeyance = ArticleBuilder("abeyance").homonyms {
+        it.homonym("əˈbeɪəns", Noun) {
+            it
+                .translation {
+                    it.variant("состояние неопределённости, неизвестности ab(или) ожидания") {
+                        it
+                            .example("the custom was revived after an abeyance of several centuries",
+                                "1033",
+                                "эта традиция возродилась после многовекового забвения")
+                            .example("to be in /to fall into, to go into/ abeyance",
+                                "1033",
+                                "находиться в состоянии неопределённости /неизвестности, ожидания/ (ab(см.) ab(тж) 2, 2))")
+                            .example("to hold in abeyance",
+                                "1033",
+                                "отсрочивать")
+                            .example("let's hold that problem in abeyance for a short while",
+                                "1033",
+                                "давайте отложим решение этого вопроса на некоторое время")
+
+                    }
+                }
+                .translation(remark = ab("юр.")) {
+                    it
+                        .variant("временное прекращение; приостановление")
+                        .variant("временная отмена", comment = "(закона, права ab(и т. п.))") {
+                            it.example("to be in /to fall into/ abeyance",
+                                "1033",
+                                "быть временно отменённым (о законе, праве ab(и т. п.)) (ab(см.) ab(тж) 1)")
+                        }
+                }
+                .translation {
+                    it.variant("отсутствие владельца, претендента",
+                        remark = "ab(юр.)",
+                        comment = "(на собственность, наследство или наследственный титул)") {
+                        it.example("lands in abeyance",
+                            "1033",
+                            "выморочное имение, имение без владельца; бесхозное имущество")
+
+                    }
+                }
+                .translation {
+                    it.variant("скрытое, латентное состояние", remark = "ab(хим.), ab(физ.)")
+                }
+        }
+    }.build()
 }

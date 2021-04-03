@@ -7,6 +7,8 @@ import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
 import ru.egoncharovsky.nbars.entity.article.ExpressionArticle
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
 import ru.egoncharovsky.nbars.getResource
+import ru.egoncharovsky.nbars.utils.ArticleBuilder
+import kotlin.reflect.full.companionObject
 import kotlin.test.assertEquals
 
 class DictionaryArticlesParseTest {
@@ -32,6 +34,7 @@ class DictionaryArticlesParseTest {
             Morphemes.ad,
             Morphemes.ible,
             Articles.abed,
+            Articles.abeyance
         ).map { arrayOf(it.headword, it) }
     }
 

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 import ru.egoncharovsky.nbars.Regexes.label
 import ru.egoncharovsky.nbars.Regexes.translation
 import kotlin.test.assertEquals
+import kotlin.test.expect
 
 internal class RawPartTest {
 
@@ -46,4 +47,30 @@ internal class RawPartTest {
             rawPart.findBefore(label, translation)
         )
     }
+
+    @Test
+    fun `Split should remove only group with defined number`() {
+        val rawPart = RawPart(
+            "[p]зоол.[/p]1.[trn]марабу, аист индийский[/trn] 2.[p]др.[/p] [trn]другой[/trn]3.fff"
+        )
+
+        val split = rawPart.split("[^ ](\\d+?\\.)".toRegex(), 1)
+        assertEquals(listOf(
+            RawPart("[p]зоол.[/p]"),
+            RawPart("[trn]марабу, аист индийский[/trn] 2.[p]др.[/p] [trn]другой[/trn]"),
+            RawPart("fff"),
+        ), split)
+    }
+
+    @Test
+    fun `Split with default group 0 should work as string split`() {
+        val s = "1. a2. b3. c"
+        val regex = "\\d+?\\.".toRegex()
+        val rawPart = RawPart(s)
+
+        val split = rawPart.split(regex)
+        val expected = s.split(regex).map { RawPart(it.trim()) }
+        assertEquals(expected, split)
+    }
+
 }

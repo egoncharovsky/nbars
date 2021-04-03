@@ -25,7 +25,7 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:53")
+        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:68")
 
         val results: List<Pair<String, Result<DictionaryArticle>>>
         val time = measureTimeMillis {

@@ -32,9 +32,9 @@ object Regexes {
 
     val homonymMarker = "\\[b]\\[sup]\\d+?\\[/sup]\\[/b]".toRegex()
     val lexicalGrammarHomonymMarker = "[Ⅰ-Ⅹ]".toRegex()
-    val translationMarker = "\\d+?\\.".toRegex()
-    val translationVariantMarker = "\\d+?\\)".toRegex()
-    val meaningVariantMarker = "\\d+?[).]".toRegex()
+    val translationMarker = "\\d+?\\. ".toRegex()
+    val translationVariantMarker = "\\d+?\\) ".toRegex()
+    val meaningVariantMarker = "\\d+?[).] ".toRegex()
 
     val transcription = "\\[t](.+?)\\[/t]".toRegex()
     val translation = "\\[trn](.+?)\\[/trn]".toRegex()

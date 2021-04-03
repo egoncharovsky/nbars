@@ -1,21 +1,8 @@
 package ru.egoncharovsky.nbars.entity.text
 
-class Sentence(parts: List<TextPart>) : Text {
-    val parts: List<TextPart> = normalize(parts)
+data class Sentence(val parts: List<TextPart>) : Text {
 
     override fun asPlain(): String = parts.joinToString("") { it.asPlain() }
-
-    private fun normalize(parts: List<TextPart>): List<TextPart> {
-        return parts.fold(mutableListOf()) { combined: MutableList<TextPart>, textPart: TextPart ->
-            val previous = combined.lastOrNull()
-            if (previous is PlainText && textPart is PlainText) {
-                combined[combined.lastIndex] = previous.merge(textPart)
-            } else {
-                combined.add(textPart)
-            }
-            combined
-        }
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -51,9 +38,43 @@ class Sentence(parts: List<TextPart>) : Text {
         }
 
         fun textFrom(parts: List<TextPart>) = if (parts.size > 1) {
-            Sentence(parts)
+            Sentence(normalize(parts))
         } else {
             parts[0]
+        }
+
+        private fun normalize(parts: List<TextPart>): List<TextPart> {
+            val normalized = parts.fold(mutableListOf()) { combined: MutableList<TextPart>, textPart: TextPart ->
+                val previous = combined.lastOrNull()
+                if (previous is PlainText && textPart is PlainText) {
+                    combined[combined.lastIndex] = previous.merge(textPart)
+                } else {
+                    combined.add(textPart)
+                }
+                combined
+            }
+
+            normalized.firstOrNull()?.let {
+                if (it is PlainText) {
+                    val trimmed = it.text.trimStart()
+                    if (trimmed.isNotEmpty()) {
+                        normalized[0] = PlainText(trimmed)
+                    } else {
+                        normalized.removeFirst()
+                    }
+                }
+            }
+            normalized.lastOrNull()?.let {
+                if (it is PlainText) {
+                    val trimmed = it.text.trimEnd()
+                    if (trimmed.isNotEmpty()) {
+                        normalized[normalized.lastIndex] = PlainText(trimmed)
+                    } else {
+                        normalized.removeLast()
+                    }
+                }
+            }
+            return normalized
         }
     }
 }
