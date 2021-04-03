@@ -4,7 +4,7 @@ import ru.egoncharovsky.nbars.entity.text.Text.Companion.requireNoTags
 
 data class Transcription(
     val value: String
-) : Text {
+) : TextPart {
     init {
         requireNoTags(value)
     }

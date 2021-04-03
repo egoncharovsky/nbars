@@ -20,7 +20,7 @@ class TextParser {
             ::findTranscriptionRanges
         ).map {
             it.invoke(raw)
-        }.reduce(Map<IntRange, (RawPart) -> Text>::plus)
+        }.reduce(Map<IntRange, (RawPart) -> TextPart>::plus)
 
         return parse(raw, ranges)
     }
@@ -49,7 +49,7 @@ class TextParser {
     }.toMap()
 
     private fun findPlainTextRanges(
-        ranges: SortedMap<IntRange, (RawPart) -> Text>,
+        ranges: SortedMap<IntRange, (RawPart) -> TextPart>,
         raw: RawPart
     ): Map<IntRange, (RawPart) -> PlainText> {
         val plainRanges = if (ranges.isNotEmpty()) {
@@ -68,7 +68,7 @@ class TextParser {
         }.toMap()
     }
 
-    internal fun parse(raw: RawPart, ranges: Map<IntRange, (RawPart) -> Text>): Text {
+    internal fun parse(raw: RawPart, ranges: Map<IntRange, (RawPart) -> TextPart>): Text {
         val sortedRanges = ranges
             .toSortedMap { r1, r2 -> r1.first.compareTo(r2.first) }
         requireNoIntersections(sortedRanges.keys, raw)
@@ -86,11 +86,7 @@ class TextParser {
 
         raw.finishAll()
 
-        return if (parts.size > 1) {
-            Sentence(parts)
-        } else {
-            parts[0]
-        }
+        return Sentence.textFrom(parts)
     }
 
     private fun requireNoIntersections(ranges: Collection<IntRange>, raw: RawPart) =

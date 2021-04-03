@@ -10,6 +10,8 @@ import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
 import ru.egoncharovsky.nbars.entity.Translation
+import ru.egoncharovsky.nbars.entity.text.Sentence
+import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.join
 import ru.egoncharovsky.nbars.exception.StepParseException
 
 class TranslationParser {
@@ -50,7 +52,7 @@ class TranslationParser {
             raw.contains(translation) -> {
                 val meaning = textParser.parse(raw.getPart(translation).removeAll(commentTag))
 
-                val comment = raw.findPart(comment)?.let { textParser.parse(it) }
+                val comment = raw.findAllParts(comment).map { textParser.parse(it) }.let { join(it, " ") }
                 val remark = raw.findPart(plain)?.let { textParser.parse(it) }
 
                 Translation.Variant(meaning, remark, comment, examples)

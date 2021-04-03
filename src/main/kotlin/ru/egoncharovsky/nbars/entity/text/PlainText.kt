@@ -4,10 +4,12 @@ import ru.egoncharovsky.nbars.entity.text.Text.Companion.requireNoTags
 
 data class PlainText(
     val text: String
-) : Text {
+) : TextPart {
     init {
         requireNoTags(text)
     }
 
     override fun asPlain(): String = text
+
+    fun merge(another: PlainText) = PlainText(text + another.text)
 }

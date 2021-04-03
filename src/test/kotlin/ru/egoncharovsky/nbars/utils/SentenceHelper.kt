@@ -36,7 +36,7 @@ object SentenceHelper {
         val texts = parts.map {
             when (it) {
                 is String -> pt(it)
-                is Text -> it
+                is TextPart -> it
                 else -> throw IllegalArgumentException("Incorrect type for $it")
             }
         }
@@ -53,7 +53,7 @@ object SentenceHelper {
             SentenceHelper::findTranscriptionRanges
         ).map {
             it.invoke(rawPart)
-        }.reduce(Map<IntRange, (RawPart) -> Text>::plus)
+        }.reduce(Map<IntRange, (RawPart) -> TextPart>::plus)
 
         return textParser.parse(rawPart, ranges)
     }

@@ -20,3 +20,5 @@ interface Text {
         }
     }
 }
+
+interface TextPart : Text

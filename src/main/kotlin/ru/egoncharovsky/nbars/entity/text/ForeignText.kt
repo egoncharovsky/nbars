@@ -5,7 +5,7 @@ import ru.egoncharovsky.nbars.entity.text.Text.Companion.requireNoTags
 data class ForeignText(
     val text: String,
     val language: String
-) : Text {
+) : TextPart {
     init {
         requireNoTags(text)
         requireNoTags(language)

@@ -4,7 +4,7 @@ import ru.egoncharovsky.nbars.entity.text.Text.Companion.requireNoTags
 
 data class Reference(
     val word: String
-): Text {
+): TextPart {
     init {
         requireNoTags(word)
     }
