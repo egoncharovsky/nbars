@@ -19,13 +19,26 @@ internal class FullDictionaryTest {
     private val indexFile = File("index/full_test.dsl.index")
 
     @Test
+    fun article() {
+        val key = "go"
+
+        val reader = DictionaryReader(dictionaryFile, indexFile)
+        val parser = DictionaryParser()
+        val positions = reader.readArticlePositions()
+        val headwords = positions.keys.toList()
+
+        val article = parser.parse(key, reader.readArticle(positions[key]!!))
+        println()
+    }
+
+    @Test
     fun fullDictionary() {
         val reader = DictionaryReader(dictionaryFile, indexFile)
         val parser = DictionaryParser()
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:68")
+        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:49")
 
         val results: List<Pair<String, Result<DictionaryArticle>>>
         val time = measureTimeMillis {

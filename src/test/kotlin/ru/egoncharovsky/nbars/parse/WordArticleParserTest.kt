@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import ru.egoncharovsky.nbars.entity.Pronoun
 import kotlin.test.assertEquals
 
-class ArticleParserTest {
+class WordArticleParserTest {
 
     @Test
     fun parsePartOfSpeech() {

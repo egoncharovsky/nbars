@@ -3,17 +3,19 @@ package ru.egoncharovsky.nbars.utils
 import ru.egoncharovsky.nbars.Either
 import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.GrammaticalForm
-import ru.egoncharovsky.nbars.entity.MorphemeMeaning
+import ru.egoncharovsky.nbars.entity.MorphemeHomonym
 import ru.egoncharovsky.nbars.entity.MorphemeType
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
 import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
 import ru.egoncharovsky.nbars.entity.text.Text
+import ru.egoncharovsky.nbars.entity.translation.Meaning
+import ru.egoncharovsky.nbars.entity.translation.Variant
 import ru.egoncharovsky.nbars.utils.SentenceHelper.ft
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 
 class MorphemeBuilder(private val keyword: String) {
-    private var homonyms: Either<MutableList<MorphemeMeaning>, ReferenceToArticle>? = null
+    private var homonyms: Either<MutableList<MorphemeHomonym>, ReferenceToArticle>? = null
 
     fun homonym(
         transcription: String,
@@ -53,29 +55,16 @@ class MorphemeMeaningBuilder(
     private val type: MorphemeType? = null,
     private val comment: String? = null
 ) {
-    private val variants = mutableListOf<MorphemeMeaning.Variant>()
+    private val variants = mutableListOf<Variant>()
 
     fun variant(
         meaning: String,
-        applyParams: (MeaningVariantBuilder) -> Unit = {}
+        applyParams: (VariantBuilder) -> Unit = {}
     ): MorphemeMeaningBuilder {
-        variants.add(MeaningVariantBuilder(st(meaning)).also(applyParams).build())
+        variants.add(VariantBuilder(st(meaning)).also(applyParams).build())
         return this
     }
 
-    fun build(): MorphemeMeaning = MorphemeMeaning(tr(transcription), variants, type, comment?.let { st(it) })
-}
-
-class MeaningVariantBuilder(
-    private val meaning: Text,
-) {
-    private val examples = mutableListOf<Example>()
-
-    fun example(text: String, lang: String, translation: String): MeaningVariantBuilder {
-        examples.add(Example(ft(text, lang), st(translation)))
-        return this
-    }
-
-    fun build(): MorphemeMeaning.Variant = MorphemeMeaning.Variant(meaning, examples)
+    fun build(): MorphemeHomonym = MorphemeHomonym(tr(transcription), type, Meaning(variants, comment?.let { st(it) }))
 }
 

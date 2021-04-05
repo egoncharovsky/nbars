@@ -2,13 +2,11 @@ package ru.egoncharovsky.nbars.parse
 
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import ru.egoncharovsky.nbars.entity.article.Article
+import ru.egoncharovsky.nbars.entity.article.WordArticle
 import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
 import ru.egoncharovsky.nbars.entity.article.ExpressionArticle
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
 import ru.egoncharovsky.nbars.getResource
-import ru.egoncharovsky.nbars.utils.ArticleBuilder
-import kotlin.reflect.full.companionObject
 import kotlin.test.assertEquals
 
 class DictionaryArticlesParseTest {
@@ -38,12 +36,12 @@ class DictionaryArticlesParseTest {
         ).map { arrayOf(it.headword, it) }
     }
 
-    @ParameterizedTest()
+    @ParameterizedTest
     @MethodSource("parameters")
     fun parse(key: String, expected: DictionaryArticle) {
         val path = key.replace(" ", "_").let {
             when (expected) {
-                is Article -> "card/$it.dsl"
+                is WordArticle -> "card/$it.dsl"
                 is ExpressionArticle -> "card/expressions/$it.dsl"
                 is MorphemeArticle -> "card/morphemes/$it.dsl"
                 else -> throw IllegalArgumentException("Unknown type $expected")

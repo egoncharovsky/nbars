@@ -3,9 +3,9 @@ package ru.egoncharovsky.nbars.utils
 import ru.egoncharovsky.nbars.Either
 import ru.egoncharovsky.nbars.entity.GrammaticalForm
 import ru.egoncharovsky.nbars.entity.PartOfSpeech
-import ru.egoncharovsky.nbars.entity.Translation
-import ru.egoncharovsky.nbars.entity.article.Article
-import ru.egoncharovsky.nbars.entity.article.Homonym
+import ru.egoncharovsky.nbars.entity.translation.DirectTranslation
+import ru.egoncharovsky.nbars.entity.article.WordArticle
+import ru.egoncharovsky.nbars.entity.WordHomonym
 import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Transcription
@@ -14,19 +14,19 @@ import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 
 class ArticleBuilder(private val keyword: String) {
 
-    private val homonyms = mutableListOf<List<Either<Homonym, ReferenceToArticle>>>()
+    private val homonyms = mutableListOf<List<Either<WordHomonym, ReferenceToArticle>>>()
 
     fun homonyms(applyParams: (HomonymsBuilder) -> Unit): ArticleBuilder {
         homonyms.add(HomonymsBuilder().also(applyParams).build())
         return this
     }
 
-    fun build(): Article = Article(keyword, homonyms)
+    fun build(): WordArticle = WordArticle(keyword, homonyms)
 }
 
 class HomonymsBuilder {
 
-    private val homonyms = mutableListOf<Either<Homonym, ReferenceToArticle>>()
+    private val homonyms = mutableListOf<Either<WordHomonym, ReferenceToArticle>>()
 
     fun homonym(
         transcription: String,
@@ -61,7 +61,7 @@ class HomonymsBuilder {
         return this
     }
 
-    fun build(): List<Either<Homonym, ReferenceToArticle>> = homonyms
+    fun build(): List<Either<WordHomonym, ReferenceToArticle>> = homonyms
 }
 
 class HomonymBuilder(
@@ -70,7 +70,7 @@ class HomonymBuilder(
     private val remark: Text? = null,
     private val comment: Text? = null
 ) {
-    private val translations = mutableListOf<Translation>()
+    private val translations = mutableListOf<DirectTranslation>()
 
     fun translation(
         remark: Text? = null,
@@ -81,5 +81,5 @@ class HomonymBuilder(
         return this
     }
 
-    fun build(): Homonym = Homonym(transcription, partOfSpeech, remark, comment, translations)
+    fun build(): WordHomonym = WordHomonym(transcription, partOfSpeech, remark, comment, translations)
 }

@@ -9,9 +9,9 @@ import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
-import ru.egoncharovsky.nbars.entity.Translation
-import ru.egoncharovsky.nbars.entity.text.Sentence
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.join
+import ru.egoncharovsky.nbars.entity.translation.DirectTranslation
+import ru.egoncharovsky.nbars.entity.translation.Variant
 import ru.egoncharovsky.nbars.exception.StepParseException
 
 class TranslationParser {
@@ -20,7 +20,7 @@ class TranslationParser {
     private val textParser = TextParser()
     private val exampleParser = ExampleParser()
 
-    fun parse(raw: RawPart): Translation {
+    fun parse(raw: RawPart): DirectTranslation {
         logger.trace("Parse translation from: $raw")
 
         val split = raw.split(translationVariantMarker)
@@ -31,9 +31,9 @@ class TranslationParser {
         val rawVariants = split.drop(1)
 
         return if (rawVariants.isEmpty()) {
-            Translation(listOf(parseVariant(prefix)))
+            DirectTranslation(listOf(parseVariant(prefix)))
         } else {
-            Translation(
+            DirectTranslation(
                 rawVariants.map { parseVariant(it) },
                 comment = prefix.findPart(comment)?.let { textParser.parse(it) },
                 remark = prefix.findPart(plain)?.let { textParser.parse(it) }
@@ -43,7 +43,7 @@ class TranslationParser {
         }
     }
 
-    internal fun parseVariant(raw: RawPart): Translation.Variant {
+    internal fun parseVariant(raw: RawPart): Variant {
         logger.trace("Parse translation variant from: $raw")
 
         val examples = raw.findAllParts(example).map { exampleParser.parse(it) }
@@ -55,7 +55,7 @@ class TranslationParser {
                 val comment = raw.findAllParts(comment).map { textParser.parse(it) }.let { join(it, " ") }
                 val remark = raw.findPart(plain)?.let { textParser.parse(it) }
 
-                Translation.Variant(meaning, remark, comment, examples)
+                Variant(meaning, examples, remark, comment)
             }
             raw.contains(reference) -> {
                 val comment = raw.findPart(comment)?.let { textParser.parse(it) }
@@ -63,7 +63,7 @@ class TranslationParser {
 
                 val reference = textParser.parse(raw)
 
-                Translation.Variant(reference, remark, comment, examples)
+                Variant(reference, examples, remark, comment)
             }
             else -> throw StepParseException(
                 "meaning",

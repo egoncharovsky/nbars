@@ -2,11 +2,9 @@ package ru.egoncharovsky.nbars.parse
 
 import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Either
-import ru.egoncharovsky.nbars.Regexes
 import ru.egoncharovsky.nbars.Regexes.boldTag
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
-import ru.egoncharovsky.nbars.Regexes.grammaticalForm
 import ru.egoncharovsky.nbars.Regexes.homonymMarker
 import ru.egoncharovsky.nbars.Regexes.lexicalGrammarHomonymMarker
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
@@ -16,10 +14,9 @@ import ru.egoncharovsky.nbars.Regexes.superscriptTag
 import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
-import ru.egoncharovsky.nbars.entity.GrammaticalForm
 import ru.egoncharovsky.nbars.entity.PartOfSpeech
-import ru.egoncharovsky.nbars.entity.article.Article
-import ru.egoncharovsky.nbars.entity.article.Homonym
+import ru.egoncharovsky.nbars.entity.article.WordArticle
+import ru.egoncharovsky.nbars.entity.WordHomonym
 import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.exception.StepParseException
@@ -31,17 +28,17 @@ class ArticleParser {
     private val translationParser = TranslationParser()
     private val referenceToArticleParser = ReferenceToArticleParser()
 
-    fun parse(headword: String, raw: RawPart): Article {
+    fun parse(headword: String, raw: RawPart): WordArticle {
         logger.trace("Parsing article $headword from $raw")
 
         val homonyms = parseBody(raw)
         raw.finishAll()
 
-        return Article(headword, homonyms)
+        return WordArticle(headword, homonyms)
     }
 
 
-    private fun parseBody(raw: RawPart): List<List<Either<Homonym, ReferenceToArticle>>> {
+    private fun parseBody(raw: RawPart): List<List<Either<WordHomonym, ReferenceToArticle>>> {
         logger.trace("Parse body from: $raw")
 
         val split = raw.split(homonymMarker).onEach {
@@ -63,7 +60,7 @@ class ArticleParser {
         return homonyms
     }
 
-    private fun parseHomonyms(raw: RawPart): List<Either<Homonym, ReferenceToArticle>> {
+    private fun parseHomonyms(raw: RawPart): List<Either<WordHomonym, ReferenceToArticle>> {
         logger.trace("Parse lex. gram. homonyms from: $raw")
 
         val split = raw.split(lexicalGrammarHomonymMarker)
@@ -83,7 +80,7 @@ class ArticleParser {
         return lexGramHomonyms
     }
 
-    private fun parseHomonymOrReference(raw: RawPart): Either<Homonym, ReferenceToArticle> {
+    private fun parseHomonymOrReference(raw: RawPart): Either<WordHomonym, ReferenceToArticle> {
         return when {
             raw.contains(partOfSpeech) && raw.contains(translation) -> Either.Left(parseLexicalGrammaticalHomonym(raw))
             raw.contains(reference) -> Either.Right(referenceToArticleParser.parse(raw))
@@ -95,9 +92,7 @@ class ArticleParser {
         }
     }
 
-
-
-    private fun parseLexicalGrammaticalHomonym(raw: RawPart): Homonym {
+    private fun parseLexicalGrammaticalHomonym(raw: RawPart): WordHomonym {
         logger.trace("Parse lex. gram. homonym from: $raw")
 
         val split = raw.split(translationMarker)
@@ -123,7 +118,7 @@ class ArticleParser {
 
         prefix.finishAll()
 
-        return Homonym(transcription, partOfSpeech, remark, comment, translations)
+        return WordHomonym(transcription, partOfSpeech, remark, comment, translations)
     }
 
     internal fun parsePartOfSpeech(labels: List<String>): PartOfSpeech {

@@ -2,16 +2,10 @@ package ru.egoncharovsky.nbars.entity
 
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Transcription
+import ru.egoncharovsky.nbars.entity.translation.Meaning
 
-data class MorphemeMeaning(
+data class MorphemeHomonym(
     val transcription: Transcription,
-    val variants: List<Variant>,
     val type: MorphemeType?,
-    val comment: Text? = null
-) {
-
-    data class Variant(
-        val meaning: Text,
-        val examples: List<Example> = listOf()
-    )
-}
+    val meaning: Meaning
+)

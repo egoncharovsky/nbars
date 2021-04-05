@@ -1,10 +1,9 @@
 package ru.egoncharovsky.nbars.utils
 
 import ru.egoncharovsky.nbars.entity.ExpressionType
-import ru.egoncharovsky.nbars.entity.Translation
+import ru.egoncharovsky.nbars.entity.translation.DirectTranslation
 import ru.egoncharovsky.nbars.entity.article.ExpressionArticle
 import ru.egoncharovsky.nbars.entity.text.Text
-import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 
 class ExpressionArticleBuilder(
@@ -13,7 +12,7 @@ class ExpressionArticleBuilder(
     private val expressionType: ExpressionType? = null,
     private val comment: Text? = null
 ) {
-    private val translations = mutableListOf<Translation>()
+    private val translations = mutableListOf<DirectTranslation>()
 
     fun translation(
         remark: Text? = null,
