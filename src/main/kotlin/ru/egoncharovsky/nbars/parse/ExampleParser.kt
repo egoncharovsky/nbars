@@ -3,11 +3,11 @@ package ru.egoncharovsky.nbars.parse
 import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Regexes.commentTag
 import ru.egoncharovsky.nbars.Regexes.dash
-import ru.egoncharovsky.nbars.Regexes.exampleVariant
 import ru.egoncharovsky.nbars.Regexes.exampleVariantMarker
 import ru.egoncharovsky.nbars.Regexes.lang
 import ru.egoncharovsky.nbars.Regexes.letter
 import ru.egoncharovsky.nbars.Regexes.plain
+import ru.egoncharovsky.nbars.Regexes.sampleVariant
 import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.text.ForeignText
 
@@ -28,13 +28,11 @@ class ExampleParser {
                 prefix.removeAll(dash)
             } as ForeignText
 
-            val allVariants = split.drop(1).flatMap { rawVariants ->
-                val translation = textParser.parse(rawVariants.getPartBefore(plain, lang))
-                val variants = rawVariants.findAllParts(exampleVariant, 0).map { parseExample(it) }
-                listOf(Example(foreign, translation)).plus(variants)
-            } // shall we need add special group?
-
-            allVariants
+            split.drop(1).flatMap { rawSamples ->
+                val translation = textParser.parse(rawSamples.getPartBefore(plain, lang))
+                val samples = rawSamples.findAllParts(sampleVariant, 0).map { parseExample(it) }
+                listOf(Example(foreign, translation)).plus(samples)
+            } // shall we need add special group/abstraction for sample?
         } else {
             listOf(parseExample(raw))
         }

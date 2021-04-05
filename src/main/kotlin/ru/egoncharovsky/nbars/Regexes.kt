@@ -49,7 +49,7 @@ object Regexes {
     val example = "\\[ex](.+?)\\[/ex]".toRegex()
     val stress = "\\['](.)\\[/']".toRegex()
 
-    val exampleVariant = "\\[lang id=(\\d+)](.+?)\\[/lang](.+?(?=\\[|\$))".toRegex()
+    val sampleVariant = "\\[lang id=(\\d+)](.+?)\\[/lang](.+?(?=\\[|\$))".toRegex()
 
     val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
     val expressionType = "\\[p](${ExpressionType.labels.joinToString("|")})\\[/p]".toRegex()
