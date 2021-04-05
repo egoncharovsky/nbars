@@ -30,7 +30,7 @@ class ExampleParser {
 
             val allVariants = split.drop(1).flatMap { rawVariants ->
                 val translation = textParser.parse(rawVariants.getPartBefore(plain, lang))
-                val variants = rawVariants.getAllParts(exampleVariant, 0).map { parseExample(it) }
+                val variants = rawVariants.findAllParts(exampleVariant, 0).map { parseExample(it) }
                 listOf(Example(foreign, translation)).plus(variants)
             } // shall we need add special group?
 
