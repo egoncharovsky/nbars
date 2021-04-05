@@ -20,7 +20,7 @@ internal class FullDictionaryTest {
 
     @Test
     fun article() {
-        val key = "go"
+        val key = "vain"
 
         val reader = DictionaryReader(dictionaryFile, indexFile)
         val parser = DictionaryParser()
