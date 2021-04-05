@@ -31,7 +31,7 @@ object Regexes {
     val leftEscapedSquareBracket = "\\\\\\[".toRegex()
     val rightEscapedSquareBracket = "\\\\]".toRegex()
 
-    val russianLetter = "[а-яА-Я]".toRegex()
+    val letter = "[a-zA-Zа-яА-Я]".toRegex()
 
     val homonymMarker = "\\[b]\\[sup]\\d+?\\[/sup]\\[/b]".toRegex()
     val lexicalGrammarHomonymMarker = "[Ⅰ-Ⅹ]".toRegex()

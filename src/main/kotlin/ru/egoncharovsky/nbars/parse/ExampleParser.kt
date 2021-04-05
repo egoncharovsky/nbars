@@ -6,8 +6,8 @@ import ru.egoncharovsky.nbars.Regexes.dash
 import ru.egoncharovsky.nbars.Regexes.exampleVariant
 import ru.egoncharovsky.nbars.Regexes.exampleVariantMarker
 import ru.egoncharovsky.nbars.Regexes.lang
+import ru.egoncharovsky.nbars.Regexes.letter
 import ru.egoncharovsky.nbars.Regexes.plain
-import ru.egoncharovsky.nbars.Regexes.russianLetter
 import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.text.ForeignText
 
@@ -44,7 +44,7 @@ class ExampleParser {
         logger.trace("Parse example from: $raw")
 
         val foreign = textParser.parse(raw.getPart(lang, 0)) as ForeignText
-        raw.removeBefore(dash, russianLetter).removeAll(commentTag)
+        raw.removeBefore(dash, letter).removeAll(commentTag)
         val translation = textParser.parse(raw)
 
         return Example(foreign, translation)
