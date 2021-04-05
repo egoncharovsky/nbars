@@ -42,8 +42,14 @@ data class RawPart(
 
     fun findBefore(regex: Regex, before: Regex, group: Int = 1): String? {
         return consumeFindBefore(regex, before, group) {
-            require(it.size <= 1) { FailExpectation("No more than 1", raw, regex, it.size, it) }
+            require(it.size <= 1) { FailExpectation("No more than 1", raw, regex, it.size, "before '$before': $it") }
         }.getOrNull(0)
+    }
+
+    fun getBefore(regex: Regex, before: Regex, group: Int = 1): String {
+        return consumeFindBefore(regex, before, group) {
+            require(it.size == 1) { FailExpectation("Expected exactly 1", raw, regex, it.size, "before '$before': $it") }
+        }[0]
     }
 
     fun remove(regex: Regex): RawPart {
@@ -73,8 +79,16 @@ data class RawPart(
         return findBefore(regex, before, group)?.let { addPart(it) }
     }
 
+    fun getPartBefore(regex: Regex, before: Regex, group: Int = 1): RawPart {
+        return addPart(getBefore(regex, before, group))
+    }
+
     fun findAllParts(regex: Regex, group: Int = 1): List<RawPart> {
         return findAll(regex, group).map { addPart(it) }
+    }
+
+    fun getAllParts(regex: Regex, group: Int = 1): List<RawPart> {
+        return getAll(regex, group).map { addPart(it) }
     }
 
     fun getGroupValues(regex: Regex): List<String> {
@@ -83,7 +97,15 @@ data class RawPart(
         }[0]
     }
 
+    fun getAllGroupValues(regex: Regex): List<List<String>> {
+        return consumeFindGroups(regex) {
+            require(it.isNotEmpty()) { FailExpectation("Expected at least 1", raw, regex, it.size, it) }
+        }
+    }
+
     fun contains(regex: Regex): Boolean = raw.contains(regex)
+
+    fun count(regex: Regex): Int = regex.findAll(raw).count()
 
     fun findMatchesRange(regex: Regex): List<IntRange> {
         return regex.findAll(raw).map { it.groups[0]!!.range }.toList()

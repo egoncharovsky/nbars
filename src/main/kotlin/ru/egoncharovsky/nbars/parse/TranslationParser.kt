@@ -46,7 +46,7 @@ class TranslationParser {
     internal fun parseVariant(raw: RawPart): Variant {
         logger.trace("Parse translation variant from: $raw")
 
-        val examples = raw.findAllParts(example).map { exampleParser.parse(it) }
+        val examples = raw.findAllParts(example).flatMap { exampleParser.parse(it) }
 
         return when {
             raw.contains(translation) -> {

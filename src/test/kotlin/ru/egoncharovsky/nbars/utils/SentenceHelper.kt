@@ -63,4 +63,6 @@ object SentenceHelper {
     fun ab(s: String) = Abbreviation(s)
     fun rf(s: String) = Reference(s)
     fun tr(s: String) = Transcription(s)
+
+    fun eng(s: String) = ForeignText(Text.normalize(s), "1033")
 }

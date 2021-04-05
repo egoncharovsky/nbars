@@ -40,7 +40,16 @@ data class Sentence(val parts: List<TextPart>) : Text {
         fun textFrom(parts: List<TextPart>) = if (parts.size > 1) {
             Sentence(normalize(parts))
         } else {
-            parts[0]
+            parts[0].let {
+                when(it) {
+                    is PlainText -> normalize(it)
+                    else -> it
+                }
+            }
+        }
+
+        private fun normalize(plainText: PlainText): PlainText {
+            return PlainText(plainText.text.trim())
         }
 
         private fun normalize(parts: List<TextPart>): List<TextPart> {

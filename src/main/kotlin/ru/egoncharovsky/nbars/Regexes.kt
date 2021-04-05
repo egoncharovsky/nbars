@@ -1,6 +1,9 @@
 package ru.egoncharovsky.nbars
 
-import ru.egoncharovsky.nbars.entity.*
+import ru.egoncharovsky.nbars.entity.ExpressionType
+import ru.egoncharovsky.nbars.entity.GrammaticalForm
+import ru.egoncharovsky.nbars.entity.MorphemeType
+import ru.egoncharovsky.nbars.entity.PartOfSpeech
 
 
 object Regexes {
@@ -35,6 +38,7 @@ object Regexes {
     val translationMarker = "\\d+?\\. ".toRegex()
     val translationVariantMarker = "\\d+?\\) ".toRegex()
     val meaningVariantMarker = "\\d+?[).] ".toRegex()
+    val exampleVariantMarker = "[а-я][).] ".toRegex()
 
     val transcription = "\\[t](.+?)\\[/t]".toRegex()
     val translation = "\\[trn](.+?)\\[/trn]".toRegex()
@@ -44,6 +48,8 @@ object Regexes {
     val lang = "\\[lang id=(\\d+)](.+?)\\[/lang]".toRegex()
     val example = "\\[ex](.+?)\\[/ex]".toRegex()
     val stress = "\\['](.)\\[/']".toRegex()
+
+    val exampleVariant = "\\[lang id=(\\d+)](.+?)\\[/lang](.+?(?=\\[|\$))".toRegex()
 
     val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
     val expressionType = "\\[p](${ExpressionType.labels.joinToString("|")})\\[/p]".toRegex()

@@ -10,7 +10,8 @@ import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.translationTag
 import ru.egoncharovsky.nbars.entity.MorphemeHomonym
 import ru.egoncharovsky.nbars.entity.MorphemeType
-import ru.egoncharovsky.nbars.entity.article.*
+import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
+import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.entity.translation.Meaning
 import ru.egoncharovsky.nbars.entity.translation.Variant
@@ -90,7 +91,7 @@ class MorphemeArticleParser {
     private fun parseVariant(raw: RawPart): Variant {
         logger.trace("Parse variant from: $raw")
 
-        val examples = raw.findAllParts(Regexes.example).map { exampleParser.parse(it) }
+        val examples = raw.findAllParts(Regexes.example).flatMap { exampleParser.parse(it) }
         val meaning = textParser.parse(raw.getPart(plain))
         raw.finishAll()
 

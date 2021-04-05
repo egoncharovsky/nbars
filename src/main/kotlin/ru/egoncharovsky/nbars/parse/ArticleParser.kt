@@ -15,9 +15,9 @@ import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.entity.PartOfSpeech
-import ru.egoncharovsky.nbars.entity.article.WordArticle
 import ru.egoncharovsky.nbars.entity.WordHomonym
 import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
+import ru.egoncharovsky.nbars.entity.article.WordArticle
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.exception.StepParseException
 
@@ -86,7 +86,7 @@ class ArticleParser {
             raw.contains(reference) -> Either.Right(referenceToArticleParser.parse(raw))
             else -> throw StepParseException(
                 "homonyms or reference",
-                "raw doesn't contains both: $partOfSpeech and $reference",
+                "raw doesn't contains both: $partOfSpeech (with $translation) and $reference",
                 raw
             )
         }

@@ -15,7 +15,7 @@ class ReferenceToArticleParser {
     fun parse(raw: RawPart): ReferenceToArticle {
         logger.trace("Parse reference to article from: '$raw'")
 
-        val examples = raw.findAllParts(Regexes.example).map { exampleParser.parse(it) }
+        val examples = raw.findAllParts(Regexes.example).flatMap { exampleParser.parse(it) }
 
         raw.removeAll(Regexes.escapedSquareBrackets)
 
