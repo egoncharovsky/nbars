@@ -1,16 +1,13 @@
 package ru.egoncharovsky.nbars.utils
 
 import ru.egoncharovsky.nbars.Either
-import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.GrammaticalForm
 import ru.egoncharovsky.nbars.entity.MorphemeHomonym
 import ru.egoncharovsky.nbars.entity.MorphemeType
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
-import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
-import ru.egoncharovsky.nbars.entity.text.Text
+import ru.egoncharovsky.nbars.entity.article.section.ReferenceToArticle
 import ru.egoncharovsky.nbars.entity.translation.Meaning
 import ru.egoncharovsky.nbars.entity.translation.Variant
-import ru.egoncharovsky.nbars.utils.SentenceHelper.ft
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 

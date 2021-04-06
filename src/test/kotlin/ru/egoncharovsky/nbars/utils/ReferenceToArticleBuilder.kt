@@ -2,7 +2,7 @@ package ru.egoncharovsky.nbars.utils
 
 import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.GrammaticalForm
-import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
+import ru.egoncharovsky.nbars.entity.article.section.ReferenceToArticle
 import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Transcription

@@ -1,4 +1,4 @@
-package ru.egoncharovsky.nbars.entity.article
+package ru.egoncharovsky.nbars.entity.article.section
 
 import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.GrammaticalForm
@@ -10,4 +10,4 @@ data class ReferenceToArticle(
     val grammaticalForm: GrammaticalForm? = null,
     val referenceOnHeadWord: Text,
     val examples: List<Example> = listOf()
-)
+) : ArticleSection

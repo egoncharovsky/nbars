@@ -1,10 +1,11 @@
 package ru.egoncharovsky.nbars.parse
 
 import mu.KotlinLogging
-import ru.egoncharovsky.nbars.Either
 import ru.egoncharovsky.nbars.Regexes.boldTag
+import ru.egoncharovsky.nbars.Regexes.colorTag
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
+import ru.egoncharovsky.nbars.Regexes.example
 import ru.egoncharovsky.nbars.Regexes.homonymMarker
 import ru.egoncharovsky.nbars.Regexes.lexicalGrammarHomonymMarker
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
@@ -15,9 +16,10 @@ import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.entity.PartOfSpeech
-import ru.egoncharovsky.nbars.entity.WordHomonym
-import ru.egoncharovsky.nbars.entity.article.ReferenceToArticle
 import ru.egoncharovsky.nbars.entity.article.WordArticle
+import ru.egoncharovsky.nbars.entity.article.section.ArticleSection
+import ru.egoncharovsky.nbars.entity.article.section.SpecializedVocabulary
+import ru.egoncharovsky.nbars.entity.article.section.WordHomonym
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.exception.StepParseException
 
@@ -38,11 +40,11 @@ class ArticleParser {
     }
 
 
-    private fun parseBody(raw: RawPart): List<List<Either<WordHomonym, ReferenceToArticle>>> {
+    private fun parseBody(raw: RawPart): List<List<ArticleSection>> {
         logger.trace("Parse body from: $raw")
 
         val split = raw.split(homonymMarker).onEach {
-            it.removeAll(boldTag).removeAll(superscriptTag)
+            it.removeAll(superscriptTag)
         }
         val prefix = split[0]
 
@@ -51,17 +53,17 @@ class ArticleParser {
         val rawHomonyms = split.drop(1)
 
         val homonyms = if (rawHomonyms.isEmpty()) {
-            listOf(parseHomonyms(prefix))
+            listOf(parseSections(prefix))
         } else {
-            rawHomonyms.map { parseHomonyms(it) }
+            rawHomonyms.map { parseSections(it) }
         }
         prefix.finishAll()
 
         return homonyms
     }
 
-    private fun parseHomonyms(raw: RawPart): List<Either<WordHomonym, ReferenceToArticle>> {
-        logger.trace("Parse lex. gram. homonyms from: $raw")
+    private fun parseSections(raw: RawPart): List<ArticleSection> {
+        logger.trace("Parse sections from: $raw")
 
         val split = raw.split(lexicalGrammarHomonymMarker)
         val prefix = split[0]
@@ -71,22 +73,29 @@ class ArticleParser {
         val rawLexGramHomonyms = split.drop(1)
 
         val lexGramHomonyms = if (rawLexGramHomonyms.isEmpty()) {
-            listOf(parseHomonymOrReference(prefix))
+            listOf(parseSection(prefix))
         } else {
-            rawLexGramHomonyms.map { parseHomonymOrReference(it) }
+            rawLexGramHomonyms.map { parseSection(it) }
         }
         prefix.finishAll()
 
         return lexGramHomonyms
     }
 
-    private fun parseHomonymOrReference(raw: RawPart): Either<WordHomonym, ReferenceToArticle> {
+    private fun parseSection(raw: RawPart): ArticleSection {
         return when {
-            raw.contains(partOfSpeech) && raw.contains(translation) -> Either.Left(parseLexicalGrammaticalHomonym(raw))
-            raw.contains(reference) -> Either.Right(referenceToArticleParser.parse(raw))
+            raw.contains(partOfSpeech) && raw.contains(translation) -> parseLexicalGrammaticalHomonym(raw)
+            raw.contains(reference) -> referenceToArticleParser.parse(raw)
+            raw.contains(translation) || raw.contains(example) || raw.contains(comment) -> {
+                raw.removeAll(plain)
+                SpecializedVocabulary("")
+            }
             else -> throw StepParseException(
-                "homonyms or reference",
-                "raw doesn't contains both: $partOfSpeech (with $translation) and $reference",
+                "section",
+                "raw doesn't any of: " +
+                        "$partOfSpeech with $translation " +
+                        "| $reference " +
+                        "| $translation or $example or $comment",
                 raw
             )
         }
@@ -94,6 +103,10 @@ class ArticleParser {
 
     private fun parseLexicalGrammaticalHomonym(raw: RawPart): WordHomonym {
         logger.trace("Parse lex. gram. homonym from: $raw")
+
+        raw
+            .removeAll(boldTag)
+            .removeAll(colorTag) // todo parse semantic sections
 
         val split = raw.split(translationMarker)
         val prefix = split[0]
