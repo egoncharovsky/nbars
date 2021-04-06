@@ -22,7 +22,7 @@ internal class FullDictionaryTest {
 
     @Test
     fun article() {
-        val key = "ought"
+        val key = "aback"
 
         val reader = DictionaryReader(dictionaryFile, indexFile)
         val parser = DictionaryParser()
@@ -40,7 +40,7 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("ArticleParser.kt:89")
+        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:49")
         val isShortArticle: (List<String>) -> Boolean = { it.size < 10 }
         var shortArticlesCount = 0
         var longArticlesCount = 0
@@ -85,13 +85,13 @@ internal class FullDictionaryTest {
                                 || it.className == TranslationParser::class.qualifiedName
                                 || it.className == ReferenceToArticleParser::class.qualifiedName
                                 || it.className == MorphemeArticleParser::class.qualifiedName
+                                || it.className == ExampleParser::class.qualifiedName
                     } ?: exception.stackTrace.find { it.className == DictionaryParser::class.qualifiedName }!!
                 val fileName = element.fileName
                 val line = element.lineNumber
                 val message = exception.message!!
 
                 if (printErrorOnLines.contains("$fileName:$line")) {
-//                    logger.error("'$headword': \t$message at $element (#${headwords.indexOf(headword)})")
                     val a = reader.readArticle(positions[headword]!!)
                     if (isShortArticle(a)) {
                         logger.error("'$headword': \t$message at $element (#${headwords.indexOf(headword)})\n${
@@ -100,6 +100,7 @@ internal class FullDictionaryTest {
                         }")
                         shortArticlesCount++
                     } else {
+                        logger.error("'$headword': \t$message at $element (#${headwords.indexOf(headword)})\n")
                         longArticlesCount++
                     }
                 }

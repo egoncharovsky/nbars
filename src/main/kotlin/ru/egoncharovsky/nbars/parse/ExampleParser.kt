@@ -20,6 +20,8 @@ class ExampleParser {
     fun parse(raw: RawPart): List<Example> {
         logger.trace("Parse examples from: $raw")
 
+        raw.removeAll(commentTag)
+
         return if (raw.count(lang) > 1) {
             val split = raw.split(exampleVariantMarker)
             val prefix = split[0]
@@ -42,7 +44,7 @@ class ExampleParser {
         logger.trace("Parse example from: $raw")
 
         val foreign = textParser.parse(raw.getPart(lang, 0)) as ForeignText
-        raw.removeBefore(dash, letter).removeAll(commentTag)
+        raw.removeBefore(dash, letter)
         val translation = textParser.parse(raw)
 
         return Example(foreign, translation)
