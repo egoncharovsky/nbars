@@ -7,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.junit.jupiter.api.Test
 import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
-import ru.egoncharovsky.nbars.parse.DictionaryParser
+import ru.egoncharovsky.nbars.parse.*
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -20,7 +20,7 @@ internal class FullDictionaryTest {
 
     @Test
     fun article() {
-        val key = "à go-go"
+        val key = "has"
 
         val reader = DictionaryReader(dictionaryFile, indexFile)
         val parser = DictionaryParser()
@@ -38,7 +38,10 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:26")
+        val printErrorOnLines: Set<String> = setOf("ArticleParser.kt:87")
+        val isShortArticle: (List<String>) -> Boolean = { it.size < 10 }
+        var shortArticlesCount = 0
+        var longArticlesCount = 0
 
         val results: List<Pair<String, Result<DictionaryArticle>>>
         val time = measureTimeMillis {
@@ -63,18 +66,25 @@ internal class FullDictionaryTest {
             .filterValues { it != null }
             .forEach { (headword, exception) ->
                 val element =
-                    exception!!.stackTrace.find { it.className == "ru.egoncharovsky.nbars.parse.ArticleParser"
-                            || it.className == "ru.egoncharovsky.nbars.parse.ExpressionArticleParser"
-                            || it.className == "ru.egoncharovsky.nbars.parse.TranslationParser"
-                            || it.className == "ru.egoncharovsky.nbars.parse.ReferenceArticleParser"
-                            || it.className == "ru.egoncharovsky.nbars.parse.MorphemeArticleParser"
-                    } ?: exception.stackTrace.find { it.className == "ru.egoncharovsky.nbars.parse.DictionaryParser" }!!
+                    exception!!.stackTrace.find { it.className == ArticleParser::class.qualifiedName
+                            || it.className == ExpressionArticleParser::class.qualifiedName
+                            || it.className == TranslationParser::class.qualifiedName
+                            || it.className == ReferenceToArticleParser::class.qualifiedName
+                            || it.className == MorphemeArticleParser::class.qualifiedName
+                    } ?: exception.stackTrace.find { it.className == DictionaryParser::class.qualifiedName }!!
                 val fileName = element.fileName
                 val line = element.lineNumber
                 val message = exception.message!!
 
                 if (printErrorOnLines.contains("$fileName:$line")) {
-                    logger.error("'$headword': \t$message at $element (#${headwords.indexOf(headword)})")
+//                    logger.error("'$headword': \t$message at $element (#${headwords.indexOf(headword)})")
+                    val a = reader.readArticle(positions[headword]!!)
+                    if (isShortArticle(a)) {
+                        logger.error("'$headword': \t$message at $element (#${headwords.indexOf(headword)})\n${a.joinToString("\n", postfix = "\n")}")
+                        shortArticlesCount++
+                    } else {
+                        longArticlesCount++
+                    }
                 }
 
                 exceptionLines.putIfAbsent(element, 0)
@@ -100,6 +110,7 @@ internal class FullDictionaryTest {
 
         logger.error("Exceptions occurred at\n$frequency")
         logger.error("Exception types:\n$types")
+        logger.error("Short articles: $shortArticlesCount long articles: $longArticlesCount")
         logger.error("Total errors: $errors (${errors * 100 / positions.size} %)")
     }
 
