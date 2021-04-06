@@ -2,10 +2,10 @@ package ru.egoncharovsky.nbars.parse
 
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import ru.egoncharovsky.nbars.entity.article.WordArticle
 import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
 import ru.egoncharovsky.nbars.entity.article.ExpressionArticle
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
+import ru.egoncharovsky.nbars.entity.article.WordArticle
 import ru.egoncharovsky.nbars.getResource
 import kotlin.test.assertEquals
 
@@ -32,7 +32,8 @@ class DictionaryArticlesParseTest {
             Morphemes.ad,
             Morphemes.ible,
             Articles.abed,
-            Articles.abeyance
+            Articles.abeyance,
+            ExpressionArticles.a_posteriori
         ).map { arrayOf(it.headword, it) }
     }
 

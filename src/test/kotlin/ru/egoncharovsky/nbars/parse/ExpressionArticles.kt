@@ -2,6 +2,7 @@ package ru.egoncharovsky.nbars.parse
 
 import ru.egoncharovsky.nbars.entity.ExpressionType
 import ru.egoncharovsky.nbars.utils.ExpressionArticleBuilder
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
 
 object ExpressionArticles {
     val tie_in = ExpressionArticleBuilder("tie in", "ˈtaɪˈɪn", ExpressionType.PHRASAL_VERB)
@@ -26,4 +27,9 @@ object ExpressionArticles {
             it.variant("присоединять (какой-л. товар) в качестве нагрузки при продаже другого товара; " +
                     "ab(≈) продавать с нагрузкой, продавать в качестве принудительного ассортимента")
         }.build()
+
+    val a_posteriori = ExpressionArticleBuilder("a posteriori", "ˌeɪpɒsterɪˈɔːr(a)ɪ", remark = ab("лат."))
+        .translation { it.variant("апостериори, эмпирически, из опыта, по опыту") }
+        .translation { it.variant("апостериорный, основанный на опыте") }
+        .build()
 }

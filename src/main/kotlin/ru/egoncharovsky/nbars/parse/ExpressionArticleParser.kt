@@ -5,6 +5,7 @@ import ru.egoncharovsky.nbars.Regexes.boldTag
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.expressionType
+import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
@@ -42,8 +43,9 @@ class ExpressionArticleParser {
         } else {
             rawTranslations.map { translationParser.parse(it) }
         }
+        val remark = prefix.findPart(plain)?.let { textParser.parse(it) }
         prefix.finishAll()
 
-        return ExpressionArticle(headword, transcription, expressionType, comment, translations)
+        return ExpressionArticle(headword, transcription, expressionType, comment, remark, translations)
     }
 }

@@ -20,7 +20,7 @@ internal class FullDictionaryTest {
 
     @Test
     fun article() {
-        val key = "vain"
+        val key = "à go-go"
 
         val reader = DictionaryReader(dictionaryFile, indexFile)
         val parser = DictionaryParser()
@@ -38,7 +38,7 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:49")
+        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:26")
 
         val results: List<Pair<String, Result<DictionaryArticle>>>
         val time = measureTimeMillis {
