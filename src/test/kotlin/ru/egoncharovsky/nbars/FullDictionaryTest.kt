@@ -22,7 +22,7 @@ internal class FullDictionaryTest {
 
     @Test
     fun article() {
-        val key = "aback"
+        val key = "run"
 
         val reader = DictionaryReader(dictionaryFile, indexFile)
         val parser = DictionaryParser()
@@ -40,7 +40,7 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:49")
+        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:64")
         val isShortArticle: (List<String>) -> Boolean = { it.size < 10 }
         var shortArticlesCount = 0
         var longArticlesCount = 0

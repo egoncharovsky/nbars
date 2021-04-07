@@ -37,19 +37,12 @@ data class Sentence(val parts: List<TextPart>) : Text {
             return textFrom(parts)
         }
 
-        fun textFrom(parts: List<TextPart>) = if (parts.size > 1) {
-            Sentence(normalize(parts))
-        } else {
-            parts[0].let {
-                when(it) {
-                    is PlainText -> normalize(it)
-                    else -> it
-                }
+        fun textFrom(parts: List<TextPart>) = normalize(parts).let {
+            if (it.size > 1) {
+                Sentence(it)
+            } else {
+                it[0]
             }
-        }
-
-        private fun normalize(plainText: PlainText): PlainText {
-            return PlainText(plainText.text.trim())
         }
 
         private fun normalize(parts: List<TextPart>): List<TextPart> {

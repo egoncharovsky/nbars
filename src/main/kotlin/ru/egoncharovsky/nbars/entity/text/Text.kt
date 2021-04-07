@@ -1,6 +1,7 @@
 package ru.egoncharovsky.nbars.entity.text
 
 import ru.egoncharovsky.nbars.Regexes
+import ru.egoncharovsky.nbars.Regexes.referenceSymbols
 import ru.egoncharovsky.nbars.Regexes.squareBrackets
 import ru.egoncharovsky.nbars.exception.TextContainsTag
 
@@ -9,7 +10,7 @@ interface Text {
 
     companion object {
         fun requireNoTags(value: String) {
-            if (squareBrackets.containsMatchIn(value)) throw TextContainsTag(value)
+            if (squareBrackets.containsMatchIn(value) || referenceSymbols.containsMatchIn(value)) throw TextContainsTag(value)
         }
 
         fun normalize(value: String): String {

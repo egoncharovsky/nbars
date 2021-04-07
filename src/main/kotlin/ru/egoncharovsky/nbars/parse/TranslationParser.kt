@@ -4,13 +4,15 @@ import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.commentTag
 import ru.egoncharovsky.nbars.Regexes.example
-import ru.egoncharovsky.nbars.Regexes.label
 import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
+import ru.egoncharovsky.nbars.Regexes.referencePart
+import ru.egoncharovsky.nbars.Regexes.superscriptTag
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.join
 import ru.egoncharovsky.nbars.entity.translation.DirectTranslation
+import ru.egoncharovsky.nbars.entity.translation.Translation
 import ru.egoncharovsky.nbars.entity.translation.Variant
 import ru.egoncharovsky.nbars.exception.StepParseException
 
@@ -20,7 +22,7 @@ class TranslationParser {
     private val textParser = TextParser()
     private val exampleParser = ExampleParser()
 
-    fun parse(raw: RawPart): DirectTranslation {
+    fun parse(raw: RawPart): Translation {
         logger.trace("Parse translation from: $raw")
 
         val split = raw.split(translationVariantMarker)
@@ -58,15 +60,15 @@ class TranslationParser {
                 Variant(meaning, examples, remark, comment)
             }
             raw.contains(reference) -> {
-                val comment = raw.findPart(comment)?.let { textParser.parse(it) }
-                val remark = raw.findPart(label, 0)?.let { textParser.parse(it) }
+                val reference = textParser.parse(raw.getPart(referencePart, 0).removeAll(superscriptTag))
 
-                val reference = textParser.parse(raw)
+                val comment = raw.findPart(comment)?.let { textParser.parse(it) }
+                val remark = raw.findPart(plain)?.let { textParser.parse(it) }
 
                 Variant(reference, examples, remark, comment)
             }
             else -> throw StepParseException(
-                "meaning",
+                "variant",
                 "no translation by '$translation' or reference by '${reference}' found",
                 raw
             )

@@ -25,7 +25,9 @@ object Regexes {
     val doubleBraces = "\\{\\{|}}".toRegex()
     val plain = "(.+)".toRegex()
     val dash = "—".toRegex()
+    val equal = "=".toRegex()
     val squareBrackets = "[\\[\\]]".toRegex()
+    val referenceSymbols = "[><]".toRegex()
 
     val escapedSquareBrackets = "(\\\\\\[|\\\\])".toRegex()
     val leftEscapedSquareBracket = "\\\\\\[".toRegex()
@@ -38,7 +40,7 @@ object Regexes {
     val translationMarker = "\\d+?\\. ".toRegex()
     val translationVariantMarker = "\\d+?\\) ".toRegex()
     val meaningVariantMarker = "\\d+?[).] ".toRegex()
-    val exampleVariantMarker = "[а-я][).] ".toRegex()
+    val exampleVariantMarker = "[а-я]\\) ".toRegex()
 
     val transcription = "\\[t](.+?)\\[/t]".toRegex()
     val translation = "\\[trn](.+?)\\[/trn]".toRegex()
@@ -50,6 +52,7 @@ object Regexes {
     val stress = "\\['](.)\\[/']".toRegex()
 
     val sampleVariant = "\\[lang id=(\\d+)](.+?)\\[/lang](.+?(?=\\[lang|\$))".toRegex()
+    val referencePart = "(от|=)? (<<.+)".toRegex()
 
     val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
     val expressionType = "\\[p](${ExpressionType.labels.joinToString("|")})\\[/p]".toRegex()

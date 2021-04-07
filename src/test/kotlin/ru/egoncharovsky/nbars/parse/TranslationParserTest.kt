@@ -58,12 +58,12 @@ class TranslationParserTest {
     }
 
     @Test
-    fun parseMultipleExamplesFromSingleLine() {
-        val s = "[lang id=1033]and so on, and so forth[/lang] — а) и так далее, и тому подобное; " +
-                "[lang id=1033]we discussed travelling, sightseeing, and so forth[/lang] — мы говорили о путешествиях, достопримечательностях и тому подобном; " +
-                "б) и другие; и прочие; " +
-                "[lang id=1033]parties, picnics and so on[/lang] — вечера, пикники и многое другое"
+    fun parseContextTranslation() {
+        RawPart("[com]в сочетаниях[/com]:" +
+                "[ex][lang id=1033]now and again, ever and again[/lang] — иногда, время от времени[/ex]" +
+                "[ex][lang id=1033]time and again[/lang] — неоднократно, часто, то и дело[/ex]" +
+                "[ex][lang id=1033]over /once, yet/ again[/lang] — ещё раз[/ex]")
+        val parser = TranslationParser()
 
-        println()
     }
 }
