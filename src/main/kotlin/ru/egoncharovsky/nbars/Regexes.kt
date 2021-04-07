@@ -26,6 +26,7 @@ object Regexes {
     val plain = "(.+)".toRegex()
     val dash = "—".toRegex()
     val equal = "=".toRegex()
+    val colon = ":".toRegex()
     val squareBrackets = "[\\[\\]]".toRegex()
     val referenceSymbols = "[><]".toRegex()
 

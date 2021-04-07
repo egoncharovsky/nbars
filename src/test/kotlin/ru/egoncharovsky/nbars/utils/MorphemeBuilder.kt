@@ -6,8 +6,8 @@ import ru.egoncharovsky.nbars.entity.MorphemeHomonym
 import ru.egoncharovsky.nbars.entity.MorphemeType
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
 import ru.egoncharovsky.nbars.entity.article.section.ReferenceToArticle
+import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.translation.Translation
-import ru.egoncharovsky.nbars.entity.translation.Variant
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 
@@ -18,11 +18,11 @@ class MorphemeBuilder(private val keyword: String) {
         transcription: String,
         type: MorphemeType? = null,
         comment: String? = null,
-        applyParams: (MorphemeMeaningBuilder) -> Unit
+        applyParams: (MorphemeHomonymBuilder) -> Unit
     ): MorphemeBuilder {
         if (homonyms == null) homonyms = Either.Left(mutableListOf())
         (homonyms as Either.Left).value.add(
-            MorphemeMeaningBuilder(transcription, type, comment).also(applyParams).build()
+            MorphemeHomonymBuilder(transcription, type, comment).also(applyParams).build()
         )
         return this
     }
@@ -47,21 +47,22 @@ class MorphemeBuilder(private val keyword: String) {
     fun build(): MorphemeArticle = MorphemeArticle(keyword, homonyms!!)
 }
 
-class MorphemeMeaningBuilder(
+class MorphemeHomonymBuilder(
     private val transcription: String,
     private val type: MorphemeType? = null,
     private val comment: String? = null
 ) {
-    private val variants = mutableListOf<Variant>()
+    private val translations = mutableListOf<Translation>()
 
-    fun variant(
-        meaning: String,
-        applyParams: (VariantBuilder) -> Unit = {}
-    ): MorphemeMeaningBuilder {
-        variants.add(VariantBuilder(st(meaning)).also(applyParams).build())
+    fun translation(
+        remark: Text? = null,
+        comment: Text? = null,
+        applyParams: (TranslationBuilder) -> Unit,
+    ): MorphemeHomonymBuilder {
+        translations.add(TranslationBuilder(remark, comment).also(applyParams).build())
         return this
     }
 
-    fun build(): MorphemeHomonym = MorphemeHomonym(tr(transcription), type, Translation(variants, comment?.let { st(it) }))
+    fun build(): MorphemeHomonym = MorphemeHomonym(tr(transcription), type, translations, comment?.let { st(it) })
 }
 

@@ -1,6 +1,7 @@
 package ru.egoncharovsky.nbars.parse
 
 import mu.KotlinLogging
+import ru.egoncharovsky.nbars.Regexes.colon
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.commentTag
 import ru.egoncharovsky.nbars.Regexes.example
@@ -37,7 +38,7 @@ class TranslationParser {
             Translation(
                 rawVariants.map { parseVariant(it) },
                 comment = prefix.findPart(comment)?.let { textParser.parse(it) },
-                remark = prefix.findPart(plain)?.let { textParser.parse(it) }
+                remark = prefix.removeAll(colon).findPart(plain)?.let { textParser.parse(it) }
             )
         }.also {
             prefix.finishAll()
@@ -49,6 +50,7 @@ class TranslationParser {
 
         val examples = raw.findAllParts(example).flatMap { exampleParser.parse(it) }
 
+        raw.removeAll(colon)
         return when {
             raw.contains(translation) -> {
                 val meaning = textParser.parse(raw.getPart(translation).removeAll(commentTag))

@@ -23,7 +23,7 @@ data class Sentence(val parts: List<TextPart>) : Text {
 
 
     companion object {
-        fun join(texts: Collection<Text>, separator: String): Text? {
+        fun join(texts: Collection<Text>, separator: String = ""): Text? {
             if (texts.isEmpty()) return null
             val parts = texts
                 .map {

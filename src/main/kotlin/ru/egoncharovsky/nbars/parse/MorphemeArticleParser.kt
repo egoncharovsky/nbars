@@ -4,39 +4,31 @@ import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Either
 import ru.egoncharovsky.nbars.Regexes.boldTag
 import ru.egoncharovsky.nbars.Regexes.colorTag
-import ru.egoncharovsky.nbars.Regexes.commentTag
+import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
-import ru.egoncharovsky.nbars.Regexes.example
 import ru.egoncharovsky.nbars.Regexes.homonymMarker
-import ru.egoncharovsky.nbars.Regexes.meaningVariantMarker
 import ru.egoncharovsky.nbars.Regexes.morphemeType
-import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.superscriptTag
 import ru.egoncharovsky.nbars.Regexes.transcription
-import ru.egoncharovsky.nbars.Regexes.translationTag
+import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.entity.MorphemeHomonym
 import ru.egoncharovsky.nbars.entity.MorphemeType
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
 import ru.egoncharovsky.nbars.entity.article.section.ReferenceToArticle
 import ru.egoncharovsky.nbars.entity.text.Transcription
-import ru.egoncharovsky.nbars.entity.translation.Translation
-import ru.egoncharovsky.nbars.entity.translation.Variant
 
 class MorphemeArticleParser {
 
     private val logger = KotlinLogging.logger { }
     private val textParser = TextParser()
     private val referenceToArticleParser = ReferenceToArticleParser()
-    private val exampleParser = ExampleParser()
+    private val translationParser = TranslationParser()
 
     fun parse(headword: String, raw: RawPart): MorphemeArticle {
         logger.trace("Parsing morpheme article $headword from $raw")
 
-        raw
-            .removeAll(colorTag)
-            .removeAll(commentTag)
-            .removeAll(translationTag)
+        raw.removeAll(colorTag)
 
         val homonyms = parseBody(raw)
         raw.finishAll()
@@ -47,11 +39,11 @@ class MorphemeArticleParser {
     private fun parseBody(raw: RawPart): Either<List<MorphemeHomonym>, ReferenceToArticle> {
         return when {
             raw.contains(reference) -> Either.Right(referenceToArticleParser.parse(raw))
-            else -> Either.Left(parseMeanings(raw))
+            else -> Either.Left(parseHomonyms(raw))
         }
     }
 
-    private fun parseMeanings(raw: RawPart): List<MorphemeHomonym> {
+    private fun parseHomonyms(raw: RawPart): List<MorphemeHomonym> {
         logger.trace("Parse meanings from: $raw")
 
         val split = raw.split(homonymMarker).onEach {
@@ -76,10 +68,10 @@ class MorphemeArticleParser {
     private fun parseHomonym(raw: RawPart): MorphemeHomonym {
         logger.trace("Parse homonym from: $raw")
 
-        val split = raw.split(meaningVariantMarker)
+        val split = raw.split(translationMarker)
         val prefix = split[0]
 
-        logger.trace("Meaning prefix: $prefix")
+        logger.trace("Translation prefix: $prefix")
 
         prefix.removeAll(escapedSquareBrackets)
         val transcription = textParser.parse(prefix.getPart(transcription, 0)) as Transcription
@@ -87,25 +79,22 @@ class MorphemeArticleParser {
 
         val rawVariants = split.drop(1)
 
-        val variants = if (rawVariants.isEmpty()) {
-            listOf(parseVariant(prefix))
+        return if (rawVariants.isEmpty()) {
+            MorphemeHomonym(
+                transcription,
+                morphemeType,
+                listOf(translationParser.parse(prefix))
+            )
         } else {
-            rawVariants.map { parseVariant(it) }
+            MorphemeHomonym(
+                transcription,
+                morphemeType,
+                rawVariants.map { translationParser.parse(it) },
+                comment = prefix.findPart(comment)?.let { textParser.parse(it) }
+            )
+
+        }.also {
+            raw.finishAll()
         }
-        val comment = prefix.findPart(plain)?.let { textParser.parse(it) }
-        raw.finishAll()
-
-        return MorphemeHomonym(transcription, morphemeType, Translation(variants, comment))
     }
-
-    private fun parseVariant(raw: RawPart): Variant {
-        logger.trace("Parse variant from: $raw")
-
-        val examples = raw.findAllParts(example).flatMap { exampleParser.parse(it) }
-        val meaning = textParser.parse(raw.getPart(plain))
-        raw.finishAll()
-
-        return Variant(meaning, examples)
-    }
-
 }
