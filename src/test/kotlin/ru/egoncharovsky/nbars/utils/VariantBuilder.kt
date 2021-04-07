@@ -13,6 +13,11 @@ class VariantBuilder(
 ) {
     private val examples = mutableListOf<Example>()
 
+    fun example(text: ForeignText, translation: String): VariantBuilder {
+        examples.add(Example(text, st(translation)))
+        return this
+    }
+
     fun example(text: String, lang: String, translation: String): VariantBuilder {
         example(text, lang, st(translation))
         return this

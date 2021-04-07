@@ -40,7 +40,7 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:70")
+        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:73")
         val isShortArticle: (List<String>) -> Boolean = { it.size < 10 }
         var shortArticlesCount = 0
         var longArticlesCount = 0
@@ -72,7 +72,7 @@ internal class FullDictionaryTest {
             .map { (headword, _) ->
                 "$headword\n\t${reader.readArticle(positions[headword]!!).joinToString("\n\t")}\n"
             }
-        File("1.txt").writeText(sp.joinToString("\n"))
+        File("specialized.txt").writeText(sp.joinToString("\n"))
 
         results.toMap()
             .mapValues { (_, result) -> result.exceptionOrNull() }

@@ -1,8 +1,8 @@
 package ru.egoncharovsky.nbars.parse
 
 import org.junit.jupiter.api.Test
-import ru.egoncharovsky.nbars.utils.SentenceHelper
 import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
+import ru.egoncharovsky.nbars.utils.SentenceHelper.eng
 import ru.egoncharovsky.nbars.utils.SentenceHelper.pt
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 import ru.egoncharovsky.nbars.utils.VariantBuilder
@@ -35,7 +35,7 @@ class TranslationParserTest {
     @Test
     fun parseVariantWithReference() {
         val raw = RawPart("[p]прост.[/p] = <<Harry>>")
-        val expected = VariantBuilder(SentenceHelper.rf("Harry"), remark = ab("прост.")).build()
+        val expected = VariantBuilder(st("= rf(Harry)"), remark = ab("прост.")).build()
 
         val variant = TranslationParser().parseVariant(raw)
         assertEquals(expected, variant)
@@ -54,6 +54,24 @@ class TranslationParserTest {
         ).build()
 
         val variant = TranslationParser().parseVariant(raw)
+        assertEquals(expected, variant)
+    }
+
+    @Test
+    fun parseMeaningVariant() {
+        val raw = RawPart(
+            "[com]готовность совершить какое-л. действие (с последующим инфинитивом)[/com]: " +
+                    "[ex][lang id=1033]a plane about to take off[/lang] — самолёт, готовый к взлёту[/ex] " +
+                    "[ex][lang id=1033]to be about to do smth[/lang] — собираться сделать что-л.[/ex] "
+        )
+        val expected = VariantBuilder(st("готовность совершить какое-л. действие (с последующим инфинитивом):"))
+            .example(eng("a plane about to take off"), "самолёт, готовый к взлёту")
+            .example(eng("to be about to do smth"), "собираться сделать что-л.")
+            .build()
+
+        val parser = TranslationParser()
+
+        val variant = parser.parseVariant(raw)
         assertEquals(expected, variant)
     }
 

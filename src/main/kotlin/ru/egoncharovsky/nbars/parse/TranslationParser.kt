@@ -27,7 +27,7 @@ class TranslationParser {
         val split = raw.split(translationVariantMarker)
         val prefix: RawPart = split[0]
 
-        logger.trace("Translation prefix: $prefix")
+        logger.trace("Translation variants prefix: $prefix")
 
         val rawVariants = split.drop(1)
 
@@ -65,6 +65,11 @@ class TranslationParser {
                 val remark = raw.findPart(plain)?.let { textParser.parse(it) }
 
                 Variant(reference, examples, remark, comment)
+            }
+            raw.contains(comment) -> {
+                val meaning = textParser.parse(raw.removeAll(commentTag).getPart(plain))
+
+                Variant(meaning, examples)
             }
             else -> throw StepParseException(
                 "variant",
