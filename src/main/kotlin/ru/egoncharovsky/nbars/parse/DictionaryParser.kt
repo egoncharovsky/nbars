@@ -18,7 +18,7 @@ class DictionaryParser {
     fun parse(headword: String, bodyLines: List<String>): DictionaryArticle {
         logger.debug("Parsing $headword with ${bodyLines.size} lines")
 
-        val body = bodyLines.joinToString("") { it.trim() }
+        val body = bodyLines.joinToString(" ") { it.trim() }
 
         val raw = RawPart(body)
             .removeAll(marginTag)

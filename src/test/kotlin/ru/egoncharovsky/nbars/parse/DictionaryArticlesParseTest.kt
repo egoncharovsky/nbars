@@ -33,7 +33,8 @@ class DictionaryArticlesParseTest {
             Morphemes.ible,
             Articles.abed,
             Articles.abeyance,
-            ExpressionArticles.a_posteriori
+            ExpressionArticles.a_posteriori,
+            Articles.tinct
         ).map { arrayOf(it.headword, it) }
     }
 

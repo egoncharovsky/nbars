@@ -40,7 +40,7 @@ object Morphemes {
             }
         }
         .homonym("-æd, -əd", MorphemeType.SUFFIX) {
-            it.variant("ab(биол.)c по направлению к:") {
+            it.variant("ab(биол.) c по направлению к:") {
                 it
                     .example("ventrad", "1033", "по направлению к брюшной стороне")
                     .example("cephalad", "1033", "краниально, по направлению к голове")

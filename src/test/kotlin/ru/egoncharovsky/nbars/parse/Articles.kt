@@ -295,4 +295,11 @@ object Articles {
                 }
         }
     }.build()
+
+    val tinct = ArticleBuilder("tinct").homonyms {
+        it.homonym("tɪŋkt", Noun) {
+            it.translation { it.variant("rf(tincture) I 2, 3, 4 и 5", remark = "ab(поэт.) ab(см.)") }
+            it.translation { it.variant("настойка, тинктура", remark = "ab(фарм.)") }
+        }
+    }.build()
 }
