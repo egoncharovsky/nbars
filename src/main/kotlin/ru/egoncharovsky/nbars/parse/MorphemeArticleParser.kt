@@ -20,7 +20,7 @@ import ru.egoncharovsky.nbars.entity.MorphemeType
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
 import ru.egoncharovsky.nbars.entity.article.section.ReferenceToArticle
 import ru.egoncharovsky.nbars.entity.text.Transcription
-import ru.egoncharovsky.nbars.entity.translation.Meaning
+import ru.egoncharovsky.nbars.entity.translation.Translation
 import ru.egoncharovsky.nbars.entity.translation.Variant
 
 class MorphemeArticleParser {
@@ -95,7 +95,7 @@ class MorphemeArticleParser {
         val comment = prefix.findPart(plain)?.let { textParser.parse(it) }
         raw.finishAll()
 
-        return MorphemeHomonym(transcription, morphemeType, Meaning(variants, comment))
+        return MorphemeHomonym(transcription, morphemeType, Translation(variants, comment))
     }
 
     private fun parseVariant(raw: RawPart): Variant {

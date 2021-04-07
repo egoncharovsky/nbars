@@ -3,7 +3,7 @@ package ru.egoncharovsky.nbars.utils
 import ru.egoncharovsky.nbars.entity.ExpressionType
 import ru.egoncharovsky.nbars.entity.article.ExpressionArticle
 import ru.egoncharovsky.nbars.entity.text.Text
-import ru.egoncharovsky.nbars.entity.translation.DirectTranslation
+import ru.egoncharovsky.nbars.entity.translation.Translation
 import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 
 class ExpressionArticleBuilder(
@@ -13,7 +13,7 @@ class ExpressionArticleBuilder(
     private val comment: Text? = null,
     private val remark: Text? = null
 ) {
-    private val translations = mutableListOf<DirectTranslation>()
+    private val translations = mutableListOf<Translation>()
 
     fun translation(
         remark: Text? = null,

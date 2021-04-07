@@ -6,7 +6,7 @@ import ru.egoncharovsky.nbars.entity.MorphemeHomonym
 import ru.egoncharovsky.nbars.entity.MorphemeType
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
 import ru.egoncharovsky.nbars.entity.article.section.ReferenceToArticle
-import ru.egoncharovsky.nbars.entity.translation.Meaning
+import ru.egoncharovsky.nbars.entity.translation.Translation
 import ru.egoncharovsky.nbars.entity.translation.Variant
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
@@ -62,6 +62,6 @@ class MorphemeMeaningBuilder(
         return this
     }
 
-    fun build(): MorphemeHomonym = MorphemeHomonym(tr(transcription), type, Meaning(variants, comment?.let { st(it) }))
+    fun build(): MorphemeHomonym = MorphemeHomonym(tr(transcription), type, Translation(variants, comment?.let { st(it) }))
 }
 

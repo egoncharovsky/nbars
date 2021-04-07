@@ -1,7 +1,7 @@
 package ru.egoncharovsky.nbars.utils
 
 import ru.egoncharovsky.nbars.entity.text.Text
-import ru.egoncharovsky.nbars.entity.translation.DirectTranslation
+import ru.egoncharovsky.nbars.entity.translation.Translation
 import ru.egoncharovsky.nbars.entity.translation.Variant
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 
@@ -30,7 +30,7 @@ class TranslationBuilder(
         return this
     }
 
-    fun build(): DirectTranslation = DirectTranslation(variants, remark, comment)
+    fun build(): Translation = Translation(variants, remark, comment)
 
 
 }

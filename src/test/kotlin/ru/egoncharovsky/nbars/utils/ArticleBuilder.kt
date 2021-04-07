@@ -7,7 +7,7 @@ import ru.egoncharovsky.nbars.entity.article.section.ArticleSection
 import ru.egoncharovsky.nbars.entity.article.section.WordHomonym
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Transcription
-import ru.egoncharovsky.nbars.entity.translation.DirectTranslation
+import ru.egoncharovsky.nbars.entity.translation.Translation
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
 
@@ -61,7 +61,7 @@ class HomonymBuilder(
     private val remark: Text? = null,
     private val comment: Text? = null,
 ) {
-    private val translations = mutableListOf<DirectTranslation>()
+    private val translations = mutableListOf<Translation>()
 
     fun translation(
         remark: Text? = null,

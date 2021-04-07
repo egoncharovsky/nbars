@@ -11,7 +11,6 @@ import ru.egoncharovsky.nbars.Regexes.superscriptTag
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationVariantMarker
 import ru.egoncharovsky.nbars.entity.text.Sentence.Companion.join
-import ru.egoncharovsky.nbars.entity.translation.DirectTranslation
 import ru.egoncharovsky.nbars.entity.translation.Translation
 import ru.egoncharovsky.nbars.entity.translation.Variant
 import ru.egoncharovsky.nbars.exception.StepParseException
@@ -33,9 +32,9 @@ class TranslationParser {
         val rawVariants = split.drop(1)
 
         return if (rawVariants.isEmpty()) {
-            DirectTranslation(listOf(parseVariant(prefix)))
+            Translation(listOf(parseVariant(prefix)))
         } else {
-            DirectTranslation(
+            Translation(
                 rawVariants.map { parseVariant(it) },
                 comment = prefix.findPart(comment)?.let { textParser.parse(it) },
                 remark = prefix.findPart(plain)?.let { textParser.parse(it) }
