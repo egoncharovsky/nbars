@@ -1,0 +1,6 @@
+package ru.egoncharovsky.nbars.entity.article.section
+
+interface WordArticleSection
+interface MorphemeArticleSection
+interface ExpressionArticleSection
+

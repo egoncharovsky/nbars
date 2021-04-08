@@ -1,6 +1,7 @@
-package ru.egoncharovsky.nbars.parse
+package ru.egoncharovsky.nbars.parse.article
 
 import mu.KotlinLogging
+import ru.egoncharovsky.nbars.Regexes
 import ru.egoncharovsky.nbars.Regexes.boldTag
 import ru.egoncharovsky.nbars.Regexes.colorTag
 import ru.egoncharovsky.nbars.Regexes.comment
@@ -12,16 +13,36 @@ import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.entity.ExpressionType
 import ru.egoncharovsky.nbars.entity.article.ExpressionArticle
+import ru.egoncharovsky.nbars.entity.article.section.ExpressionArticleSection
+import ru.egoncharovsky.nbars.entity.article.section.ExpressionHomonym
 import ru.egoncharovsky.nbars.entity.text.Transcription
+import ru.egoncharovsky.nbars.parse.RawPart
+import ru.egoncharovsky.nbars.parse.ReferenceToArticleParser
+import ru.egoncharovsky.nbars.parse.TextParser
+import ru.egoncharovsky.nbars.parse.TranslationParser
 
-class ExpressionArticleParser {
+class ExpressionArticleParser : ArticleParser<ExpressionArticleSection>() {
 
-    private val logger = KotlinLogging.logger { }
+    override val logger = KotlinLogging.logger { }
     private val textParser = TextParser()
     private val translationParser = TranslationParser()
+    private val referenceToArticleParser = ReferenceToArticleParser()
 
     fun parse(headword: String, raw: RawPart): ExpressionArticle {
         logger.trace("Parse expression article for '$headword' from: '$raw'")
+
+        return ExpressionArticle(headword, parseBody(raw))
+    }
+
+    override fun parseSection(raw: RawPart): ExpressionArticleSection {
+        return when {
+            raw.contains(Regexes.reference) -> referenceToArticleParser.parse(raw)
+            else -> parseHomonym(raw)
+        }
+    }
+
+    private fun parseHomonym(raw: RawPart): ExpressionHomonym {
+        logger.trace("Parse expression homonym: $raw")
 
         raw
             .removeAll(boldTag)
@@ -49,6 +70,6 @@ class ExpressionArticleParser {
         val remark = prefix.findPart(plain)?.let { textParser.parse(it) }
         prefix.finishAll()
 
-        return ExpressionArticle(headword, transcription, expressionType, comment, remark, translations)
+        return ExpressionHomonym(transcription, expressionType, translations, remark, comment)
     }
 }

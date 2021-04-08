@@ -5,7 +5,7 @@ import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
 import ru.egoncharovsky.nbars.utils.SentenceHelper.eng
 import ru.egoncharovsky.nbars.utils.SentenceHelper.pt
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
-import ru.egoncharovsky.nbars.utils.VariantBuilder
+import ru.egoncharovsky.nbars.utils.builder.VariantBuilder
 import kotlin.test.assertEquals
 
 class TranslationParserTest {

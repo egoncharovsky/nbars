@@ -1,23 +1,24 @@
-package ru.egoncharovsky.nbars.utils
+package ru.egoncharovsky.nbars.utils.builder
 
 import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.GrammaticalForm
 import ru.egoncharovsky.nbars.entity.article.section.ReferenceToArticle
-import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Transcription
+import ru.egoncharovsky.nbars.utils.builder.part.Examples
 
 class ReferenceToArticleBuilder(
     private val transcription: Transcription,
     private val referenceOnHeadWord: Text,
     private val grammaticalForm: GrammaticalForm? = null
-) {
+) : Examples<ReferenceToArticleBuilder>, Builder<ReferenceToArticle> {
     private val examples = mutableListOf<Example>()
 
-    fun example(text: String, lang: String, translation: String): ReferenceToArticleBuilder {
-        examples.add(Example(ForeignText(Text.normalize(text), lang), SentenceHelper.st(translation)))
-        return this
+    override fun add(example: Example) {
+        examples.add(example)
     }
 
-    fun build() = ReferenceToArticle(transcription, grammaticalForm, referenceOnHeadWord, examples)
+    override fun builder(): ReferenceToArticleBuilder = this
+
+    override fun build() = ReferenceToArticle(transcription, grammaticalForm, referenceOnHeadWord, examples)
 }

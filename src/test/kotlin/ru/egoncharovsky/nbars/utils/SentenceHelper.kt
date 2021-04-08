@@ -58,6 +58,8 @@ object SentenceHelper {
         return textParser.parse(rawPart, ranges)
     }
 
+    fun stn(raw: String?): Text? = raw?.let { st(it) }
+
     fun pt(s: String) = PlainText(Text.normalize(s))
     fun ft(s: String, lang: String) = ForeignText(Text.normalize(s), lang)
     fun ab(s: String) = Abbreviation(s)

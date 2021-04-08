@@ -1,4 +1,4 @@
-package ru.egoncharovsky.nbars.parse
+package ru.egoncharovsky.nbars.parse.article
 
 import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Regexes.boldTag
@@ -6,26 +6,28 @@ import ru.egoncharovsky.nbars.Regexes.colorTag
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.example
-import ru.egoncharovsky.nbars.Regexes.homonymMarker
-import ru.egoncharovsky.nbars.Regexes.lexicalGrammarHomonymMarker
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
 import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
-import ru.egoncharovsky.nbars.Regexes.superscriptTag
 import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.entity.PartOfSpeech
 import ru.egoncharovsky.nbars.entity.article.WordArticle
-import ru.egoncharovsky.nbars.entity.article.section.ArticleSection
 import ru.egoncharovsky.nbars.entity.article.section.SpecializedVocabulary
+import ru.egoncharovsky.nbars.entity.article.section.WordArticleSection
 import ru.egoncharovsky.nbars.entity.article.section.WordHomonym
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.exception.StepParseException
+import ru.egoncharovsky.nbars.parse.RawPart
+import ru.egoncharovsky.nbars.parse.ReferenceToArticleParser
+import ru.egoncharovsky.nbars.parse.TextParser
+import ru.egoncharovsky.nbars.parse.TranslationParser
 
-class ArticleParser {
+class WordArticleParser : ArticleParser<WordArticleSection>() {
 
-    private val logger = KotlinLogging.logger { }
+    override val logger = KotlinLogging.logger { }
+
     private val textParser = TextParser()
     private val translationParser = TranslationParser()
     private val referenceToArticleParser = ReferenceToArticleParser()
@@ -33,56 +35,10 @@ class ArticleParser {
     fun parse(headword: String, raw: RawPart): WordArticle {
         logger.trace("Parsing article $headword from $raw")
 
-        val homonyms = parseBody(raw)
-        raw.finishAll()
-
-        return WordArticle(headword, homonyms)
+        return WordArticle(headword, parseBody(raw))
     }
 
-
-    private fun parseBody(raw: RawPart): List<List<ArticleSection>> {
-        logger.trace("Parse body from: $raw")
-
-        val split = raw.split(homonymMarker).onEach {
-            it.removeAll(superscriptTag)
-        }
-        val prefix = split[0]
-
-        logger.trace("Body prefix: $prefix")
-
-        val rawHomonyms = split.drop(1)
-
-        val homonyms = if (rawHomonyms.isEmpty()) {
-            listOf(parseSections(prefix))
-        } else {
-            rawHomonyms.map { parseSections(it) }
-        }
-        prefix.finishAll()
-
-        return homonyms
-    }
-
-    private fun parseSections(raw: RawPart): List<ArticleSection> {
-        logger.trace("Parse sections from: $raw")
-
-        val split = raw.split(lexicalGrammarHomonymMarker)
-        val prefix = split[0]
-
-        logger.trace("Homonyms prefix: $prefix")
-
-        val rawLexGramHomonyms = split.drop(1)
-
-        val lexGramHomonyms = if (rawLexGramHomonyms.isEmpty()) {
-            listOf(parseSection(prefix))
-        } else {
-            rawLexGramHomonyms.map { parseSection(it) }
-        }
-        prefix.finishAll()
-
-        return lexGramHomonyms
-    }
-
-    private fun parseSection(raw: RawPart): ArticleSection {
+    override fun parseSection(raw: RawPart): WordArticleSection {
         return when {
             raw.contains(partOfSpeech) && raw.contains(translation) -> parseLexicalGrammaticalHomonym(raw)
             raw.contains(reference) -> referenceToArticleParser.parse(raw)
@@ -131,7 +87,7 @@ class ArticleParser {
 
         prefix.finishAll()
 
-        return WordHomonym(transcription, partOfSpeech, remark, comment, translations)
+        return WordHomonym(transcription, partOfSpeech, translations, remark, comment)
     }
 
     internal fun parsePartOfSpeech(labels: List<String>): PartOfSpeech {

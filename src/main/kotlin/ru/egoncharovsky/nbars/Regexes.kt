@@ -37,10 +37,9 @@ object Regexes {
     val letter = "[a-zA-Zа-яА-Я]".toRegex()
 
     val homonymMarker = "\\[b]\\[sup]\\d+?\\[/sup]\\[/b]".toRegex()
-    val lexicalGrammarHomonymMarker = "(?<!\\[c])\\[b][Ⅰ-Ⅹ]\\[/b](?!\\[/c])".toRegex()
+    val sectionMarker = "(?<!\\[c])\\[b][Ⅰ-Ⅹ]\\[/b](?!\\[/c])".toRegex()
     val translationMarker = "\\d+?\\. ".toRegex()
     val translationVariantMarker = "\\d+?\\) ".toRegex()
-    val meaningVariantMarker = "\\d+?[).] ".toRegex()
     val exampleVariantMarker = "[а-я]\\) ".toRegex()
 
     val transcription = "\\[t](.+?)\\[/t]".toRegex()

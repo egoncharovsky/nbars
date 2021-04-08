@@ -1,16 +1,16 @@
 package ru.egoncharovsky.nbars.parse
 
 import ru.egoncharovsky.nbars.entity.MorphemeType
-import ru.egoncharovsky.nbars.utils.MorphemeBuilder
+import ru.egoncharovsky.nbars.utils.builder.article.MorphemeArticleBuilder
 
 object Morphemes {
-    val ible = MorphemeBuilder("-ible")
-        .reference("-əb(ə)l", "= rf(-able) 2, 3")
+    val ible = MorphemeArticleBuilder("-ible").homonyms {
+        it.reference("-əb(ə)l", "= rf(-able) 2, 3")
+    }.build()
 
-    val ade = MorphemeBuilder("-ade")
-        .homonym(
-            "-eɪd",
-            MorphemeType.SUFFIX,
+    val ade = MorphemeArticleBuilder("-ade").homonyms {
+        it.homonym(
+            "-eɪd", MorphemeType.SUFFIX,
             "выделяется в ряде существительных, заимствованных из французского или испанского языка и обозначающих:"
         ) {
             it.translation {
@@ -30,24 +30,29 @@ object Morphemes {
                     it.example("orangeade", "1033", "оранжад")
                 }
             }
-        }.build()
-
-    val ad = MorphemeBuilder("-ad")
-        .homonym("-æd, -əd", MorphemeType.SUFFIX) {
-            it.translation {
-                it.variant("встречается в ab(сущ.), производных от ab(греч.) числительных, со значением группа с таким-то числом членов") {
-                    it.example("dyad", "1033", "диада")
-                    it.example("triad", "1033", "триада")
-                    it.example("pentad", "1033", "пентада")
-                }
-            }
-
         }
-        .homonym("-æd, -əd", MorphemeType.SUFFIX) {
-            it.translation {
-                it.variant("по направлению к", remark = "ab(биол.)", comment = "c") {
-                    it.example("ventrad", "1033", "по направлению к брюшной стороне")
-                    it.example("cephalad", "1033", "краниально, по направлению к голове")
+    }.build()
+
+    val ad = MorphemeArticleBuilder("-ad")
+        .homonyms {
+            it.homonym("-æd, -əd", MorphemeType.SUFFIX) {
+                it.translation {
+                    it.variant("встречается в ab(сущ.), производных от ab(греч.) числительных, со значением группа с таким-то числом членов") {
+                        it.example("dyad", "1033", "диада")
+                        it.example("triad", "1033", "триада")
+                        it.example("pentad", "1033", "пентада")
+                    }
+                }
+
+            }
+        }
+        .homonyms {
+            it.homonym("-æd, -əd", MorphemeType.SUFFIX) {
+                it.translation {
+                    it.variant("по направлению к", remark = "ab(биол.)", comment = "c") {
+                        it.example("ventrad", "1033", "по направлению к брюшной стороне")
+                        it.example("cephalad", "1033", "краниально, по направлению к голове")
+                    }
                 }
             }
         }.build()

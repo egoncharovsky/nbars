@@ -6,10 +6,16 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.junit.jupiter.api.Test
-import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
+import ru.egoncharovsky.nbars.entity.article.Article
 import ru.egoncharovsky.nbars.entity.article.WordArticle
 import ru.egoncharovsky.nbars.entity.article.section.SpecializedVocabulary
-import ru.egoncharovsky.nbars.parse.*
+import ru.egoncharovsky.nbars.parse.DictionaryParser
+import ru.egoncharovsky.nbars.parse.ExampleParser
+import ru.egoncharovsky.nbars.parse.ReferenceToArticleParser
+import ru.egoncharovsky.nbars.parse.TranslationParser
+import ru.egoncharovsky.nbars.parse.article.ExpressionArticleParser
+import ru.egoncharovsky.nbars.parse.article.MorphemeArticleParser
+import ru.egoncharovsky.nbars.parse.article.WordArticleParser
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -22,7 +28,7 @@ internal class FullDictionaryTest {
 
     @Test
     fun article() {
-        val key = "run"
+        val key = "drop away"
 
         val reader = DictionaryReader(dictionaryFile, indexFile)
         val parser = DictionaryParser()
@@ -40,12 +46,12 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:73")
+        val printErrorOnLines: Set<String> = setOf("ExpressionArticleParser.kt:39")
         val isShortArticle: (List<String>) -> Boolean = { it.size < 10 }
         var shortArticlesCount = 0
         var longArticlesCount = 0
 
-        val results: List<Pair<String, Result<DictionaryArticle>>>
+        val results: List<Pair<String, Result<Article<*>>>>
         val time = measureTimeMillis {
             results = runBlocking(Dispatchers.IO) {
                 positions.map { (headword, position) ->
@@ -80,7 +86,7 @@ internal class FullDictionaryTest {
             .forEach { (headword, exception) ->
                 val element =
                     exception!!.stackTrace.find {
-                        it.className == ArticleParser::class.qualifiedName
+                        it.className == WordArticleParser::class.qualifiedName
                                 || it.className == ExpressionArticleParser::class.qualifiedName
                                 || it.className == TranslationParser::class.qualifiedName
                                 || it.className == ReferenceToArticleParser::class.qualifiedName

@@ -10,4 +10,4 @@ data class ReferenceToArticle(
     val grammaticalForm: GrammaticalForm? = null,
     val referenceOnHeadWord: Text,
     val examples: List<Example> = listOf()
-) : ArticleSection
+) : WordArticleSection, MorphemeArticleSection, ExpressionArticleSection

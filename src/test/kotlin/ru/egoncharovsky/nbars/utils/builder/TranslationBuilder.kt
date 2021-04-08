@@ -1,4 +1,4 @@
-package ru.egoncharovsky.nbars.utils
+package ru.egoncharovsky.nbars.utils.builder
 
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.translation.Translation

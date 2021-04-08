@@ -2,7 +2,7 @@ package ru.egoncharovsky.nbars.parse
 
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import ru.egoncharovsky.nbars.entity.article.DictionaryArticle
+import ru.egoncharovsky.nbars.entity.article.Article
 import ru.egoncharovsky.nbars.entity.article.ExpressionArticle
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
 import ru.egoncharovsky.nbars.entity.article.WordArticle
@@ -40,7 +40,7 @@ class DictionaryArticlesParseTest {
 
     @ParameterizedTest
     @MethodSource("parameters")
-    fun parse(key: String, expected: DictionaryArticle) {
+    fun parse(key: String, expected: Article<*>) {
         val path = key.replace(" ", "_").let {
             when (expected) {
                 is WordArticle -> "card/$it.dsl"

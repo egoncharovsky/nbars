@@ -1,5 +1,6 @@
 package ru.egoncharovsky.nbars.entity.article
 
-interface DictionaryArticle {
+interface Article<S> {
     val headword: String
+    val homonyms: List<List<S>>
 }

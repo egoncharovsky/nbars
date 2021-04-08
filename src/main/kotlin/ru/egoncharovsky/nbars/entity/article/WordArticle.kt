@@ -1,8 +1,8 @@
 package ru.egoncharovsky.nbars.entity.article
 
-import ru.egoncharovsky.nbars.entity.article.section.ArticleSection
+import ru.egoncharovsky.nbars.entity.article.section.WordArticleSection
 
 data class WordArticle(
     override val headword: String,
-    val homonyms: List<List<ArticleSection>>
-) : DictionaryArticle
+    override val homonyms: List<List<WordArticleSection>>
+) : Article<WordArticleSection>

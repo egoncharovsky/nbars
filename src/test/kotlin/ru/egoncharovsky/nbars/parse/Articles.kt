@@ -2,15 +2,15 @@ package ru.egoncharovsky.nbars.parse
 
 import ru.egoncharovsky.nbars.entity.*
 import ru.egoncharovsky.nbars.entity.GrammaticalForm.Plural
-import ru.egoncharovsky.nbars.utils.ArticleBuilder
 import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
+import ru.egoncharovsky.nbars.utils.SentenceHelper.eng
 import ru.egoncharovsky.nbars.utils.SentenceHelper.ft
 import ru.egoncharovsky.nbars.utils.SentenceHelper.pt
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
-import ru.egoncharovsky.nbars.utils.SentenceHelper.tr
+import ru.egoncharovsky.nbars.utils.builder.article.WordArticleBuilder
 
 object Articles {
-    val adjutant = ArticleBuilder("adjutant")
+    val adjutant = WordArticleBuilder("adjutant")
         .homonyms {
             it.homonym("ˈæʤʊt(ə)nt", Noun) {
                 it.translation(ab("воен.")) {
@@ -40,7 +40,7 @@ object Articles {
             }
         }.build()
 
-    val tarnish = ArticleBuilder("tarnish")
+    val tarnish = WordArticleBuilder("tarnish")
         .homonyms {
             it.homonym("ˈtɑːnɪʃ", Noun) {
                 it
@@ -79,10 +79,9 @@ object Articles {
                     }
                 }
             }
-        }
-        .build()
+        }.build()
 
-    val someone = ArticleBuilder("someone")
+    val someone = WordArticleBuilder("someone")
         .homonyms {
             it.homonym("ˈsʌmwʌn, ˈsʌmwən", Pronoun(Pronoun.SubType.INDEFINITE)) {
                 it.translation {
@@ -99,13 +98,12 @@ object Articles {
                     }
                 }
             }
-        }
-        .build()
+        }.build()
 
-    val swagman = ArticleBuilder("swagman").homonyms {
+    val swagman = WordArticleBuilder("swagman").homonyms {
         it.homonym(
             "ˈswægmæn", Noun,
-            comment = st("(", ab("pl"), " ", ft("-men", "1033"), " ", tr("ˈswægmen"), pt(")"))
+            comment = "(ab(pl) ft(-men,1033) tr(ˈswægmen))"
         ) {
             it.translation {
                 it.variant(
@@ -116,7 +114,7 @@ object Articles {
         }
     }.build()
 
-    val arry = ArticleBuilder("'Arry").homonyms {
+    val arry = WordArticleBuilder("'Arry").homonyms {
         it.homonym("ˈærɪ", Noun) {
             it.translation { it.variant(st("= rf(Harry)"), remark = ab("прост.")) }
             it.translation {
@@ -128,7 +126,7 @@ object Articles {
         }
     }.build()
 
-    val narrator = ArticleBuilder("narrator")
+    val narrator = WordArticleBuilder("narrator")
         .homonyms {
             it.homonym("nəˈreɪtə", Noun) {
                 it
@@ -141,11 +139,10 @@ object Articles {
                     }
 
             }
-        }
-        .build()
+        }.build()
 
-    val a_la = ArticleBuilder("a la").homonyms {
-        it.homonym("ˈɑːlɑː", Adverb, remark = st("ab(фр.) à la")) {
+    val a_la = WordArticleBuilder("a la").homonyms {
+        it.homonym("ˈɑːlɑː", Adverb, remark = "ab(фр.) à la") {
             it
                 .translation {
                     it.variant("а-ля; в стиле, в духе, во вкусе") {
@@ -166,7 +163,7 @@ object Articles {
         }
     }.build()
 
-    val abatement = ArticleBuilder("abatement")
+    val abatement = WordArticleBuilder("abatement")
         .homonyms {
             it.homonym("əˈbeɪtmənt", Noun) {
                 it
@@ -200,37 +197,37 @@ object Articles {
             }
         }.build()
 
-    val peet = ArticleBuilder("peet")
+    val peet = WordArticleBuilder("peet")
         .homonyms {
             it.reference("piːt", "= rf(pete)")
         }
 
         .build()
 
-    val pence = ArticleBuilder("pence")
+    val pence = WordArticleBuilder("pence")
         .homonyms {
             it.reference("pens", "ab(от) rf(penny)", Plural)
         }
         .build()
 
-    val excepting = ArticleBuilder("excepting")
+    val excepting = WordArticleBuilder("excepting")
         .homonyms {
             it
                 .reference("ɪkˈseptɪŋ", "= rf(except) II 1", Preposition) {
                     it
-                        .example("everyone not excepting myself", "1033", "все, в том числе и я")
-                        .example("all were there not excepting him", "1033", "все были там, и он в том числе")
-                }
+                        .example(eng("everyone not excepting myself"), "все, в том числе и я")
+                        .example(eng("all were there not excepting him"), "все были там, и он в том числе")
+                }.builder()
                 .reference("ɪkˈseptɪŋ", "= rf(except) III 1")
         }.build()
 
-    val ll = ArticleBuilder("'ll").homonyms {
+    val ll = WordArticleBuilder("'ll").homonyms {
         it.reference("-ə(l)", "ab(разг.) ab(сокр.) ab(от) rf(will)2") {
-            it.example("you'll be late", "1033", "вы опоздаете")
+            it.example(eng("you'll be late"), "вы опоздаете")
         }
     }.build()
 
-    val abed = ArticleBuilder("abed").homonyms {
+    val abed = WordArticleBuilder("abed").homonyms {
         it
             .homonym("əˈbed", Adjective) {
                 it.translation(remark = st("ab(predic) ab(арх.)")) {
@@ -250,24 +247,32 @@ object Articles {
             }
     }.build()
 
-    val abeyance = ArticleBuilder("abeyance").homonyms {
+    val abeyance = WordArticleBuilder("abeyance").homonyms {
         it.homonym("əˈbeɪəns", Noun) {
             it
                 .translation {
                     it.variant("состояние неопределённости, неизвестности ab(или) ожидания") {
                         it
-                            .example("the custom was revived after an abeyance of several centuries",
+                            .example(
+                                "the custom was revived after an abeyance of several centuries",
                                 "1033",
-                                "эта традиция возродилась после многовекового забвения")
-                            .example("to be in /to fall into, to go into/ abeyance",
+                                "эта традиция возродилась после многовекового забвения"
+                            )
+                            .example(
+                                "to be in /to fall into, to go into/ abeyance",
                                 "1033",
-                                "находиться в состоянии неопределённости /неизвестности, ожидания/ (ab(см.) ab(тж) 2, 2))")
-                            .example("to hold in abeyance",
+                                "находиться в состоянии неопределённости /неизвестности, ожидания/ (ab(см.) ab(тж) 2, 2))"
+                            )
+                            .example(
+                                "to hold in abeyance",
                                 "1033",
-                                "отсрочивать")
-                            .example("let's hold that problem in abeyance for a short while",
+                                "отсрочивать"
+                            )
+                            .example(
+                                "let's hold that problem in abeyance for a short while",
                                 "1033",
-                                "давайте отложим решение этого вопроса на некоторое время")
+                                "давайте отложим решение этого вопроса на некоторое время"
+                            )
 
                     }
                 }
@@ -275,18 +280,24 @@ object Articles {
                     it
                         .variant("временное прекращение; приостановление")
                         .variant("временная отмена", comment = "(закона, права ab(и т. п.))") {
-                            it.example("to be in /to fall into/ abeyance",
+                            it.example(
+                                "to be in /to fall into/ abeyance",
                                 "1033",
-                                "быть временно отменённым (о законе, праве ab(и т. п.)) (ab(см.) ab(тж) 1)")
+                                "быть временно отменённым (о законе, праве ab(и т. п.)) (ab(см.) ab(тж) 1)"
+                            )
                         }
                 }
                 .translation {
-                    it.variant("отсутствие владельца, претендента",
+                    it.variant(
+                        "отсутствие владельца, претендента",
                         remark = "ab(юр.)",
-                        comment = "(на собственность, наследство или наследственный титул)") {
-                        it.example("lands in abeyance",
+                        comment = "(на собственность, наследство или наследственный титул)"
+                    ) {
+                        it.example(
+                            "lands in abeyance",
                             "1033",
-                            "выморочное имение, имение без владельца; бесхозное имущество")
+                            "выморочное имение, имение без владельца; бесхозное имущество"
+                        )
 
                     }
                 }
@@ -296,7 +307,7 @@ object Articles {
         }
     }.build()
 
-    val tinct = ArticleBuilder("tinct").homonyms {
+    val tinct = WordArticleBuilder("tinct").homonyms {
         it.homonym("tɪŋkt", Noun) {
             it.translation { it.variant("rf(tincture) I 2, 3, 4 и 5", remark = "ab(поэт.) ab(см.)") }
             it.translation { it.variant("настойка, тинктура", remark = "ab(фарм.)") }
