@@ -11,13 +11,15 @@ interface References<B : References<B>> {
         transcription: String,
         referenceOnHeadWord: String,
         grammaticalForm: GrammaticalForm? = null,
+        comment: String? = null,
         applyParams: (ReferenceToArticleBuilder) -> Unit = {},
     ): B {
         add(
             ReferenceToArticleBuilder(
                 SentenceHelper.tr(transcription),
                 SentenceHelper.st(referenceOnHeadWord),
-                grammaticalForm
+                grammaticalForm,
+                comment
             ).also(applyParams).build()
         )
         return builder()

@@ -105,6 +105,10 @@ data class RawPart(
 
     fun contains(regex: Regex): Boolean = raw.contains(regex)
 
+    fun containsExcluding(regex: Regex, excluding: Regex): Boolean {
+        return raw.split(excluding).any { it.contains(regex) }
+    }
+
     fun count(regex: Regex): Int = regex.findAll(raw).count()
 
     fun findMatchesRange(regex: Regex): List<IntRange> {

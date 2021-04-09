@@ -28,14 +28,16 @@ internal class FullDictionaryTest {
 
     @Test
     fun article() {
-        val key = "drop away"
+        val key = "'shun"
 
         val reader = DictionaryReader(dictionaryFile, indexFile)
         val parser = DictionaryParser()
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val article = parser.parse(key, reader.readArticle(positions[key]!!))
+        val lines = reader.readArticle(positions[key]!!)
+        logger.info("\n${lines.joinToString("\n")}")
+        val article = parser.parse(key, lines)
         println()
     }
 
@@ -46,7 +48,7 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("ExpressionArticleParser.kt:39")
+        val printErrorOnLines: Set<String> = setOf("ReferenceToArticleParser.kt:34")
         val isShortArticle: (List<String>) -> Boolean = { it.size < 10 }
         var shortArticlesCount = 0
         var longArticlesCount = 0

@@ -9,5 +9,6 @@ data class ReferenceToArticle(
     val transcription: Transcription,
     val grammaticalForm: GrammaticalForm? = null,
     val referenceOnHeadWord: Text,
-    val examples: List<Example> = listOf()
+    val examples: List<Example> = listOf(),
+    val comment: Text? = null
 ) : WordArticleSection, MorphemeArticleSection, ExpressionArticleSection

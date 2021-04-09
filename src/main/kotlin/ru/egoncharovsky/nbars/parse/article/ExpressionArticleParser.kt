@@ -36,7 +36,7 @@ class ExpressionArticleParser : ArticleParser<ExpressionArticleSection>() {
 
     override fun parseSection(raw: RawPart): ExpressionArticleSection {
         return when {
-            raw.contains(Regexes.reference) -> referenceToArticleParser.parse(raw)
+            !raw.contains(translation) && raw.contains(Regexes.reference) -> referenceToArticleParser.parse(raw)
             else -> parseHomonym(raw)
         }
     }

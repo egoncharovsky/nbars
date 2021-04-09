@@ -41,7 +41,7 @@ class WordArticleParser : ArticleParser<WordArticleSection>() {
     override fun parseSection(raw: RawPart): WordArticleSection {
         return when {
             raw.contains(partOfSpeech) && raw.contains(translation) -> parseLexicalGrammaticalHomonym(raw)
-            raw.contains(reference) -> referenceToArticleParser.parse(raw)
+            !raw.contains(translation) && raw.contains(reference) -> referenceToArticleParser.parse(raw)
             raw.contains(translation) || raw.contains(example) || raw.contains(comment) -> {
                 raw.removeAll(plain)
                 SpecializedVocabulary("")

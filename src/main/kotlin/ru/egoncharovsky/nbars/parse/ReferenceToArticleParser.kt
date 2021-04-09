@@ -3,6 +3,7 @@ package ru.egoncharovsky.nbars.parse
 import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Regexes
 import ru.egoncharovsky.nbars.Regexes.colorTag
+import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.example
 import ru.egoncharovsky.nbars.Regexes.grammaticalForm
@@ -29,10 +30,11 @@ class ReferenceToArticleParser {
 
         raw.removeAll(escapedSquareBrackets)
 
+        val comment = raw.findPart(comment)?.let { textParser.parse(it) }
         val transcription = textParser.parse(raw.getPart(transcription, 0)) as Transcription
         val grammaticalForm = raw.find(grammaticalForm)?.let { GrammaticalForm.byLabel(it) }
         val toHeadword = textParser.parse(raw.getPart(plain, 0))
 
-        return ReferenceToArticle(transcription, grammaticalForm, toHeadword, examples)
+        return ReferenceToArticle(transcription, grammaticalForm, toHeadword, examples, comment)
     }
 }

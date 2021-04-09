@@ -58,4 +58,6 @@ object Regexes {
     val expressionType = "\\[p](${ExpressionType.labels.joinToString("|")})\\[/p]".toRegex()
     val grammaticalForm = "\\[p](${GrammaticalForm.labels.joinToString("|")})\\[/p]".toRegex()
     val morphemeType = "\\[p](${MorphemeType.labels.joinToString("|")})\\[/p]".toRegex()
+
+    fun Regex.or(regex: Regex): Regex = (this.pattern + "|" + regex.pattern).toRegex()
 }

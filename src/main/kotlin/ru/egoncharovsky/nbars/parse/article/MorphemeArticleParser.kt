@@ -8,6 +8,7 @@ import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.morphemeType
 import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.transcription
+import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
 import ru.egoncharovsky.nbars.entity.MorphemeType
 import ru.egoncharovsky.nbars.entity.article.MorphemeArticle
@@ -34,7 +35,7 @@ class MorphemeArticleParser : ArticleParser<MorphemeArticleSection>() {
 
     override fun parseSection(raw: RawPart): MorphemeArticleSection {
         return when {
-            raw.contains(reference) -> referenceToArticleParser.parse(raw)
+            !raw.contains(translation) && raw.contains(reference) -> referenceToArticleParser.parse(raw)
             else -> parseHomonym(raw)
         }
     }

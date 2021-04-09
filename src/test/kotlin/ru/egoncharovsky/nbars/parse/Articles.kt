@@ -313,4 +313,15 @@ object Articles {
             it.translation { it.variant("настойка, тинктура", remark = "ab(фарм.)") }
         }
     }.build()
+
+    val d = WordArticleBuilder("'d").homonyms {
+        it.reference(
+            "-d",
+            referenceOnHeadWord = "ab(разг.) ab(сокр.) от rf(had), rf(should), rf(would)",
+            comment = "(в любых типах предложений, за исключением общевопросительных)"
+        ) {
+            it.example(eng("I'd better go"), "я, пожалуй, пойду")
+            it.example(eng("I'd like to work"), "я бы хотел поработать")
+        }
+    }.build()
 }
