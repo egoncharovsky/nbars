@@ -3,12 +3,14 @@ package ru.egoncharovsky.nbars.utils.builder.part
 import ru.egoncharovsky.nbars.entity.GrammaticalForm
 import ru.egoncharovsky.nbars.entity.article.section.ReferenceToArticle
 import ru.egoncharovsky.nbars.utils.SentenceHelper
+import ru.egoncharovsky.nbars.utils.SentenceHelper.st
+import ru.egoncharovsky.nbars.utils.SentenceHelper.trn
 import ru.egoncharovsky.nbars.utils.builder.ReferenceToArticleBuilder
 
 interface References<B : References<B>> {
 
     fun reference(
-        transcription: String,
+        transcription: String? = null,
         referenceOnHeadWord: String,
         grammaticalForm: GrammaticalForm? = null,
         comment: String? = null,
@@ -16,8 +18,8 @@ interface References<B : References<B>> {
     ): B {
         add(
             ReferenceToArticleBuilder(
-                SentenceHelper.tr(transcription),
-                SentenceHelper.st(referenceOnHeadWord),
+                trn(transcription),
+                st(referenceOnHeadWord),
                 grammaticalForm,
                 comment
             ).also(applyParams).build()

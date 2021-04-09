@@ -324,4 +324,8 @@ object Articles {
             it.example(eng("I'd like to work"), "я бы хотел поработать")
         }
     }.build()
+
+    val cosec = WordArticleBuilder("cosec").homonyms {
+        it.reference(referenceOnHeadWord = "ab(сокр.) от rf(cosecant)")
+    }.build()
 }

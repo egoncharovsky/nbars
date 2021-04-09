@@ -9,7 +9,7 @@ import ru.egoncharovsky.nbars.utils.SentenceHelper.stn
 import ru.egoncharovsky.nbars.utils.builder.part.Examples
 
 class ReferenceToArticleBuilder(
-    private val transcription: Transcription,
+    private val transcription: Transcription? = null,
     private val referenceOnHeadWord: Text,
     private val grammaticalForm: GrammaticalForm? = null,
     private val comment: String? = null

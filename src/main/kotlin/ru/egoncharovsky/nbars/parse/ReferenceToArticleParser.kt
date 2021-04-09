@@ -31,7 +31,7 @@ class ReferenceToArticleParser {
         raw.removeAll(escapedSquareBrackets)
 
         val comment = raw.findPart(comment)?.let { textParser.parse(it) }
-        val transcription = textParser.parse(raw.getPart(transcription, 0)) as Transcription
+        val transcription = raw.findPart(transcription, 0)?.let { textParser.parse(it) as Transcription }
         val grammaticalForm = raw.find(grammaticalForm)?.let { GrammaticalForm.byLabel(it) }
         val toHeadword = textParser.parse(raw.getPart(plain, 0))
 

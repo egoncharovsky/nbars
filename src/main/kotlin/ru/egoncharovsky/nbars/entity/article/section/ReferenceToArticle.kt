@@ -6,7 +6,7 @@ import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Transcription
 
 data class ReferenceToArticle(
-    val transcription: Transcription,
+    val transcription: Transcription?,
     val grammaticalForm: GrammaticalForm? = null,
     val referenceOnHeadWord: Text,
     val examples: List<Example> = listOf(),
