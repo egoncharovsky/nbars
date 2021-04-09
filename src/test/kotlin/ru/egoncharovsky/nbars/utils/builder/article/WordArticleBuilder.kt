@@ -4,14 +4,16 @@ import ru.egoncharovsky.nbars.entity.PartOfSpeech
 import ru.egoncharovsky.nbars.entity.article.WordArticle
 import ru.egoncharovsky.nbars.entity.article.section.ReferenceToArticle
 import ru.egoncharovsky.nbars.entity.article.section.WordArticleSection
+import ru.egoncharovsky.nbars.utils.SentenceHelper.stn
 import ru.egoncharovsky.nbars.utils.builder.Builder
 import ru.egoncharovsky.nbars.utils.builder.WordHomonymBuilder
 import ru.egoncharovsky.nbars.utils.builder.part.References
 
 class WordArticleBuilder(
-    private val headword: String
+    private val headword: String,
+    private val compound: String? = null
 ) : ArticleBuilder<WordArticle, WordArticleSection, WordArticleSectionsBuilder, WordArticleBuilder>() {
-    override fun build(): WordArticle = WordArticle(headword, homonyms)
+    override fun build(): WordArticle = WordArticle(headword, homonyms, stn(compound))
 
     override fun sectionsBuilder(): WordArticleSectionsBuilder = WordArticleSectionsBuilder()
 

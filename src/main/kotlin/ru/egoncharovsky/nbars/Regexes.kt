@@ -53,6 +53,7 @@ object Regexes {
 
     val sampleVariant = "\\[lang id=(\\d+)](.+?)\\[/lang](.+?(?=\\[lang|\$))".toRegex()
     val referencePart = "(от|=)? (<<.+)".toRegex()
+    val compound = "\\[trn]\\\\\\[(.+?)\\\\]\\[/trn]".toRegex()
 
     val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
     val expressionType = "\\[p](${ExpressionType.labels.joinToString("|")})\\[/p]".toRegex()

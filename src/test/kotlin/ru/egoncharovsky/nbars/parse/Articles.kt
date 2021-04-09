@@ -328,4 +328,15 @@ object Articles {
     val cosec = WordArticleBuilder("cosec").homonyms {
         it.reference(referenceOnHeadWord = "ab(сокр.) от rf(cosecant)")
     }.build()
+
+    val prosequence = WordArticleBuilder(
+        "prosequence",
+        compound = "propositional + sequence"
+    ).homonyms {
+        it.homonym("piːəʊˈsiːkwəns", Noun) {
+            it.translation {
+                it.variant("просеквенция, последовательность высказываний", remark = "ab(лог.)")
+            }
+        }
+    }.build()
 }

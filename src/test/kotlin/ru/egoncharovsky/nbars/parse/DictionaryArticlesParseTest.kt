@@ -36,7 +36,8 @@ class DictionaryArticlesParseTest {
             ExpressionArticles.a_posteriori,
             Articles.tinct,
             Articles.d,
-            Articles.cosec
+            Articles.cosec,
+            Articles.prosequence
         ).map { arrayOf(it.headword, it) }
     }
 

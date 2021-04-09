@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Regexes.boldTag
 import ru.egoncharovsky.nbars.Regexes.colorTag
 import ru.egoncharovsky.nbars.Regexes.comment
+import ru.egoncharovsky.nbars.Regexes.compound
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.example
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
@@ -35,7 +36,9 @@ class WordArticleParser : ArticleParser<WordArticleSection>() {
     fun parse(headword: String, raw: RawPart): WordArticle {
         logger.trace("Parsing article $headword from $raw")
 
-        return WordArticle(headword, parseBody(raw))
+        val compound = raw.findPart(compound)?.let { textParser.parse(it) }
+
+        return WordArticle(headword, parseBody(raw), compound)
     }
 
     override fun parseSection(raw: RawPart): WordArticleSection {
