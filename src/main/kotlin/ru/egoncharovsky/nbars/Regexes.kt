@@ -28,7 +28,7 @@ object Regexes {
     val equal = "=".toRegex()
     val colon = ":".toRegex()
     val squareBrackets = "[\\[\\]]".toRegex()
-    val referenceSymbols = "[><]".toRegex()
+    val referenceSymbols = "<<|>>".toRegex()
 
     val escapedSquareBrackets = "(\\\\\\[|\\\\])".toRegex()
     val leftEscapedSquareBracket = "\\\\\\[".toRegex()
