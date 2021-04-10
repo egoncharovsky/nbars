@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Regexes.commentTag
 import ru.egoncharovsky.nbars.Regexes.dash
 import ru.egoncharovsky.nbars.Regexes.exampleVariantMarker
+import ru.egoncharovsky.nbars.Regexes.labelTag
 import ru.egoncharovsky.nbars.Regexes.lang
 import ru.egoncharovsky.nbars.Regexes.letter
 import ru.egoncharovsky.nbars.Regexes.plain
@@ -43,7 +44,8 @@ class ExampleParser {
     private fun parseExample(raw: RawPart): Example {
         logger.trace("Parse example from: $raw")
 
-        val foreign = textParser.parse(raw.getPart(lang, 0)) as ForeignText
+        //todo add support of abbreviations
+        val foreign = textParser.parse(raw.getPart(lang, 0).removeAll(labelTag)) as ForeignText
         raw.removeBefore(dash, letter)
         val translation = textParser.parse(raw)
 

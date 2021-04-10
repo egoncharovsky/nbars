@@ -63,10 +63,8 @@ object Articles {
                             it
                                 .example("tarnished by damp", "1033", "потускневший от влаги")
                                 .example(
-                                    "he couldn't bear to have his dream tarnished", "1033", st(
-                                        ab("образн."),
-                                        pt(" он не мог смириться с тем, что кто-то покушается на его мечту")
-                                    )
+                                    eng("he couldn't bear to have his dream tarnished"),
+                                    "ab(образн.) он не мог смириться с тем, что кто-то покушается на его мечту"
                                 )
                         }
                         .variant("тускнеть, терять блеск; окисляться")
@@ -337,6 +335,17 @@ object Articles {
             it.translation {
                 it.variant("просеквенция, последовательность высказываний", remark = "ab(лог.)")
             }
+        }
+    }.build()
+
+    val oatmeal = WordArticleBuilder("oatmeal").homonyms {
+        it.homonym("ˈəʊtmiːl", Noun) {
+            it.translation {
+                it.variant("овсяная мука; плющеная овсяная крупа; овсяные хлопья, геркулес") {
+                    it.example(eng("oatmeal biscuits /амер. cookies/"), "овсяное печенье")
+                }
+            }
+            it.translation { it.variant("овсянка, овсяная каша", comment = "(ab(тж) ft(oatmeal porridge,1033))") }
         }
     }.build()
 }

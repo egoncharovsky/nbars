@@ -4,6 +4,7 @@ import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.text.ForeignText
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.translation.Variant
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ft
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
 
 class VariantBuilder(
@@ -19,12 +20,7 @@ class VariantBuilder(
     }
 
     fun example(text: String, lang: String, translation: String): VariantBuilder {
-        example(text, lang, st(translation))
-        return this
-    }
-
-    fun example(text: String, lang: String, translation: Text): VariantBuilder {
-        examples.add(Example(ForeignText(Text.normalize(text), lang), translation))
+        example(ft(text, lang), translation)
         return this
     }
 

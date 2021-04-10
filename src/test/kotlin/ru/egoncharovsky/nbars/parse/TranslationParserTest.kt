@@ -20,11 +20,8 @@ class TranslationParserTest {
         val expected = VariantBuilder(pt("вызывать потускнение, лишать блеска; окислять"))
             .example("tarnished by damp", "1033", "потускневший от влаги")
             .example(
-                "he couldn't bear to have his dream tarnished", "1033",
-                st(
-                    ab("образн."),
-                    pt(" он не мог смириться с тем, что кто-то покушается на его мечту")
-                )
+                eng("he couldn't bear to have his dream tarnished"),
+                "ab(образн.) он не мог смириться с тем, что кто-то покушается на его мечту"
             )
             .build()
 

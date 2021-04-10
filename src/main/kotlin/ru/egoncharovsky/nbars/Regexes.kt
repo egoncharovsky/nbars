@@ -20,6 +20,7 @@ object Regexes {
     val superscriptTag = "\\[/?sup]".toRegex()
     val subscriptTag = "\\[/?sub]".toRegex()
     val translationTag = "\\[/?trn]".toRegex()
+    val labelTag = "\\[/?p]".toRegex()
 
     val braces = "[{}]".toRegex()
     val doubleBraces = "\\{\\{|}}".toRegex()
