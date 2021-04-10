@@ -1,0 +1,6 @@
+	[m0]\[[t]ˈsiːmɪ[/t]\] [p]a[/p][/m]
+	[m3]1) [trn]со швами наружу[/trn][/m]
+	[m3]2) [trn]покрытый швами, шрамами, морщинами[/trn][/m]
+	[m2][*][ex][lang id=1033]with a seamy face[/lang] — со шрамами на лице[/ex][/*][/m]
+	[m2][*][ex][p]♦[/p] [lang id=1033]the seamy side[/lang] — а) изнанка, оборотная сторона; [lang id=1033]the seamy side of a profession[/lang] — оборотная сторона профессии; б) тёмная, неприглядная сторона [com]([i]жизни[/i] [p]и т. п.[/p])[/com][/ex][/*][/m]
+	[m2][*][ex][lang id=1033]to know the seamy side of life[/lang] — знать тёмные стороны /изнанку/ жизни[/ex][/*][/m]

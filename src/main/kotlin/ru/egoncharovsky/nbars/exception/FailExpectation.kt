@@ -1,12 +1,30 @@
 package ru.egoncharovsky.nbars.exception
 
-class FailExpectation(
+import ru.egoncharovsky.nbars.parse.RawPart
+
+class FailExpectation private constructor(
     val expectation: String,
-    val raw: String,
+    val raw: Any,
     val byRegex: Regex,
     val butWas: Any,
     val details: Any
 ) : Exception("$expectation but was $butWas by '$byRegex' in '$raw': $details") {
+    constructor(
+        expectation: String,
+        raw: String,
+        byRegex: Regex,
+        butWas: Any,
+        details: Any
+    ) : this(expectation, raw as Any, byRegex, butWas, details)
+
+    constructor(
+        expectation: String,
+        raw: RawPart,
+        byRegex: Regex,
+        butWas: Any,
+        details: Any
+    ) : this(expectation, raw as Any, byRegex, butWas, details)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is FailExpectation) return false

@@ -1,7 +1,9 @@
 package ru.egoncharovsky.nbars.parse
 
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import ru.egoncharovsky.nbars.entity.Example
+import ru.egoncharovsky.nbars.exception.FailExpectation
 import ru.egoncharovsky.nbars.utils.SentenceHelper.eng
 import ru.egoncharovsky.nbars.utils.SentenceHelper.pt
 import ru.egoncharovsky.nbars.utils.SentenceHelper.st
@@ -53,5 +55,13 @@ internal class ExampleParserTest {
             ),
             examples
         )
+    }
+
+    @Test
+    fun `Example parser should check that no idiom marker at translation start exists`() {
+        val parser = ExampleParser()
+
+        assertThrows<FailExpectation> { parser.parse(RawPart("[p]♦[/p] [lang id=1033]to be on the air[/lang] — перевод")) }
+        parser.parse(RawPart("[lang id=1033]to be on the air[/lang] — перевод ab(см.) [p]♦[/p]"))
     }
 }

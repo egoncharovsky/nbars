@@ -42,6 +42,7 @@ object Regexes {
     val translationMarker = "\\d+?\\. ".toRegex()
     val translationVariantMarker = "\\d+?\\) ".toRegex()
     val exampleVariantMarker = "[а-я]\\) ".toRegex()
+    val idiomMarker = "\\[p]♦\\[/p]".toRegex()
 
     val transcription = "\\[t](.+?)\\[/t]".toRegex()
     val translation = "\\[trn](.+?)\\[/trn]".toRegex()
@@ -55,11 +56,11 @@ object Regexes {
     val sampleVariant = "\\[lang id=(\\d+)](.+?)\\[/lang](.+?(?=\\[lang|\$))".toRegex()
     val referencePart = "(от|=)? (<<.+)".toRegex()
     val compound = "\\[trn]\\\\\\[(.+?)\\\\]\\[/trn]".toRegex()
+    val idioms = "\\[ex]\\[p]♦\\[/p].+".toRegex()
+    val idiomPrefix = "^[ ]*\\[p]♦\\[/p].+".toRegex()
 
     val partOfSpeech = "\\[p](${PartOfSpeech.labels.joinToString("|")})\\[/p]".toRegex()
     val expressionType = "\\[p](${ExpressionType.labels.joinToString("|")})\\[/p]".toRegex()
     val grammaticalForm = "\\[p](${GrammaticalForm.labels.joinToString("|")})\\[/p]".toRegex()
     val morphemeType = "\\[p](${MorphemeType.labels.joinToString("|")})\\[/p]".toRegex()
-
-    fun Regex.or(regex: Regex): Regex = (this.pattern + "|" + regex.pattern).toRegex()
 }

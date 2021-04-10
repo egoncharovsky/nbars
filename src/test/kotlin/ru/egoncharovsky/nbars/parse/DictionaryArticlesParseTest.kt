@@ -38,7 +38,8 @@ class DictionaryArticlesParseTest {
             Articles.d,
             Articles.cosec,
             Articles.prosequence,
-            Articles.oatmeal
+            Articles.oatmeal,
+            Articles.seamy
         ).map { arrayOf(it.headword, it) }
     }
 

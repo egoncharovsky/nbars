@@ -7,12 +7,17 @@ import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.compound
 import ru.egoncharovsky.nbars.Regexes.escapedSquareBrackets
 import ru.egoncharovsky.nbars.Regexes.example
+import ru.egoncharovsky.nbars.Regexes.idiomMarker
+import ru.egoncharovsky.nbars.Regexes.idiomPrefix
+import ru.egoncharovsky.nbars.Regexes.idioms
+import ru.egoncharovsky.nbars.Regexes.lang
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
 import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.transcription
 import ru.egoncharovsky.nbars.Regexes.translation
 import ru.egoncharovsky.nbars.Regexes.translationMarker
+import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.PartOfSpeech
 import ru.egoncharovsky.nbars.entity.article.WordArticle
 import ru.egoncharovsky.nbars.entity.article.section.SpecializedVocabulary
@@ -20,10 +25,7 @@ import ru.egoncharovsky.nbars.entity.article.section.WordArticleSection
 import ru.egoncharovsky.nbars.entity.article.section.WordHomonym
 import ru.egoncharovsky.nbars.entity.text.Transcription
 import ru.egoncharovsky.nbars.exception.StepParseException
-import ru.egoncharovsky.nbars.parse.RawPart
-import ru.egoncharovsky.nbars.parse.ReferenceToArticleParser
-import ru.egoncharovsky.nbars.parse.TextParser
-import ru.egoncharovsky.nbars.parse.TranslationParser
+import ru.egoncharovsky.nbars.parse.*
 
 class WordArticleParser : ArticleParser<WordArticleSection>() {
 
@@ -32,6 +34,7 @@ class WordArticleParser : ArticleParser<WordArticleSection>() {
     private val textParser = TextParser()
     private val translationParser = TranslationParser()
     private val referenceToArticleParser = ReferenceToArticleParser()
+    private val exampleParser = ExampleParser()
 
     fun parse(headword: String, raw: RawPart): WordArticle {
         logger.trace("Parsing article $headword from $raw")
@@ -67,6 +70,8 @@ class WordArticleParser : ArticleParser<WordArticleSection>() {
             .removeAll(boldTag)
             .removeAll(colorTag) // todo parse semantic sections
 
+        val idioms = raw.findPart(idioms, 0)?.let { parseIdioms(it) }
+
         val split = raw.split(translationMarker)
         val prefix = split[0]
 
@@ -90,7 +95,7 @@ class WordArticleParser : ArticleParser<WordArticleSection>() {
 
         prefix.finishAll()
 
-        return WordHomonym(transcription, partOfSpeech, translations, remark, comment)
+        return WordHomonym(transcription, partOfSpeech, translations, remark, comment, idioms)
     }
 
     internal fun parsePartOfSpeech(labels: List<String>): PartOfSpeech {
@@ -99,5 +104,14 @@ class WordArticleParser : ArticleParser<WordArticleSection>() {
             2 -> PartOfSpeech.byLabel(labels[1], labels[0])
             else -> throw IllegalArgumentException("Can't parse part of speech from $labels: unexpected size ${labels.size}")
         }
+    }
+
+    private fun parseIdioms(raw: RawPart): List<Example> {
+        raw.removeBefore(idiomMarker, lang)
+
+        val idioms = raw.getAllParts(example).flatMap { exampleParser.parse(it) }
+        raw.finishAll()
+
+        return idioms
     }
 }

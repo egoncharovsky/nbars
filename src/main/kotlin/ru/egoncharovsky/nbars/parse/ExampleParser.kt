@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Regexes.commentTag
 import ru.egoncharovsky.nbars.Regexes.dash
 import ru.egoncharovsky.nbars.Regexes.exampleVariantMarker
+import ru.egoncharovsky.nbars.Regexes.idiomPrefix
 import ru.egoncharovsky.nbars.Regexes.labelTag
 import ru.egoncharovsky.nbars.Regexes.lang
 import ru.egoncharovsky.nbars.Regexes.letter
@@ -11,6 +12,7 @@ import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.sampleVariant
 import ru.egoncharovsky.nbars.entity.Example
 import ru.egoncharovsky.nbars.entity.text.ForeignText
+import ru.egoncharovsky.nbars.exception.FailExpectation
 
 class ExampleParser {
 
@@ -38,6 +40,8 @@ class ExampleParser {
             } // shall we need add special group/abstraction for sample?
         } else {
             listOf(parseExample(raw))
+        }.also {
+            raw.finishAll()
         }
     }
 
@@ -47,6 +51,12 @@ class ExampleParser {
         //todo add support of abbreviations
         val foreign = textParser.parse(raw.getPart(lang, 0).removeAll(labelTag)) as ForeignText
         raw.removeBefore(dash, letter)
+
+        if (raw.contains(idiomPrefix))
+            throw FailExpectation(
+                "No idiom marker expected", raw, idiomPrefix, "some",
+                "translation of example should not starts with idiom prefix"
+            )
         val translation = textParser.parse(raw)
 
         return Example(foreign, translation)

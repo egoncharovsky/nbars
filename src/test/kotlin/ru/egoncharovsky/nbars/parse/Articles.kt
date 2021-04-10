@@ -348,4 +348,21 @@ object Articles {
             it.translation { it.variant("овсянка, овсяная каша", comment = "(ab(тж) ft(oatmeal porridge,1033))") }
         }
     }.build()
+
+    val seamy = WordArticleBuilder("seamy").homonyms {
+        it.homonym("ˈsiːmɪ", Adjective) {
+            it.translation {
+                it.variant("со швами наружу")
+                it.variant("покрытый швами, шрамами, морщинами") {
+                    it.example(eng("with a seamy face"), "со шрамами на лице")
+                }
+            }
+            it.idioms {
+                it.example(eng("the seamy side"), "изнанка, оборотная сторона;")
+                it.example(eng("the seamy side of a profession"), "оборотная сторона профессии;")
+                it.example(eng("the seamy side"), "тёмная, неприглядная сторона (жизни ab(и т. п.))")
+                it.example(eng("to know the seamy side of life"), "знать тёмные стороны /изнанку/ жизни")
+            }
+        }
+    }.build()
 }
