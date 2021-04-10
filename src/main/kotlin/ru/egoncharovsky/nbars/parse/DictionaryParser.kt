@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import ru.egoncharovsky.nbars.Regexes.doubleBraces
 import ru.egoncharovsky.nbars.Regexes.italicTag
 import ru.egoncharovsky.nbars.Regexes.marginTag
+import ru.egoncharovsky.nbars.Regexes.notTranslationTag
 import ru.egoncharovsky.nbars.Regexes.optionalTag
 import ru.egoncharovsky.nbars.Regexes.partOfSpeech
 import ru.egoncharovsky.nbars.entity.article.Article
@@ -28,6 +29,7 @@ class DictionaryParser {
             .removeAll(italicTag)
             .removeAll(doubleBraces)
             .removeAll(optionalTag)
+            .removeAll(notTranslationTag)
 
         return when {
             !raw.contains(partOfSpeech) && headword.contains(" ") -> expressionArticleParser.parse(headword, raw)
