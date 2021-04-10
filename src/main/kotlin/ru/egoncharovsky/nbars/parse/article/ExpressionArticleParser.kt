@@ -16,10 +16,7 @@ import ru.egoncharovsky.nbars.entity.article.ExpressionArticle
 import ru.egoncharovsky.nbars.entity.article.section.ExpressionArticleSection
 import ru.egoncharovsky.nbars.entity.article.section.ExpressionHomonym
 import ru.egoncharovsky.nbars.entity.text.Transcription
-import ru.egoncharovsky.nbars.parse.RawPart
-import ru.egoncharovsky.nbars.parse.ReferenceToArticleParser
-import ru.egoncharovsky.nbars.parse.TextParser
-import ru.egoncharovsky.nbars.parse.TranslationParser
+import ru.egoncharovsky.nbars.parse.*
 
 class ExpressionArticleParser : ArticleParser<ExpressionArticleSection>() {
 
@@ -27,6 +24,7 @@ class ExpressionArticleParser : ArticleParser<ExpressionArticleSection>() {
     private val textParser = TextParser()
     private val translationParser = TranslationParser()
     private val referenceToArticleParser = ReferenceToArticleParser()
+    private val exampleParser = ExampleParser()
 
     fun parse(headword: String, raw: RawPart): ExpressionArticle {
         logger.trace("Parse expression article for '$headword' from: '$raw'")
@@ -47,6 +45,8 @@ class ExpressionArticleParser : ArticleParser<ExpressionArticleSection>() {
         raw
             .removeAll(boldTag)
             .removeAll(colorTag)
+
+        val idioms = raw.findPart(Regexes.idioms, 0)?.let { exampleParser.parseIdioms(it) }
 
         val split = raw.split(translationMarker)
         val prefix = split[0]
@@ -70,6 +70,6 @@ class ExpressionArticleParser : ArticleParser<ExpressionArticleSection>() {
         val remark = prefix.findPart(plain)?.let { textParser.parse(it) }
         prefix.finishAll()
 
-        return ExpressionHomonym(transcription, expressionType, translations, remark, comment)
+        return ExpressionHomonym(transcription, expressionType, translations, remark, comment, idioms)
     }
 }

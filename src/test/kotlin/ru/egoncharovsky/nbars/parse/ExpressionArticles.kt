@@ -1,6 +1,8 @@
 package ru.egoncharovsky.nbars.parse
 
 import ru.egoncharovsky.nbars.entity.ExpressionType
+import ru.egoncharovsky.nbars.utils.SentenceHelper.ab
+import ru.egoncharovsky.nbars.utils.SentenceHelper.eng
 import ru.egoncharovsky.nbars.utils.builder.article.ExpressionArticleBuilder
 
 object ExpressionArticles {
@@ -35,6 +37,24 @@ object ExpressionArticles {
         it.homonym("ˌeɪpɒsterɪˈɔːr(a)ɪ", remark = "ab(лат.)") {
             it.translation { it.variant("апостериори, эмпирически, из опыта, по опыту") }
             it.translation { it.variant("апостериорный, основанный на опыте") }
+        }
+    }.build()
+
+    val blue_murder = ExpressionArticleBuilder("blue murder").homonyms {
+        it.homonym("ˌbluːˈmɜːdə", remark = "ab(сл.)") {
+            it.translation {
+                it.variant("караул") {
+                    it.example(
+                        eng("to scream /to cry, to shout, to yell/ blue murder"),
+                        "а) кричать караул; поднимать шум /вопль/; б) орать, дико вопить (без особой причины)"
+                    )
+                }
+            }
+            it.translation(remark = ab("амер.")) {
+                it.variant("полное поражение, провал")
+                it.variant("трудная задача")
+            }
+            it.idiom(eng("like blue murder"), "чертовски быстро, со всех ног, сломя голову")
         }
     }.build()
 }

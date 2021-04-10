@@ -357,12 +357,10 @@ object Articles {
                     it.example(eng("with a seamy face"), "со шрамами на лице")
                 }
             }
-            it.idioms {
-                it.example(eng("the seamy side"), "изнанка, оборотная сторона;")
-                it.example(eng("the seamy side of a profession"), "оборотная сторона профессии;")
-                it.example(eng("the seamy side"), "тёмная, неприглядная сторона (жизни ab(и т. п.))")
-                it.example(eng("to know the seamy side of life"), "знать тёмные стороны /изнанку/ жизни")
-            }
+            it.idiom(eng("the seamy side"), "изнанка, оборотная сторона;")
+            it.idiom(eng("the seamy side of a profession"), "оборотная сторона профессии;")
+            it.idiom(eng("the seamy side"), "тёмная, неприглядная сторона (жизни ab(и т. п.))")
+            it.idiom(eng("to know the seamy side of life"), "знать тёмные стороны /изнанку/ жизни")
         }
     }.build()
 }

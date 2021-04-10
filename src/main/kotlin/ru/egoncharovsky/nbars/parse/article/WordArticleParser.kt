@@ -70,7 +70,7 @@ class WordArticleParser : ArticleParser<WordArticleSection>() {
             .removeAll(boldTag)
             .removeAll(colorTag) // todo parse semantic sections
 
-        val idioms = raw.findPart(idioms, 0)?.let { parseIdioms(it) }
+        val idioms = raw.findPart(idioms, 0)?.let { exampleParser.parseIdioms(it) }
 
         val split = raw.split(translationMarker)
         val prefix = split[0]
@@ -104,14 +104,5 @@ class WordArticleParser : ArticleParser<WordArticleSection>() {
             2 -> PartOfSpeech.byLabel(labels[1], labels[0])
             else -> throw IllegalArgumentException("Can't parse part of speech from $labels: unexpected size ${labels.size}")
         }
-    }
-
-    private fun parseIdioms(raw: RawPart): List<Example> {
-        raw.removeBefore(idiomMarker, lang)
-
-        val idioms = raw.getAllParts(example).flatMap { exampleParser.parse(it) }
-        raw.finishAll()
-
-        return idioms
     }
 }

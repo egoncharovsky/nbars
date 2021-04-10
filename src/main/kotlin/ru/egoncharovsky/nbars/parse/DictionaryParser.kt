@@ -30,8 +30,8 @@ class DictionaryParser {
             .removeAll(optionalTag)
 
         return when {
-            !body.contains(partOfSpeech) && headword.contains(" ") -> expressionArticleParser.parse(headword, raw)
-            !body.contains(partOfSpeech) && (
+            !raw.contains(partOfSpeech) && headword.contains(" ") -> expressionArticleParser.parse(headword, raw)
+            !raw.contains(partOfSpeech) && (
                     headword.startsWith("-") || headword.endsWith("-") || headword.endsWith("'")
                     ) -> morphemeArticleParser.parse(headword, raw)
             else -> articleParser.parse(headword, raw)

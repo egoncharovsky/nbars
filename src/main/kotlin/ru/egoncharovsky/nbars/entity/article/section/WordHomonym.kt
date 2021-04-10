@@ -12,5 +12,5 @@ data class WordHomonym(//lex. gram. homonym
     val translations: List<Translation>,
     val remark: Text? = null,
     val comment: Text? = null,
-    val idioms: List<Example>? = null
+    val idioms: List<Example>?
 ) : WordArticleSection

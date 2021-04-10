@@ -1,6 +1,7 @@
 package ru.egoncharovsky.nbars.parse
 
 import mu.KotlinLogging
+import ru.egoncharovsky.nbars.Regexes
 import ru.egoncharovsky.nbars.Regexes.commentTag
 import ru.egoncharovsky.nbars.Regexes.dash
 import ru.egoncharovsky.nbars.Regexes.exampleVariantMarker
@@ -19,6 +20,14 @@ class ExampleParser {
     private val logger = KotlinLogging.logger { }
     private val textParser = TextParser()
 
+    fun parseIdioms(raw: RawPart): List<Example> {
+        raw.removeBefore(Regexes.idiomMarker, lang)
+
+        val idioms = raw.getAllParts(Regexes.example).flatMap { parse(it) }
+        raw.finishAll()
+
+        return idioms
+    }
 
     fun parse(raw: RawPart): List<Example> {
         logger.trace("Parse examples from: $raw")
