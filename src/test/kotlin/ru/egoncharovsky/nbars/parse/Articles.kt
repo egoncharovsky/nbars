@@ -363,4 +363,15 @@ object Articles {
             it.idiom(eng("to know the seamy side of life"), "знать тёмные стороны /изнанку/ жизни")
         }
     }.build()
+
+    val albert = WordArticleBuilder("Albert").homonyms {
+        it.homonym("ˈælbət", Noun) {
+            it.translation { it.variant("Алберт, Элберт; Альберт", comment = "(мужское имя)") }
+            it.translation {
+                it.variant(ab("геогр.")) {
+                    it.example(eng("Lake Albert"), "озеро Альберт")
+                }
+            }
+        }
+    }.build()
 }

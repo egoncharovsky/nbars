@@ -5,6 +5,7 @@ import ru.egoncharovsky.nbars.Regexes.colon
 import ru.egoncharovsky.nbars.Regexes.comment
 import ru.egoncharovsky.nbars.Regexes.commentTag
 import ru.egoncharovsky.nbars.Regexes.example
+import ru.egoncharovsky.nbars.Regexes.label
 import ru.egoncharovsky.nbars.Regexes.plain
 import ru.egoncharovsky.nbars.Regexes.reference
 import ru.egoncharovsky.nbars.Regexes.referencePart
@@ -68,14 +69,14 @@ class TranslationParser {
 
                 Variant(reference, examples, remark, comment)
             }
-            raw.contains(comment) -> {
+            raw.contains(comment) || raw.contains(label) -> {
                 val meaning = textParser.parse(raw.removeAll(commentTag).getPart(plain))
 
                 Variant(meaning, examples)
             }
             else -> throw StepParseException(
                 "variant",
-                "no translation by '$translation' or reference by '${reference}' found",
+                "no translation by '$translation' or reference by '$reference' or comment/label by '$comment'/'$label' found",
                 raw
             )
         }.also {

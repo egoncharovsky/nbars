@@ -40,7 +40,8 @@ class DictionaryArticlesParseTest {
             Articles.prosequence,
             Articles.oatmeal,
             Articles.seamy,
-            ExpressionArticles.blue_murder
+            ExpressionArticles.blue_murder,
+            Articles.albert
         ).map { arrayOf(it.headword, it) }
     }
 
