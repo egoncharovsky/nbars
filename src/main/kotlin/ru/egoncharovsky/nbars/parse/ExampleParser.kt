@@ -58,7 +58,7 @@ class ExampleParser {
         logger.trace("Parse example from: $raw")
 
         //todo add support of abbreviations
-        val foreign = textParser.parse(raw.getPart(lang, 0).removeAll(labelTag)) as ForeignText
+        val foreign = textParser.parse(raw.getPart(lang, 0)) as ForeignText
         raw.removeBefore(dash, letter)
 
         if (raw.contains(idiomPrefix))

@@ -115,6 +115,12 @@ data class RawPart(
         return regex.findAll(raw).map { it.groups[0]!!.range }.toList()
     }
 
+    fun attach(child: String): RawPart {
+        return RawPart(child).also {
+            children.add(it)
+        }
+    }
+
     fun cut(vararg ranges: IntRange): List<RawPart> {
         logger.trace("Cutting by ${ranges.size} ranges")
 

@@ -10,11 +10,18 @@ import ru.egoncharovsky.nbars.entity.text.Text.Companion.normalize
 import ru.egoncharovsky.nbars.exception.IntersectedRangesFound
 import java.util.*
 
-class TextParser {
+open class TextParser {
 
     fun parse(raw: RawPart): Text {
+        val parts = divide(raw, findLangRanges(raw)) { rawPart ->
+            parsePlainParts(rawPart)
+        }.flatten()
+
+        return Sentence.textFrom(parts)
+    }
+
+    protected fun parsePlainParts(raw: RawPart): List<TextPart> {
         val ranges = listOf(
-            ::findLangRanges,
             ::findLabelRanges,
             ::findReferenceRanges,
             ::findTranscriptionRanges
@@ -22,58 +29,58 @@ class TextParser {
             it.invoke(raw)
         }.reduce(Map<IntRange, (RawPart) -> TextPart>::plus)
 
-        return parse(raw, ranges)
+        return divide(raw, ranges) {
+            PlainText(normalize(it.get(plain)))
+        }
     }
 
-    private fun findLangRanges(raw: RawPart) =
+    protected open fun findLangRanges(raw: RawPart) =
         raw.findMatchesRange(lang).map {
             it to { rawPart: RawPart ->
                 val values = rawPart.getGroupValues(lang)
-                ForeignText(
-                    normalize(values[2]),
-                    values[1]
+
+                val language = values[1]
+                val text = Sentence.textFrom(parsePlainParts(rawPart.attach(values[2])))
+
+                listOf(
+                    ForeignText(
+                        text,
+                        language
+                    )
                 )
             }
         }.toMap()
 
-    private fun findLabelRanges(raw: RawPart) = raw.findMatchesRange(label).map {
+    protected open fun findLabelRanges(raw: RawPart) = raw.findMatchesRange(label).map {
         it to { rawPart: RawPart -> Abbreviation(rawPart.get(label)) }
     }.toMap()
 
-    private fun findReferenceRanges(raw: RawPart) = raw.findMatchesRange(reference).map {
+    protected open fun findReferenceRanges(raw: RawPart) = raw.findMatchesRange(reference).map {
         it to { rawPart: RawPart -> Reference(rawPart.get(reference)) }
     }.toMap()
 
-    private fun findTranscriptionRanges(raw: RawPart) = raw.findMatchesRange(transcription).map {
+    protected open fun findTranscriptionRanges(raw: RawPart) = raw.findMatchesRange(transcription).map {
         it to { rawPart: RawPart -> Transcription(rawPart.get(transcription)) }
     }.toMap()
 
-    private fun findPlainTextRanges(
-        ranges: SortedMap<IntRange, (RawPart) -> TextPart>,
-        raw: RawPart
-    ): Map<IntRange, (RawPart) -> PlainText> {
-        val plainRanges = if (ranges.isNotEmpty()) {
-            ranges.keys.zipWithNext { a, b -> plainTextRange(a.last + 1, b.first) }
-                .plus(plainTextRange(0, ranges.firstKey().first))
-                .plus(plainTextRange(ranges.lastKey().last + 1, raw.length()))
+    private fun findRangesBetween(ranges: List<IntRange>, length: Int): List<IntRange> {
+        return if (ranges.isNotEmpty()) {
+            ranges.zipWithNext { a, b -> rangeBetween(a.last + 1, b.first) }
+                .plus(rangeBetween(0, ranges.first().first))
+                .plus(rangeBetween(ranges.last().last + 1, length))
                 .filterNotNull()
         } else {
-            listOfNotNull(plainTextRange(0, raw.length()))
+            listOfNotNull(rangeBetween(0, length))
         }
-
-        return plainRanges.map {
-            it to { rawPart: RawPart ->
-                PlainText(normalize(rawPart.get(plain)))
-            }
-        }.toMap()
     }
 
-    internal fun parse(raw: RawPart, ranges: Map<IntRange, (RawPart) -> TextPart>): Text {
+    private fun <P> divide(raw: RawPart, ranges: Map<IntRange, (RawPart) -> P>, default: (RawPart) -> P): List<P> {
         val sortedRanges = ranges
             .toSortedMap { r1, r2 -> r1.first.compareTo(r2.first) }
         requireNoIntersections(sortedRanges.keys, raw)
 
-        val plainRanges = findPlainTextRanges(sortedRanges, raw)
+        val plainRanges = findRangesBetween(sortedRanges.keys.toList(), raw.length())
+            .associateWith { default }
 
         sortedRanges.putAll(plainRanges)
         requireNoIntersections(sortedRanges.keys, raw)
@@ -86,7 +93,7 @@ class TextParser {
 
         raw.finishAll()
 
-        return Sentence.textFrom(parts)
+        return parts
     }
 
     private fun requireNoIntersections(ranges: Collection<IntRange>, raw: RawPart) =
@@ -95,7 +102,7 @@ class TextParser {
             acc.plus(range)
         }
 
-    private fun plainTextRange(from: Int, to: Int): IntRange? {
+    private fun rangeBetween(from: Int, to: Int): IntRange? {
         return if (from < to) from until to else null
     }
 }

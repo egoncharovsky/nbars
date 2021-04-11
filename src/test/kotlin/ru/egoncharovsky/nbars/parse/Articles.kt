@@ -342,7 +342,7 @@ object Articles {
         it.homonym("ˈəʊtmiːl", Noun) {
             it.translation {
                 it.variant("овсяная мука; плющеная овсяная крупа; овсяные хлопья, геркулес") {
-                    it.example(eng("oatmeal biscuits /амер. cookies/"), "овсяное печенье")
+                    it.example(eng("oatmeal biscuits /ab(амер.) cookies/"), "овсяное печенье")
                 }
             }
             it.translation { it.variant("овсянка, овсяная каша", comment = "(ab(тж) ft(oatmeal porridge,1033))") }
