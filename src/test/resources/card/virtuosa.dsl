@@ -1,0 +1,1 @@
+	[m0]\[[t]ˌvɜːʧʊˈəʊzə[/t]\] [p]n[/p] [com]([p]pl[/p] [lang id=1033]-se, -sas[/lang] \[[t]ˌvɜːʧʊˈəʊzəz[/t]\]) [p]редк.[/p] [p]женск.[/p] [c][i]к[/i][/c] <<virtuoso>>[/com][/m]

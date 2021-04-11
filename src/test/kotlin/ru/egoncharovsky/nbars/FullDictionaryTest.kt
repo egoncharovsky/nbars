@@ -48,7 +48,7 @@ internal class FullDictionaryTest {
         val positions = reader.readArticlePositions()
         val headwords = positions.keys.toList()
 
-        val printErrorOnLines: Set<String> = setOf("TranslationParser.kt:76")
+        val printErrorOnLines: Set<String> = setOf("ReferenceToArticleParser.kt:36")
         val isShortArticle: (List<String>) -> Boolean = { it.size < 10 }
         var shortArticlesCount = 0
         var longArticlesCount = 0

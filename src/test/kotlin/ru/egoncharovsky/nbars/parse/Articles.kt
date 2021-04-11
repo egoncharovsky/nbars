@@ -374,4 +374,12 @@ object Articles {
             }
         }
     }.build()
+
+    val virtuosa = WordArticleBuilder("virtuosa").homonyms {
+        it.reference(
+            "ˌvɜːʧʊˈəʊzə",
+            "(ab(pl) ft(-se, -sas,1033) tr(ˌvɜːʧʊˈəʊzəz)) ab(редк.) ab(женск.) к rf(virtuoso)",
+            grammaticalForm = Noun
+        )
+    }.build()
 }
