@@ -8,6 +8,8 @@ import ru.egoncharovsky.nbars.entity.PartOfSpeech
 
 object Regexes {
 
+    val endOfLine = "\\eol"
+
     val headwordMarker = "^[^\\t#\uFEFF]".toRegex()
     val dictionaryEndMarker = "\\{\\{ The End }}".toRegex()
 
@@ -40,8 +42,8 @@ object Regexes {
 
     val homonymMarker = "\\[b]\\[sup]\\d+?\\[/sup]\\[/b]".toRegex()
     val sectionMarker = "(?<!\\[c])\\[b][Ⅰ-Ⅹ]\\[/b](?!\\[/c])".toRegex()
-    val translationMarker = "\\d+?\\. ".toRegex()
-    val translationVariantMarker = "\\d+?\\) ".toRegex()
+    val translationMarker = "(?<=^|\t)\\d+?\\. ".toRegex()
+    val translationVariantMarker = "(?<=^|\t)\\d+?\\) ".toRegex()
     val exampleVariantMarker = "[а-я]\\) ".toRegex()
     val idiomMarker = "\\[p]♦\\[/p]".toRegex()
 

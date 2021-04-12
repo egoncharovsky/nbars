@@ -382,4 +382,43 @@ object Articles {
             grammaticalForm = Noun
         )
     }.build()
+
+    val scoring = WordArticleBuilder("scoring").homonyms {
+        it.homonym("ˈskɔːrɪŋ", Noun) {
+            it.translation { it.variant("задиры", remark = "ab(тех.)") }
+            it.translation {
+                it.variant("= rf(score) I 2, 1)") {
+                    it.example(eng("scoring table"), "оценочная таблица")
+                }
+            }
+            it.translation { it.variant("апробация", remark = "ab(с.-х.)", comment = "(зерна)") }
+            it.translation { it.variant("озвучивание", remark = "ab(кино)") }
+            it.translation {
+                it.variant("забивание голов; набирание очков", remark = "ab(спорт.)") {
+                    it.example(eng("scoring chance"), "голевая ситуация")
+                    it.example(eng("scoring run"), "изменение счёта (в ходе игры)")
+                }
+            }
+        }
+    }.build()
+
+    val angloAmerican = WordArticleBuilder("Anglo-American").homonyms {
+        it.homonym("ˌæŋgləʊəˈmerɪkən", Noun) {
+            it.translation {
+                it.variant("англо-американец, американец английского происхождения") {
+                    it.example(eng("the Anglo-Americans"), "ab(pl) ab(собир.) англо-американцы")
+                }
+                it.variant("(белый) житель Северной Америки, говорящий на английском языке",
+                    comment = "(скандинавского, немецкого и ab(др.) происхождения)")
+            }
+        }
+        it.homonym("ˌæŋgləʊəˈmerɪkən", Adjective) {
+            it.translation {
+                it.variant("англо-американский") {
+                    it.example(eng("Anglo-American cooperation"), "англо-американское сотрудничество")
+                }
+                it.variant("относящийся к англо-американцам", remark = "ab(см.) 1. 1)")
+            }
+        }
+    }.build()
 }

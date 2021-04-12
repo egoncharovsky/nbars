@@ -5,7 +5,7 @@ import ru.egoncharovsky.nbars.entity.GrammaticalForm
 import ru.egoncharovsky.nbars.entity.text.Text
 import ru.egoncharovsky.nbars.entity.text.Transcription
 
-data class ReferenceToArticle(
+data class ReferenceToArticle(//todo change to variant!
     val transcription: Transcription?,
     val grammaticalForm: GrammaticalForm? = null,
     val referenceOnHeadWord: Text,

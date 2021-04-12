@@ -1,7 +1,9 @@
 package ru.egoncharovsky.nbars.parse
 
 import mu.KotlinLogging
+import ru.egoncharovsky.nbars.Regexes
 import ru.egoncharovsky.nbars.Regexes.doubleBraces
+import ru.egoncharovsky.nbars.Regexes.endOfLine
 import ru.egoncharovsky.nbars.Regexes.italicTag
 import ru.egoncharovsky.nbars.Regexes.marginTag
 import ru.egoncharovsky.nbars.Regexes.notTranslationTag
@@ -22,7 +24,7 @@ class DictionaryParser {
     fun parse(headword: String, bodyLines: List<String>): Article<*> {
         logger.debug("Parsing $headword with ${bodyLines.size} lines")
 
-        val body = bodyLines.joinToString(" ") { it.trim() }
+        val body = bodyLines.joinToString("\t") { it.trim() }
 
         val raw = RawPart(body)
             .removeAll(marginTag)

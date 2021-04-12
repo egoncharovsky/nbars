@@ -57,4 +57,17 @@ object ExpressionArticles {
             it.idiom(eng("like blue murder"), "чертовски быстро, со всех ног, сломя голову")
         }
     }.build()
+
+    val ad_libitum = ExpressionArticleBuilder("ad libitum").homonyms {
+        it.homonym("ˌædˈlɪbɪtəm", remark = "ab(лат.)") {
+            it.translation { it.variant("= rf(ad lib) I 1) и 2)") }
+            it.translation(remark = ab("муз.")) {
+                it.variant(
+                    "ад либитум, на усмотрение исполнителя",
+                    comment = "(о темпе, громкости ab(и т. п.))"
+                )
+                it.variant("разрешение исключить часть или партию музыкального произведения")
+            }
+        }
+    }.build()
 }
